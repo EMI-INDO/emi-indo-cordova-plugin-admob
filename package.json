@@ -1,0 +1,17 @@
+{
+  "name": "emi-indo-cordova-plugin-admob",
+  "version": "0.0.1",
+  "description": "",
+  "cordova": {
+    "id": "emi-indo-cordova-plugin-admob",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "",
+  "license": "ISC"
+}

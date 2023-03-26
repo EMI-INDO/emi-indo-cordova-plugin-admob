@@ -1,0 +1,42 @@
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="emi-indo-cordova-plugin-admob" version="0.0.1">
+<name>emiAdmobPlugin</name>
+
+<js-module src="www/emiAdmobPlugin.js" name="emiAdmobPlugin">
+<clobbers target="cordova.plugins.emiAdmobPlugin"/>
+</js-module>
+
+    <engines>
+	
+        <engine name="cordova" version=">=7.0.0" />
+        <engine name="cordova-android" version=">=6.0.0" />
+        
+   </engines>
+
+
+<platform name="android">
+<config-file parent="/*" target="res/xml/config.xml">
+<feature name="emiAdmobPlugin">
+<param name="android-package" value="emi.indo.cordova.plugin.admob.emiAdmobPlugin"/>
+</feature>
+</config-file>
+
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:excludeFromRecents="true" android:name="com.google.android.gms.ads.AdActivity" android:noHistory="true" />
+            <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="$APP_ID_ANDROID" />
+            <meta-data android:name="com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT" android:value="true"/>
+        </config-file>
+
+         <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
+      
+        <preference name="APP_ID_ANDROID" default="ca-app-pub-3940256099942544~3347511713" />
+        <preference name="PLAY_SERVICES_VERSION" default="21.5.0" />
+		
+        <framework src="com.google.android.gms:play-services-ads:$PLAY_SERVICES_VERSION" />
+
+
+<config-file parent="/*" target="AndroidManifest.xml"/>
+<source-file src="src/android/emiAdmobPlugin.java" target-dir="src/emi/indo/cordova/plugin/admob/emiAdmobPlugin"/>
+
+</platform>
+</plugin>
