@@ -10,8 +10,24 @@
   },
   "keywords": [
     "ecosystem:cordova",
-    "cordova-android"
+    "cordova-android",
+    "javascript",
+    "admob",
+    "cordova-plugin-admob",
+    "admob-free",
+    "admob-plus",
+    "admob-pro",
+    "construct 3"
+    
   ],
-  "author": "",
-  "license": "ISC"
+  "author": "EMI INDO",
+  "license": "MIT",
+"repository": {
+    "type": "git",
+    "url": "git+https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob.git"
+  },
+  "bugs": {
+    "url": "https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/issues"
+  },
+  "homepage": "https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#readme"
 }
