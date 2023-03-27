@@ -6,6 +6,14 @@
 
 <script>
 
+
+
+/// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "" = BANNER
+var size = "LARGE_BANNER"
+/// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "" = bottom-left
+var position = "bottom-center"
+
+
 var AdUnitId = {
 
 bannerAdUnitId: "ca-app-pub-3940256099942544/6300978111",
@@ -13,42 +21,38 @@ InterstitialAdAdUnitId: "ca-app-pub-3940256099942544/1033173712",
 RewardedInterstitialAdUnitId: "ca-app-pub-3940256099942544/5354046379",
 RewardedAdAdUnitId: "ca-app-pub-3940256099942544/5224354917"
 
-
 }
+
+
+
+
 
 
 document.addEventListener("deviceready", function(){
 
 	cordova.plugins.emiAdmobPlugin.initialize();
-	
-	
-	
+
+
+
 	// event
 
-document.addEventListener('onInitializationComplete', (event) => {
+document.addEventListener('onInitializationComplete', () => {
 
 alert("on Initialization Complete");
 
 });
 
 
-document.addEventListener('onUnityAdsFailedToLoad.video', (event) => {
-
-alert("on Unity Ads Failed To Load video");
-
-});
-
 
 }, false);
 </script>
 
-<p><button onclick="cordova.plugins.emiAdmobPlugin.showBannerAd(AdUnitId.bannerAdUnitId);">Show Banner Ad</button></p>
-<p><button onclick="cordova.plugins.emiAdmobPlugin.removeBannerAd();">remove Banner Ad</button></p>
-<p><button onclick="cordova.plugins.emiAdmobPlugin.loadInterstitialAd(AdUnitId.InterstitialAdAdUnitId);">Load Interstitial Ad</button></p>
-<p><button onclick="cordova.plugins.emiAdmobPlugin.showInterstitialAd();">Show Interstitial Ad</button></p>
-<p><button onclick="cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(AdUnitId.RewardedInterstitialAdUnitId);">Load Rewarded Interstitial</button></p>
-<p><button onclick="cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();">Show Rewarded Interstitial</button></p>
-
+<p> <button onclick="cordova.plugins.emiAdmobPlugin.showBannerAd(AdUnitId.bannerAdUnitId, size, position);">Show Banner Ad</button></p>
+<p> <button onclick="cordova.plugins.emiAdmobPlugin.removeBannerAd();">remove Banner Ad</button></p>
+<p> <button onclick="cordova.plugins.emiAdmobPlugin.loadInterstitialAd(AdUnitId.InterstitialAdAdUnitId);">Load Interstitial Ad</button></p>
+<p> <button onclick="cordova.plugins.emiAdmobPlugin.showInterstitialAd();">Show Interstitial Ad</button></p>
+<p> <button onclick="cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(AdUnitId.RewardedInterstitialAdUnitId);">Load Rewarded Interstitial</button></p>
+<p> <button onclick="cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();">Show Rewarded Interstitial</button></p>
 
 
 </body>
