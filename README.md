@@ -199,5 +199,6 @@ alert("on Ad Loaded banner");
 - onAdShowedFullScreenContent.rewardedInterstitialAd
 
 
-                    
+## 💰Sponsor this project
+  [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)                     
                              
