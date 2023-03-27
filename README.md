@@ -24,6 +24,9 @@ emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-app-pub-3940256099942
 ## deviceready
 
 ```sh
+// Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
+// This needs to be done only once, ideally at app launch.
+
 cordova.plugins.emiAdmobPlugin.initialize();
 
 document.addEventListener('onInitializationComplete', () => {
@@ -58,7 +61,7 @@ var position = "bottom-center"
 
 ```
 
- [Banner ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/edit/main/README.md#banner-ad) - callback:
+ [Banner ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-banner-ads-) - callback:
 
 
 ## Interstitial ads
@@ -70,6 +73,8 @@ var position = "bottom-center"
 // Show  cordova.plugins.emiAdmobPlugin.showInterstitialAd();
 
 ```
+ [Interstitial ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-interstitial-ads-) - callback:
+
 
 
 ## Rewarded ads
@@ -82,6 +87,9 @@ var position = "bottom-center"
 
 ```
 
+[Rewarded ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-rewarded-ads-) - callback:
+
+
 ## Rewarded interstitial ads
 
 ```sh
@@ -92,7 +100,7 @@ var position = "bottom-center"
 
 ```
 
-
+[Rewarded interstitial ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-rewarded-ads-) - callback:
 
 
 
