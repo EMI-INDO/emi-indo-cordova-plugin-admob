@@ -1,0 +1,68 @@
+<html>
+<head>
+    <script type="text/javascript" src="cordova.js"></script>
+</head>
+<body>
+
+<script>
+
+var AdUnitId = {
+
+bannerAdUnitId: "ca-app-pub-3940256099942544/6300978111",
+InterstitialAdAdUnitId: "ca-app-pub-3940256099942544/1033173712",
+RewardedInterstitialAdUnitId: "ca-app-pub-3940256099942544/5354046379",
+RewardedAdAdUnitId: "ca-app-pub-3940256099942544/5224354917"
+
+
+}
+
+
+document.addEventListener("deviceready", function(){
+
+	cordova.plugins.emiAdmobPlugin.initialize();
+	
+	
+	
+	// event
+
+document.addEventListener('onInitializationComplete', (event) => {
+
+alert("on Initialization Complete");
+
+});
+
+
+document.addEventListener('onUnityAdsFailedToLoad.video', (event) => {
+
+alert("on Unity Ads Failed To Load video");
+
+});
+
+
+}, false);
+</script>
+
+<p>
+    <button onclick="cordova.plugins.emiAdmobPlugin.showBannerAd(AdUnitId.bannerAdUnitId);">Show Banner Ad</button>
+</p>
+<p>
+    <button onclick="cordova.plugins.emiAdmobPlugin.removeBannerAd();">remove Banner Ad</button>
+</p>
+<p>
+    <button onclick="cordova.plugins.emiAdmobPlugin.loadInterstitialAd(AdUnitId.InterstitialAdAdUnitId);">Load Interstitial Ad</button>
+</p>
+<p>
+    <button onclick="cordova.plugins.emiAdmobPlugin.showInterstitialAd();">Show Interstitial Ad</button>
+</p>
+
+<p>
+    <button onclick="cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(AdUnitId.RewardedInterstitialAdUnitId);">Load Rewarded Interstitial</button>
+</p>
+<p>
+    <button onclick="cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();">Show Rewarded Interstitial</button>
+</p>
+
+
+
+</body>
+</html>
