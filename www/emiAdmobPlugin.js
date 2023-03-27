@@ -1,8 +1,16 @@
 var exec = require('cordova/exec');
 
 
-exports.adsinitialize = function (arg0, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'adsinitialize', [arg0]);
+exports.initialize = function (arg0, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'initialize', [arg0]);
+};
+
+exports.showBannerAd = function (arg0, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'showBannerAd', [arg0]);
+};
+
+exports.removeBannerAd = function (arg0, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'removeBannerAd', [arg0]);
 };
 
 exports.loadInterstitialAd = function (arg0, success, error) {
@@ -25,6 +33,6 @@ exports.loadRewardedInterstitialAd = function (arg0, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'loadRewardedInterstitialAd', [arg0]);
 };
 
-exports.showBanner = function (arg0, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'showBanner', [arg0]);
+exports.showRewardedInterstitialAd = function (arg0, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'showRewardedInterstitialAd', [arg0]);
 };
