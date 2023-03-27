@@ -16,7 +16,7 @@
 <platform name="android">
 <config-file parent="/*" target="res/xml/config.xml">
 <feature name="emiAdmobPlugin">
-<param name="android-package" value="emi.indo.cordova.plugin.admob.emiAdmobPlugin"/>
+<param name="android-package" value="emi.indo.cordova.plugin.admob"/>
 </feature>
 </config-file>
 
