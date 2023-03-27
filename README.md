@@ -3,6 +3,16 @@
 
 ### Mobile Ads SDK (Android: 21.5.0)
 
+
+  > __Note__
+> - ## It's Not a fork, it's purely rewritten, clean of 3rd party code.
+
+ > __Note__
+> - ### No Ad-Sharing
+> - ### No Remote Control
+> - ### I guarantee 100% revenue for you.
+
+
  ## Features
 
 - Banner ads
