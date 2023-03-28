@@ -17,6 +17,14 @@
 > - [Code source:](https://github.com/googleads/googleads-mobile-android-examples) - Admob:
 
 
+
+
+https://user-images.githubusercontent.com/78555833/228323239-e9e18e74-b814-4ca8-ab86-b2e28437e61c.mp4
+
+
+
+
+
  ## Features
 
 - Banner ads
@@ -24,8 +32,6 @@
 - Rewarded ads
 - Rewarded interstitial ads
 - App Open Ads (Coming soon)
-
-
 
 
 ## Installation
