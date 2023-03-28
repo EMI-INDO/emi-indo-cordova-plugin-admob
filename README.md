@@ -14,6 +14,15 @@
 > - ### No Ad-Sharing
 > - ### No Remote Control
 > - ### I guarantee 100% revenue for you.
+> - [Code source:](https://github.com/googleads/googleads-mobile-android-examples) - Admob:
+
+
+
+
+https://user-images.githubusercontent.com/78555833/228323239-e9e18e74-b814-4ca8-ab86-b2e28437e61c.mp4
+
+
+
 
 
  ## Features
@@ -25,12 +34,14 @@
 - App Open Ads (Coming soon)
 
 
-
-
 ## Installation
 
 ```sh
 emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-app-pub-3940256099942544~3347511713
+```
+### Or
+```sh
+https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-app-pub-3940256099942544~3347511713
 ```
 
 
