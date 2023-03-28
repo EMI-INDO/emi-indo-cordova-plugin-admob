@@ -39,6 +39,10 @@ https://user-images.githubusercontent.com/78555833/228323239-e9e18e74-b814-4ca8-
 ```sh
 emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-app-pub-3940256099942544~3347511713
 ```
+### Or
+```sh
+https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-app-pub-3940256099942544~3347511713
+```
 
 
 ## deviceready
