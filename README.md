@@ -43,6 +43,10 @@ cordova plugin add emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-ap
 ```sh
 cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-app-pub-3940256099942544~3347511713
 ```
+## Remove
+```sh
+cordova plugin rm emi-indo-cordova-plugin-admob
+```
 
 
 ## deviceready
