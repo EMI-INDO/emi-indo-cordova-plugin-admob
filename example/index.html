@@ -9,9 +9,9 @@
 
 
 /// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "" = BANNER
-var size = "LARGE_BANNER"
+var size = "BANNER"
 /// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "" = bottom-left
-var position = "bottom-center"
+var position = "top-center"
 
 
 var AdUnitId = {
@@ -34,11 +34,59 @@ document.addEventListener("deviceready", function(){
 
 
 
-	// event
+	// event Sdk initialize
 
 document.addEventListener('onInitializationComplete', () => {
 
-alert("on Initialization Complete");
+alert("on Sdk Initialization Complete");
+
+});
+
+
+
+
+// event On banner load
+
+document.addEventListener('onAdLoaded.bannerAd', () => {
+
+alert("on Loaded banner Ad");
+
+});
+
+
+
+
+// event On Interstitial load
+
+document.addEventListener('onAdLoaded.InterstitialAd', () => {
+
+alert("on Loaded Interstitial Ad");
+
+//  cordova.plugins.emiAdmobPlugin.showInterstitialAd();
+
+});
+
+
+
+// event On Rewarded load
+
+document.addEventListener('onAdLoaded.RewardedAd', () => {
+
+alert("on Loaded Rewarded Ad");
+
+//  cordova.plugins.emiAdmobPlugin.showRewardedAd();
+
+});
+
+
+
+// event On Rewarded Interstitial load
+
+document.addEventListener('onAdLoaded.RewardedInterstitial', () => {
+
+alert("on Loaded Rewarded Interstitial");
+
+//  cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();
 
 });
 
@@ -49,10 +97,15 @@ alert("on Initialization Complete");
 
 <p> <button onclick="cordova.plugins.emiAdmobPlugin.showBannerAd(AdUnitId.bannerAdUnitId, size, position);">Show Banner Ad</button></p>
 <p> <button onclick="cordova.plugins.emiAdmobPlugin.removeBannerAd();">remove Banner Ad</button></p>
+
 <p> <button onclick="cordova.plugins.emiAdmobPlugin.loadInterstitialAd(AdUnitId.InterstitialAdAdUnitId);">Load Interstitial Ad</button></p>
 <p> <button onclick="cordova.plugins.emiAdmobPlugin.showInterstitialAd();">Show Interstitial Ad</button></p>
+
 <p> <button onclick="cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(AdUnitId.RewardedInterstitialAdUnitId);">Load Rewarded Interstitial</button></p>
 <p> <button onclick="cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();">Show Rewarded Interstitial</button></p>
+
+<p> <button onclick="cordova.plugins.emiAdmobPlugin.loadRewardedAd(AdUnitId.RewardedAdAdUnitId);">Load Rewarded Ad</button></p>
+<p> <button onclick="cordova.plugins.emiAdmobPlugin.showRewardedAd();">Show Rewarded Ad</button></p>
 
 
 </body>
