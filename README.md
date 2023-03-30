@@ -48,6 +48,8 @@ cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob --v
 cordova plugin rm emi-indo-cordova-plugin-admob
 ```
 
+## 💰Sponsor this project
+  [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)  
 
 ## deviceready
 
@@ -212,6 +214,10 @@ alert("on Ad Loaded banner");
 - onAdFailedToShowFullScreenContent.rewardedInterstitialAd
 - onAdImpression.rewardedInterstitialAd
 - onAdShowedFullScreenContent.rewardedInterstitialAd
+
+
+### Platform Support
+- Android
 
 
 ## 💰Sponsor this project
