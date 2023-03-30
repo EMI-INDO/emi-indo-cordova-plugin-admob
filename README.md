@@ -224,5 +224,15 @@ alert("on Ad Loaded banner");
 
 
 ## 💰Sponsor this project
-  [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)                     
+  [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)   
+  
+
+ ## Earn more money, with other ad networks.
+  - ### emi-indo-cordova-plugin-fan
+  
+  [Facebook Audience Network:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-fan) - Ads:
+  
+   - ### emi-indo-cordova-plugin-unityads
+  
+  [Cordova Plugin Unity:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-unityads) - Ads:
                              
