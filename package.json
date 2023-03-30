@@ -21,7 +21,7 @@
     
   ],
   "author": "EMI INDO",
-  "license": "MIT",
+  "license": "ISC",
 "repository": {
     "type": "git",
     "url": "git+https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob.git"
