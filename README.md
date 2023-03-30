@@ -24,14 +24,17 @@ https://user-images.githubusercontent.com/78555833/228323239-e9e18e74-b814-4ca8-
 
 
 
-
  ## Features
 
-- Banner ads
-- Interstitial ads
-- Rewarded ads
-- Rewarded interstitial ads
-- App Open Ads (Coming soon)
+- Banner Ads
+- Interstitial Ads
+- Rewarded Ads
+- Rewarded interstitial Ads
+
+ ## Coming soon
+- App Open Ads
+- User Consent
+- Mediation
 
 
 ## Installation
