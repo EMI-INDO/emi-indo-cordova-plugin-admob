@@ -85,9 +85,9 @@ RewardedAdAdUnitId: "ca-app-pub-3940256099942544/5224354917"
 
 }
 
-/// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "" = BANNER
+/// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "BANNER" | (Smart Banners = DEPRECATED)
 var size = "LARGE_BANNER"
-/// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "" = bottom-left
+/// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "bottom-left" 
 var position = "bottom-center"
 
 
