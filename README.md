@@ -56,6 +56,8 @@ cordova plugin rm emi-indo-cordova-plugin-admob
 
 ## deviceready
 
+[Example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/index.html) - index.html:
+
 ```sh
 // Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
 // This needs to be done only once, ideally at app launch.
