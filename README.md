@@ -2,10 +2,14 @@
  Cordova Plugin Admob Android
 
 ### Mobile Ads SDK (Android: 21.5.0)
-
+[Release Notes:](https://developers.google.com/admob/android/rel-notes)
 
 > __Warning__
-> - ## This plugin is still BETA (in progress).
+> Updating the Mobile Ads SDK version may cause some code to malfunction, as the latest version usually deprecates some older code, [scrrenshot](https://drive.google.com/file/d/1UKaEjdmGRXgdZ2DKfOne8BSq13IUY14_/view) Current plugin code SDK 21.5.0
+
+> __Warning__
+> If the cordova admob plugin using Mobile Ads SDK code version 20.6.0 is upgraded to Mobile Ads SDK version 21.5.0, some of the old plugin code will not work.
+
 
   > __Note__
 > - ## It's Not a fork, it's purely rewritten, clean of 3rd party code.
