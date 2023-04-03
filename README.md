@@ -240,6 +240,34 @@ cordova plugin add emi-indo-cordova-plugin-mediation-meta --variable META_ADAPTE
 ```
 [Get Adapter version:](https://developers.google.com/admob/android/mediation/meta) - Meta:
 
+- ================================
+- ================================
+
+## Unity Ads
+[Integrate Unity Ads with Mediation :](https://developers.google.com/admob/android/mediation/unity)
+- (Adapter default: 4.6.1.0)
+### Installation
+```sh
+emi-indo-cordova-plugin-mediation-unity
+```
+
+
+## (Cordova CLI Update Adapter with Variables or Update Adapter with config.xml)
+
+### Variables Name
+[How to use variables :](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#installation-1)
+
+- --variable META_ADAPTER_VERSION="xxxxx"
+- --variable UNITY_ADAPTER_VERSION="xxxxx"
+
+### preference name
+[How to use preference :](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#installation-1)
+
+- META_ADAPTER_VERSION
+- UNITY_ADAPTER_VERSION
+
+
+
 
 
 ### Platform Support
