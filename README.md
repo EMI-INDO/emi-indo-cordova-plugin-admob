@@ -230,7 +230,9 @@ alert("on Ad Loaded banner");
 ```sh
 emi-indo-cordova-plugin-mediation-meta
 ```
+
 - ================================
+
 
 ## Unity Ads
 [Integrate Unity Ads with Mediation :](https://developers.google.com/admob/android/mediation/unity)
@@ -239,6 +241,18 @@ emi-indo-cordova-plugin-mediation-meta
 ```sh
 emi-indo-cordova-plugin-mediation-unity
 ```
+
+- ================================
+
+
+## AppLovin Ads
+[Integrate AppLovin with Mediation :](https://developers.google.com/admob/android/mediation/applovin)
+- (Adapter default: 11.8.2.0)
+### Installation
+```sh
+emi-indo-cordova-plugin-mediation-applovin
+```
+
 
 
 ## Variables name or preference name
@@ -258,11 +272,13 @@ cordova plugin add emi-indo-cordova-plugin-mediation-meta --variable META_ADAPTE
 
 - --variable META_ADAPTER_VERSION="xxxxx"
 - --variable UNITY_ADAPTER_VERSION="xxxxx"
+- --variable APPLOVIN_ADAPTER_VERSION="xxxxx"
 
 ### preference name
 
 - META_ADAPTER_VERSION
 - UNITY_ADAPTER_VERSION
+- APPLOVIN_ADAPTER_VERSION
 
 
 
