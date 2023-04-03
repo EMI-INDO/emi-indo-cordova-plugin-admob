@@ -242,12 +242,14 @@ emi-indo-cordova-plugin-mediation-unity
 
 
 ## Variables name or preference name
+> __Warning__
+> This is so that if I don't have time to update the Mediation Adapter version later, you can do it yourself as below. 
 
-- Cordova CLI Update Adapter with Variables
+- Cordova CLI Update Adapter version with Variables
 ```sh
 cordova plugin add emi-indo-cordova-plugin-mediation-meta --variable META_ADAPTER_VERSION="xxxxx"
 ```
-- Update Adapter with config.xml
+- Update Adapter version with config.xml
 ```sh
 <preference name="META_ADAPTER_VERSION" value="xxxxx" />
 ```
