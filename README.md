@@ -230,17 +230,6 @@ alert("on Ad Loaded banner");
 ```sh
 emi-indo-cordova-plugin-mediation-meta
 ```
-### Cordova CLI Update Adapter with Variables
-```sh
-cordova plugin add emi-indo-cordova-plugin-mediation-meta --variable META_ADAPTER_VERSION="xxxxx"
-```
-### Update Adapter with config.xml
-```sh
-<preference name="META_ADAPTER_VERSION" value="xxxxx" />
-```
-[Get Adapter version:](https://developers.google.com/admob/android/mediation/meta) - Meta:
-
-- ================================
 - ================================
 
 ## Unity Ads
@@ -252,16 +241,23 @@ emi-indo-cordova-plugin-mediation-unity
 ```
 
 
-## Cordova CLI Update Adapter with Variables or Update Adapter with config.xml
+## Variables name or preference name
+
+- Cordova CLI Update Adapter with Variables
+```sh
+cordova plugin add emi-indo-cordova-plugin-mediation-meta --variable META_ADAPTER_VERSION="xxxxx"
+```
+- Update Adapter with config.xml
+```sh
+<preference name="META_ADAPTER_VERSION" value="xxxxx" />
+```
 
 ### Variables Name
-[How to use variables :](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#cordova-cli-update-adapter-with-variables)
 
 - --variable META_ADAPTER_VERSION="xxxxx"
 - --variable UNITY_ADAPTER_VERSION="xxxxx"
 
 ### preference name
-[How to use preference :](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#update-adapter-with-configxml)
 
 - META_ADAPTER_VERSION
 - UNITY_ADAPTER_VERSION
