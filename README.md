@@ -230,11 +230,11 @@ alert("on Ad Loaded banner");
 ```sh
 emi-indo-cordova-plugin-mediation-meta
 ```
-- (Cordova CLI Update Adapter with Variables)
+### Cordova CLI Update Adapter with Variables
 ```sh
 cordova plugin add emi-indo-cordova-plugin-mediation-meta --variable META_ADAPTER_VERSION="xxxxx"
 ```
-- (Update Adapter with config.xml)
+### Update Adapter with config.xml
 ```sh
 <preference name="META_ADAPTER_VERSION" value="xxxxx" />
 ```
