@@ -252,16 +252,16 @@ emi-indo-cordova-plugin-mediation-unity
 ```
 
 
-## (Cordova CLI Update Adapter with Variables or Update Adapter with config.xml)
+## Cordova CLI Update Adapter with Variables or Update Adapter with config.xml
 
 ### Variables Name
-[How to use variables :](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#installation-1)
+[How to use variables :](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#cordova-cli-update-adapter-with-variables)
 
 - --variable META_ADAPTER_VERSION="xxxxx"
 - --variable UNITY_ADAPTER_VERSION="xxxxx"
 
 ### preference name
-[How to use preference :](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#installation-1)
+[How to use preference :](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#update-adapter-with-configxml)
 
 - META_ADAPTER_VERSION
 - UNITY_ADAPTER_VERSION
