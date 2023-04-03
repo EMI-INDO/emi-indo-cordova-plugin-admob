@@ -221,6 +221,23 @@ alert("on Ad Loaded banner");
 - onAdShowedFullScreenContent.rewardedInterstitialAd
 
 
+# Admob Mediation
+
+## Meta Audience Network
+[Integrate Meta Audience Network with bidding :](https://developers.google.com/admob/android/mediation/meta)
+- (Adapter default: 6.13.7.0)
+### Installation
+```sh
+emi-indo-cordova-plugin-mediation-meta
+```
+- (Update Adapter with Variables)
+```sh
+cordova plugin add emi-indo-cordova-plugin-mediation-meta --variable META_ADAPTER_VERSION="xxxxx"
+```
+[Get Adapter version:](https://developers.google.com/admob/android/mediation/meta) - Meta:
+
+
+
 ### Platform Support
 - Android
 
