@@ -7,104 +7,124 @@
 <script>
 
 
+var bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111"
+var interstitialAdAdUnitId = "ca-app-pub-3940256099942544/1033173712"
+var rewardedInterstitialAdUnitId = "ca-app-pub-3940256099942544/5354046379"
+var rewardedAdAdUnitId = "ca-app-pub-3940256099942544/5224354917"
 
-/// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "BANNER" | (Smart Banners = DEPRECATED)
-var size = "BANNER"
-/// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "bottom-left"
+
+/// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "" = BANNER
+var size = "LARGE_BANNER"
+/// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "" = bottom-left
 var position = "bottom-center"
-
-
-var AdUnitId = {
-
-bannerAdUnitId: "ca-app-pub-3940256099942544/6300978111",
-InterstitialAdAdUnitId: "ca-app-pub-3940256099942544/1033173712",
-RewardedInterstitialAdUnitId: "ca-app-pub-3940256099942544/5354046379",
-RewardedAdAdUnitId: "ca-app-pub-3940256099942544/5224354917"
-
-}
-
-
-
 
 
 
 document.addEventListener("deviceready", function(){
 
-	cordova.plugins.emiAdmobPlugin.initialize();
+// Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
+// This needs to be done only once, ideally at app launch.
 
+cordova.plugins.emiAdmobPlugin.initialize();
 
-
-	// event Sdk initialize
-
-document.addEventListener('onInitializationComplete', () => {
+document.addEventListener('on.SdkInitializationComplete', () => {
 
 alert("on Sdk Initialization Complete");
 
-});
-
-
-
-
-// event On banner load
-
-document.addEventListener('onAdLoaded.bannerAd', () => {
-
-alert("on Loaded banner Ad");
 
 });
 
 
+// BANNER EVENT
 
+/*
+on.bannerAdClicked
+on.bannerAdClosed
+on.bannerAdFailedToLoad
+on.bannerAdImpression
+on.bannerAdLoaded
+on.bannerAdOpened
+*/
+document.addEventListener('on.bannerAdLoaded', () => {
 
-// event On Interstitial load
-
-document.addEventListener('onAdLoaded.InterstitialAd', () => {
-
-alert("on Loaded Interstitial Ad");
-
-// (auto show)  cordova.plugins.emiAdmobPlugin.showInterstitialAd();
+alert("on banner Ad Loaded");
 
 });
 
 
 
-// event On Rewarded load
+// Interstitial EVENT
 
-document.addEventListener('onAdLoaded.RewardedAd', () => {
+/*
+on.InterstitialAdLoaded
+on.InterstitialAdFailedToLoad
+on.InterstitialAdClicked
+on.InterstitialAdDismissedFullScreenContent
+on.InterstitialAdFailedToShowFullScreenContent
+on.InterstitialAdImpression
+on.InterstitialAdShowedFullScreenContent
+*/
 
-alert("on Loaded Rewarded Ad");
+document.addEventListener('on.InterstitialAdLoaded', () => {
 
-// (auto show)  cordova.plugins.emiAdmobPlugin.showRewardedAd();
+alert("on Interstitial Ad Loaded");
 
 });
 
 
+// Rewarded Interstitial EVENT
 
-// event On Rewarded Interstitial load
+/*
+on.RewardedInterstitialLoaded
+on.RewardedInterstitialFailedToLoad
+on.rewardedInterstitialAdClicked
+on.rewardedInterstitialAdDismissedFullScreenContent
+on.rewardedInterstitialAdFailedToShowFullScreenContent
+on.rewardedInterstitialAdImpression
+on.rewardedInterstitialAdShowedFullScreenContent
+*/
 
-document.addEventListener('onAdLoaded.RewardedInterstitial', () => {
+document.addEventListener('on.RewardedInterstitialLoaded', () => {
 
-alert("on Loaded Rewarded Interstitial");
+alert("on Rewarded Interstitial Loaded");
 
-// (auto show)  cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();
+});
+
+
+// Rewarded EVENT
+
+/*
+on.RewardedAdFailedToLoad
+on.RewardedAdLoaded
+on.rewardedAdClicked
+on.rewardedAdDismissedFullScreenContent
+on.rewardedAdFailedToShowFullScreenContent
+on.rewardedAdImpression
+on.rewardedAdShowedFullScreenContent
+*/
+
+document.addEventListener('on.RewardedAdFailedToLoad', () => {
+
+alert("on Rewarded Ad Failed To Load");
 
 });
 
 
 
 }, false);
+
 </script>
 
-<p> <button onclick="cordova.plugins.emiAdmobPlugin.showBannerAd(AdUnitId.bannerAdUnitId, size, position);">Show Banner Ad</button></p>
+<p> <button onclick="cordova.plugins.emiAdmobPlugin.showBannerAd(bannerAdUnitId, size, position);">Show Banner Ad</button></p>
 <p> <button onclick="cordova.plugins.emiAdmobPlugin.removeBannerAd();">remove Banner Ad</button></p>
 
-<p> <button onclick="cordova.plugins.emiAdmobPlugin.loadInterstitialAd(AdUnitId.InterstitialAdAdUnitId);">Load Interstitial Ad</button></p>
+<p> <button onclick="cordova.plugins.emiAdmobPlugin.loadInterstitialAd(interstitialAdAdUnitId);">Load Interstitial Ad</button></p>
 <p> <button onclick="cordova.plugins.emiAdmobPlugin.showInterstitialAd();">Show Interstitial Ad</button></p>
 
-<p> <button onclick="cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(AdUnitId.RewardedInterstitialAdUnitId);">Load Rewarded Interstitial</button></p>
+<p> <button onclick="cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(rewardedInterstitialAdUnitId);">Load Rewarded Interstitial</button></p>
 <p> <button onclick="cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();">Show Rewarded Interstitial</button></p>
 
-<p> <button onclick="cordova.plugins.emiAdmobPlugin.loadRewardedAd(AdUnitId.RewardedAdAdUnitId);">Load Rewarded Ad</button></p>
+<p> <button onclick="cordova.plugins.emiAdmobPlugin.loadRewardedAd(rewardedAdAdUnitId);">Load Rewarded Ad</button></p>
 <p> <button onclick="cordova.plugins.emiAdmobPlugin.showRewardedAd();">Show Rewarded Ad</button></p>
 
 
