@@ -247,7 +247,7 @@ alert("on.banner Ad Loaded");
 - (Adapter default: 6.13.7.0)
 ### Installation
 ```sh
-emi-indo-cordova-plugin-mediation-meta
+cordova plugin add emi-indo-cordova-plugin-mediation-meta
 ```
 
 - ================================
@@ -258,7 +258,7 @@ emi-indo-cordova-plugin-mediation-meta
 - (Adapter default: 4.6.1.0)
 ### Installation
 ```sh
-emi-indo-cordova-plugin-mediation-unity
+cordova plugin add emi-indo-cordova-plugin-mediation-unity
 ```
 
 - ================================
@@ -269,7 +269,7 @@ emi-indo-cordova-plugin-mediation-unity
 - (Adapter default: 11.8.2.0)
 ### Installation
 ```sh
-emi-indo-cordova-plugin-mediation-applovin
+cordova plugin add emi-indo-cordova-plugin-mediation-applovin
 ```
 
 
