@@ -2,10 +2,14 @@
  Cordova Plugin Admob Android
 
 ### Mobile Ads SDK (Android: 21.5.0)
-
+[Release Notes:](https://developers.google.com/admob/android/rel-notes)
 
 > __Warning__
-> - ## This plugin is still BETA (in progress).
+> Updating the Mobile Ads SDK version may cause some code to malfunction, as the latest version usually deprecates some older code, [scrrenshot](https://drive.google.com/file/d/1UKaEjdmGRXgdZ2DKfOne8BSq13IUY14_/view) Current plugin code SDK 21.5.0
+
+> __Warning__
+> If the cordova admob plugin using Mobile Ads SDK code version 20.6.0 is upgraded to Mobile Ads SDK version 21.5.0, some of the old plugin code will not work.
+
 
   > __Note__
 > - ## It's Not a fork, it's purely rewritten, clean of 3rd party code.
@@ -34,7 +38,7 @@ https://user-images.githubusercontent.com/78555833/228323239-e9e18e74-b814-4ca8-
  ## Coming soon
 - App Open Ads
 - User Consent
-- Mediation
+- Mediation ( In the process )
 
 
 ## Installation
@@ -51,10 +55,20 @@ cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob --v
 cordova plugin rm emi-indo-cordova-plugin-admob
 ```
 
+## Upgrade Mobile Ads SDK
+[Release Notes Mobile Ads SDK:](https://developers.google.com/admob/android/rel-notes)
+```sh
+cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-app-pub-3940256099942544~3347511713 --variable PLAY_SERVICES_VERSION="xxxx" 
+```
+
+
+
 ## 💰Sponsor this project
   [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)  
 
 ## deviceready
+
+[Example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/index.html) - index.html:
 
 ```sh
 // Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
@@ -83,9 +97,9 @@ RewardedAdAdUnitId: "ca-app-pub-3940256099942544/5224354917"
 
 }
 
-/// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "" = BANNER
+/// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "BANNER" | (Smart Banners = DEPRECATED)
 var size = "LARGE_BANNER"
-/// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "" = bottom-left
+/// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "bottom-left" 
 var position = "bottom-center"
 
 
@@ -217,6 +231,71 @@ alert("on Ad Loaded banner");
 - onAdFailedToShowFullScreenContent.rewardedInterstitialAd
 - onAdImpression.rewardedInterstitialAd
 - onAdShowedFullScreenContent.rewardedInterstitialAd
+
+
+# Admob Mediation
+<img src="https://user-images.githubusercontent.com/78555833/229587307-91a7e380-aa2d-4140-a62d-fa8e6a8dd153.png" width="500">
+
+## Meta Audience Network
+
+[Integrate Meta Audience Network with bidding :](https://developers.google.com/admob/android/mediation/meta)
+- (Adapter default: 6.13.7.0)
+### Installation
+```sh
+emi-indo-cordova-plugin-mediation-meta
+```
+
+- ================================
+
+
+## Unity Ads
+[Integrate Unity Ads with Mediation :](https://developers.google.com/admob/android/mediation/unity)
+- (Adapter default: 4.6.1.0)
+### Installation
+```sh
+emi-indo-cordova-plugin-mediation-unity
+```
+
+- ================================
+
+
+## AppLovin Ads
+[Integrate AppLovin with Mediation :](https://developers.google.com/admob/android/mediation/applovin)
+- (Adapter default: 11.8.2.0)
+### Installation
+```sh
+emi-indo-cordova-plugin-mediation-applovin
+```
+
+
+
+## Variables name or preference name
+> __Warning__
+> This is so that if I don't have time to update the Mediation Adapter version later, you can do it yourself as below. 
+
+- Cordova CLI Update Adapter version with Variables
+```sh
+cordova plugin add emi-indo-cordova-plugin-mediation-meta --variable META_ADAPTER_VERSION="xxxxx"
+```
+- Update Adapter version with config.xml
+```sh
+<preference name="META_ADAPTER_VERSION" value="xxxxx" />
+```
+
+### Variables Name
+
+- --variable META_ADAPTER_VERSION="xxxxx"
+- --variable UNITY_ADAPTER_VERSION="xxxxx"
+- --variable APPLOVIN_ADAPTER_VERSION="xxxxx"
+
+### preference name
+
+- META_ADAPTER_VERSION
+- UNITY_ADAPTER_VERSION
+- APPLOVIN_ADAPTER_VERSION
+
+
+
 
 
 ### Platform Support

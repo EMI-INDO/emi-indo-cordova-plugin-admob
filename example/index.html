@@ -8,9 +8,9 @@
 
 
 
-/// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "" = BANNER
+/// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "BANNER" | (Smart Banners = DEPRECATED)
 var size = "BANNER"
-/// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "" = bottom-left
+/// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "bottom-left"
 var position = "bottom-center"
 
 
@@ -62,7 +62,7 @@ document.addEventListener('onAdLoaded.InterstitialAd', () => {
 
 alert("on Loaded Interstitial Ad");
 
-//  cordova.plugins.emiAdmobPlugin.showInterstitialAd();
+// (auto show)  cordova.plugins.emiAdmobPlugin.showInterstitialAd();
 
 });
 
@@ -74,7 +74,7 @@ document.addEventListener('onAdLoaded.RewardedAd', () => {
 
 alert("on Loaded Rewarded Ad");
 
-//  cordova.plugins.emiAdmobPlugin.showRewardedAd();
+// (auto show)  cordova.plugins.emiAdmobPlugin.showRewardedAd();
 
 });
 
@@ -86,7 +86,7 @@ document.addEventListener('onAdLoaded.RewardedInterstitial', () => {
 
 alert("on Loaded Rewarded Interstitial");
 
-//  cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();
+// (auto show)  cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();
 
 });
 
