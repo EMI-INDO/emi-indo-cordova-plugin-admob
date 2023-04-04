@@ -75,8 +75,8 @@ alert("on Interstitial Ad Loaded");
 // Rewarded Interstitial EVENT
 
 /*
-on.RewardedInterstitialLoaded
-on.RewardedInterstitialFailedToLoad
+on.RewardedInterstitialAdLoaded
+on.RewardedInterstitialAdFailedToLoad
 on.rewardedInterstitialAdClicked
 on.rewardedInterstitialAdDismissedFullScreenContent
 on.rewardedInterstitialAdFailedToShowFullScreenContent
@@ -84,7 +84,7 @@ on.rewardedInterstitialAdImpression
 on.rewardedInterstitialAdShowedFullScreenContent
 */
 
-document.addEventListener('on.RewardedInterstitialLoaded', () => {
+document.addEventListener('on.RewardedInterstitialAdLoaded', () => {
 
 alert("on Rewarded Interstitial Loaded");
 
@@ -103,9 +103,9 @@ on.rewardedAdImpression
 on.rewardedAdShowedFullScreenContent
 */
 
-document.addEventListener('on.RewardedAdFailedToLoad', () => {
+document.addEventListener('on.RewardedAdLoaded', () => {
 
-alert("on Rewarded Ad Failed To Load");
+alert("on Rewarded Ad Loaded");
 
 });
 
