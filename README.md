@@ -90,9 +90,9 @@ alert("on Sdk Initialization Complete");
 var AdUnitId = {
 
 bannerAdUnitId: "ca-app-pub-3940256099942544/6300978111",
-InterstitialAdAdUnitId: "ca-app-pub-3940256099942544/1033173712",
-RewardedInterstitialAdUnitId: "ca-app-pub-3940256099942544/5354046379",
-RewardedAdAdUnitId: "ca-app-pub-3940256099942544/5224354917"
+interstitialAdAdUnitId: "ca-app-pub-3940256099942544/1033173712",
+rewardedInterstitialAdUnitId: "ca-app-pub-3940256099942544/5354046379",
+rewardedAdAdUnitId: "ca-app-pub-3940256099942544/5224354917"
 
 
 }
