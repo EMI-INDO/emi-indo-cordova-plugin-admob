@@ -173,7 +173,7 @@ alert("on.banner Ad Loaded");
 
 ## ( Banner Ads )
 
-### Event Show a load
+### Event Load a Show
 
 - on.bannerAdClicked
 - on.bannerAdClosed
@@ -225,8 +225,8 @@ alert("on.banner Ad Loaded");
 
 ### Event Load
 
-- on.RewardedInterstitialLoaded
-- on.RewardedInterstitialFailedToLoad
+- on.RewardedInterstitialAdLoaded
+- on.RewardedInterstitialAdFailedToLoad
 
 
 ### Event Show
