@@ -76,9 +76,9 @@ cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob --v
 
 cordova.plugins.emiAdmobPlugin.initialize();
 
-document.addEventListener('onInitializationComplete', () => {
+document.addEventListener('on.SdkInitializationComplete', () => {
 
-alert("on Initialization Complete");
+alert("on Sdk Initialization Complete");
 
 });
 
@@ -158,79 +158,83 @@ var position = "bottom-center"
 ### event code
 
 ```sh
-document.addEventListener('onAdLoaded.bannerAd', () => {
+document.addEventListener('on.bannerAdLoaded', () => {
 
-alert("on Ad Loaded banner");
+alert("on.banner Ad Loaded");
 
 });
 
 ```
 
-## ( Banner ads )
+## ( SDK )
+- on.SdkInitializationComplete
+
+
+## ( Banner Ads )
 
 ### Event Show a load
 
-- onAdClicked.bannerAd
-- onAdClosed.bannerAd
-- onAdFailedToLoad.bannerAd
-- onAdImpression.bannerAd
-- onAdLoaded.bannerAd
-- onAdOpened.bannerAd
+- on.bannerAdClicked
+- on.bannerAdClosed
+- on.bannerAdFailedToLoad
+- on.bannerAdImpression
+- on.bannerAdLoaded
+- on.bannerAdOpened
 
 
 
 
-## ( Interstitial ads )
+## ( Interstitial Ads )
 
 ### Event Load
 
-- onAdLoaded.InterstitialAd
-- onAdFailedToLoad.InterstitialAd
+- on.InterstitialAdLoaded
+- on.InterstitialAdFailedToLoad
 
 ### Event Show
 
-- onAdClicked.InterstitialAd
-- onAdDismissedFullScreenContent.InterstitialAd
-- onAdFailedToShowFullScreenContent.InterstitialAd
-- onAdImpression.InterstitialAd
-- onAdShowedFullScreenContent.InterstitialAd
+- on.InterstitialAdClicked
+- on.InterstitialAdDismissedFullScreenContent
+- on.InterstitialAdFailedToShowFullScreenContent
+- on.InterstitialAdImpression
+- on.InterstitialAdShowedFullScreenContent
 
 
 
 
-## ( Rewarded ads )
-
-### Event Load
-
-- onAdFailedToLoad.RewardedAd
-- onAdLoaded.RewardedAd
-
-
-### Event Show
-
-- onAdClicked.rewardedAd
-- onAdDismissedFullScreenContent.rewardedAd
-- onAdFailedToShowFullScreenContent.rewardedAd
-- onAdImpression.rewardedAd
-- onAdShowedFullScreenContent.rewardedAd
-
-
-
-## ( Rewarded interstitial ads )
+## ( Rewarded Ads )
 
 ### Event Load
 
-- onAdLoaded.RewardedInterstitial
-- onAdFailedToLoad.RewardedInterstitial
+- on.RewardedAdFailedToLoad
+- on.RewardedAdLoaded
 
 
 ### Event Show
 
-- onAdClicked.rewardedInterstitialAd
-- onAdDismissedFullScreenContent.rewardedInterstitialAd
-- onAdFailedToShowFullScreenContent.rewardedInterstitialAd
-- onAdImpression.rewardedInterstitialAd
-- onAdShowedFullScreenContent.rewardedInterstitialAd
+- on.rewardedAdClicked
+- on.rewardedAdDismissedFullScreenContent
+- on.rewardedAdFailedToShowFullScreenContent
+- on.rewardedAdImpression
+- on.rewardedAdShowedFullScreenContent
+
+
+
+## ( Rewarded interstitial Ads )
+
+### Event Load
+
+- on.RewardedInterstitialLoaded
+- on.RewardedInterstitialFailedToLoad
+
+
+### Event Show
+
+- on.rewardedInterstitialAdClicked
+- on.rewardedInterstitialAdDismissedFullScreenContent
+- on.rewardedInterstitialAdFailedToShowFullScreenContent
+- on.rewardedInterstitialAdImpression
+- on.rewardedInterstitialAdShowedFullScreenContent
 
 
 # Admob Mediation
