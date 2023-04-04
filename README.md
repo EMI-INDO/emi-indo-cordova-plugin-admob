@@ -70,7 +70,26 @@ cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob --v
 
 [Example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/index.html) - index.html:
 
+
+
+
 ```sh
+
+
+var bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111"
+var interstitialAdAdUnitId = "ca-app-pub-3940256099942544/1033173712"
+var rewardedInterstitialAdUnitId = "ca-app-pub-3940256099942544/5354046379"
+var rewardedAdAdUnitId = "ca-app-pub-3940256099942544/5224354917"
+
+
+
+
+/// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "BANNER" | (Smart Banners = DEPRECATED)
+var size = "LARGE_BANNER"
+/// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "bottom-left" 
+var position = "bottom-center"
+
+
 // Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
 // This needs to be done only once, ideally at app launch.
 
@@ -84,30 +103,12 @@ alert("on Sdk Initialization Complete");
 
 
 ```
-## Banner ads
 
+## Banner Ads
 ```sh
-var AdUnitId = {
-
-bannerAdUnitId: "ca-app-pub-3940256099942544/6300978111",
-interstitialAdAdUnitId: "ca-app-pub-3940256099942544/1033173712",
-rewardedInterstitialAdUnitId: "ca-app-pub-3940256099942544/5354046379",
-rewardedAdAdUnitId: "ca-app-pub-3940256099942544/5224354917"
-
-
-}
-
-/// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "BANNER" | (Smart Banners = DEPRECATED)
-var size = "LARGE_BANNER"
-/// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "bottom-left" 
-var position = "bottom-center"
-
-
-// Load a Show cordova.plugins.emiAdmobPlugin.showBannerAd(AdUnitId.bannerAdUnitId, size, position);
+// Load a Show cordova.plugins.emiAdmobPlugin.showBannerAd(bannerAdUnitId, size, position);
 // remove cordova.plugins.emiAdmobPlugin.removeBannerAd();
-
 ```
-
  [Banner ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-banner-ads-) - callback:
 
 
@@ -115,11 +116,11 @@ var position = "bottom-center"
 
 ```sh
 
-// Load cordova.plugins.emiAdmobPlugin.loadInterstitialAd(AdUnitId.InterstitialAdAdUnitId);
+// Load cordova.plugins.emiAdmobPlugin.loadInterstitialAd(interstitialAdAdUnitId);
 
 // Show  cordova.plugins.emiAdmobPlugin.showInterstitialAd();
 
-```
+
  [Interstitial ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-interstitial-ads-) - callback:
 
 
@@ -128,7 +129,7 @@ var position = "bottom-center"
 
 ```sh
 
-// Load cordova.plugins.emiAdmobPlugin.loadRewardedAd(AdUnitId.RewardedAdAdUnitId);
+// Load cordova.plugins.emiAdmobPlugin.loadRewardedAd(rewardedAdAdUnitId);
 
 // Show cordova.plugins.emiAdmobPlugin.showRewardedAd();
 
@@ -141,7 +142,7 @@ var position = "bottom-center"
 
 ```sh
 
-// Load cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(AdUnitId.RewardedInterstitialAdUnitId);
+// Load cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(rewardedInterstitialAdUnitId);
 
 // Show cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();
 
