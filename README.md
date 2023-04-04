@@ -119,7 +119,7 @@ alert("on Sdk Initialization Complete");
 // Load cordova.plugins.emiAdmobPlugin.loadInterstitialAd(interstitialAdAdUnitId);
 
 // Show  cordova.plugins.emiAdmobPlugin.showInterstitialAd();
-
+```
 
  [Interstitial ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-interstitial-ads-) - callback:
 
