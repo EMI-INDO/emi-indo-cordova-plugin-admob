@@ -151,8 +151,14 @@ alert("on Sdk Initialization Complete");
 [Rewarded interstitial ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-rewarded-ads-) - callback:
 
 
+## handle success or error
 
+[Example code ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/getMediationAdapterName.html)
+```sh
 
+cordova.plugins.emiAdmobPlugin.loadRewardedAd(rewardedAdAdUnitId, success, error);
+
+```
 
 
 # Event | callback:
