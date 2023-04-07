@@ -242,8 +242,13 @@ alert("on.banner Ad Loaded");
 <img src="https://user-images.githubusercontent.com/78555833/229587307-91a7e380-aa2d-4140-a62d-fa8e6a8dd153.png" width="500">
 
 
-### get Mediation Adapter Name
+## get Mediation Adapter Name
+
 [Example code ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/getMediationAdapterName.html) - get Mediation Adapter Name:
+
+<img src="https://user-images.githubusercontent.com/78555833/230655800-0dbc3f12-72fb-4cf3-b4e6-801704fade28.png" width="250">
+
+
 
 ## Meta Audience Network
 
