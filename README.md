@@ -75,19 +75,42 @@ cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob --v
 
 ```sh
 
+/*
+( set banner size: )
+
+Anchored_adaptive
+Inline_adaptive
+BANNER
+LARGE_BANNER
+MEDIUM_RECTANGLE
+FULL_BANNER
+LEADERBOARD
+Smart Banners = DEPRECATED
+default: Anchored_adaptive
+
+
+( set banner position )
+
+top-right
+top-center
+left
+center
+right
+bottom-center
+bottom-right
+
+adaptiveWidth = 320 // default: 320
+*/
+
 
 var bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111"
 var interstitialAdAdUnitId = "ca-app-pub-3940256099942544/1033173712"
 var rewardedInterstitialAdUnitId = "ca-app-pub-3940256099942544/5354046379"
 var rewardedAdAdUnitId = "ca-app-pub-3940256099942544/5224354917"
 
-
-
-
-/// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "BANNER" | (Smart Banners = DEPRECATED)
-var size = "LARGE_BANNER"
-/// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "bottom-left" 
+var size = "Anchored_adaptive"     
 var position = "bottom-center"
+var adaptiveWidth = 320
 
 
 // Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
@@ -106,7 +129,8 @@ alert("on Sdk Initialization Complete");
 
 ## Banner Ads
 ```sh
-// Load a Show cordova.plugins.emiAdmobPlugin.showBannerAd(bannerAdUnitId, size, position);
+// Load a Show BANNER   cordova.plugins.emiAdmobPlugin.showBannerAd(bannerAdUnitId, size, position);
+// Load a Show BANNER adaptive   cordova.plugins.emiAdmobPlugin.showBannerAd(bannerAdUnitId, size, position, adaptiveWidth);
 // remove cordova.plugins.emiAdmobPlugin.removeBannerAd();
 ```
  [Banner ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-banner-ads-) - callback:
@@ -178,6 +202,31 @@ alert("on.banner Ad Loaded");
 
 
 ## ( Banner Ads )
+
+### size
+- Anchored_adaptive
+- Inline_adaptive
+- BANNER
+- LARGE_BANNER
+- MEDIUM_RECTANGLE
+- FULL_BANNER
+- LEADERBOARD
+- Smart Banners = DEPRECATED
+- default: Anchored_adaptive
+
+
+### position
+
+- top-right
+- top-center
+- left
+- center
+- right
+- bottom-center
+- bottom-right
+- adaptiveWidth = number 
+> default: 320
+
 
 ### Event Load a Show
 
