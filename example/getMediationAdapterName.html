@@ -1,0 +1,59 @@
+<html>
+<head>
+    <script type="text/javascript" src="cordova.js"></script>
+</head>
+<body>
+
+<script>
+
+
+///  ( Must be Admob App-id-original. )
+
+/// The example here tries Interstitial ads.
+
+var interstitialAdAdUnitId = "Must be the original AdUnitId"
+
+
+function getMediationAdapterName() {
+
+cordova.plugins.emiAdmobPlugin.loadInterstitialAd(interstitialAdAdUnitId, success, error);
+
+function success(AdapterName){
+
+alert(AdapterName)
+
+}
+
+function error(e){
+
+alert(JSON.stringify(e))
+
+}
+
+};
+
+
+document.addEventListener("deviceready", function(){
+
+cordova.plugins.emiAdmobPlugin.initialize();
+
+	// event Sdk initialize
+
+document.addEventListener('on.SdkInitializationComplete', () => {
+
+   alert("get Mediation Adapter Name");
+
+   getMediationAdapterName()
+
+});
+
+}, false);
+
+
+</script>
+
+<p> <button onclick="getMediationAdapterName();">get Mediation Adapter Name</button></p>
+
+
+</body>
+</html>
