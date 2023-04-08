@@ -370,10 +370,9 @@ cordova plugin add emi-indo-cordova-plugin-mediation-meta --variable META_ADAPTE
 
 
 
-   > __Note__
+  
 > - ##  Note Release
-> emi-indo-cordova-plugin-admob@0.0.4
-
+ [emi-indo-cordova-plugin-admob@0.0.4](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/%400.0.4) 
 
 
 
