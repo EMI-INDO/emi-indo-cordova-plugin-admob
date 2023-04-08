@@ -5,8 +5,8 @@ exports.initialize = function (arg0, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'initialize', [arg0]);
 };
 
-exports.showBannerAd = function (bannerAdUnitId, size, position, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'showBannerAd', [bannerAdUnitId, size, position]);
+exports.showBannerAd = function (bannerAdUnitId, size, position, adaptiveWidth, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'showBannerAd', [bannerAdUnitId, size, position, adaptiveWidth]);
 };
 
 exports.removeBannerAd = function (arg0, success, error) {
