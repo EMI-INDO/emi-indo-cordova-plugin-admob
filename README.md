@@ -336,6 +336,39 @@ cordova plugin add emi-indo-cordova-plugin-mediation-unity
 cordova plugin add emi-indo-cordova-plugin-mediation-applovin
 ```
 
+- ================================
+
+
+## AdColony Ads
+[Integrate AdColony with Mediation :](https://developers.google.com/admob/android/mediation/adcolony)
+- (Adapter default: 4.8.0.1)
+### Installation
+```sh
+cordova plugin add emi-indo-cordova-plugin-mediation-adcolony
+```
+
+- ================================
+
+
+## Chartboost Ads
+[Integrate Chartboost with Mediation :](https://developers.google.com/admob/android/mediation/chartboost)
+- (Adapter default: 9.2.1.0)
+### Installation
+```sh
+cordova plugin add emi-indo-cordova-plugin-mediation-chartboost
+```
+
+- ================================
+
+
+## ironSource Ads
+[Integrate ironSource with Mediation :](https://developers.google.com/admob/android/mediation/ironsource)
+- (Adapter default: 7.2.7.0)
+### Installation
+```sh
+cordova plugin add emi-indo-cordova-plugin-mediation-ironsource
+```
+
 
 
 ## Variables name or preference name
@@ -356,14 +389,18 @@ cordova plugin add emi-indo-cordova-plugin-mediation-meta --variable META_ADAPTE
 - --variable META_ADAPTER_VERSION="xxxxx"
 - --variable UNITY_ADAPTER_VERSION="xxxxx"
 - --variable APPLOVIN_ADAPTER_VERSION="xxxxx"
+- --variable ADCOLONY_ADAPTER_VERSION="xxxxx"
+- --variable CHARTBOOST_ADAPTER_VERSION="xxxxx"
+- --variable IRONSOURCE_ADAPTER_VERSION="xxxxx"
 
 ### preference name
 
 - META_ADAPTER_VERSION
 - UNITY_ADAPTER_VERSION
 - APPLOVIN_ADAPTER_VERSION
-
-
+- ADCOLONY_ADAPTER_VERSION
+- CHARTBOOST_ADAPTER_VERSION
+- IRONSOURCE_ADAPTER_VERSION
 
 - ================================
 
