@@ -1,14 +1,14 @@
 # emi-indo-cordova-plugin-admob
  Cordova Plugin Admob Android
 
-### Mobile Ads SDK (Android: 21.5.0)
+### Mobile Ads SDK (Android: 22.0.0)
 [Release Notes:](https://developers.google.com/admob/android/rel-notes)
 
 > __Warning__
-> Updating the Mobile Ads SDK version may cause some code to malfunction, as the latest version usually deprecates some older code, [scrrenshot](https://drive.google.com/file/d/1UKaEjdmGRXgdZ2DKfOne8BSq13IUY14_/view) Current plugin code SDK 21.5.0
+> Updating the Mobile Ads SDK version may cause some code to malfunction, as the latest version usually deprecates some older code, [scrrenshot](https://drive.google.com/file/d/1UKaEjdmGRXgdZ2DKfOne8BSq13IUY14_/view) Current plugin code SDK 22.0.0
 
 > __Warning__
-> If the cordova admob plugin using Mobile Ads SDK code version 20.6.0 is upgraded to Mobile Ads SDK version 21.5.0, some of the old plugin code will not work.
+> If the cordova admob plugin using Mobile Ads SDK code version 20.6.0 is upgraded to Mobile Ads SDK version 22.0.0, some of the old plugin code will not work.
 
 
   > __Note__
@@ -363,6 +363,16 @@ cordova plugin add emi-indo-cordova-plugin-mediation-meta --variable META_ADAPTE
 - UNITY_ADAPTER_VERSION
 - APPLOVIN_ADAPTER_VERSION
 
+
+
+- ================================
+
+
+
+
+   > __Note__
+> - ##  Note Release
+> emi-indo-cordova-plugin-admob@0.0.4
 
 
 
