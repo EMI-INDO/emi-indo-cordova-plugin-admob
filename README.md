@@ -71,47 +71,7 @@ cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob --v
 [Example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/index.html) - index.html:
 
 
-
-
 ```sh
-
-/*
-( set banner size: )
-
-Anchored_adaptive
-Inline_adaptive
-BANNER
-LARGE_BANNER
-MEDIUM_RECTANGLE
-FULL_BANNER
-LEADERBOARD
-Smart Banners = DEPRECATED
-default: Anchored_adaptive
-
-
-( set banner position )
-
-top-right
-top-center
-left
-center
-right
-bottom-center
-bottom-right
-
-adaptiveWidth = 320 // default: 320
-*/
-
-
-var bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111"
-var interstitialAdAdUnitId = "ca-app-pub-3940256099942544/1033173712"
-var rewardedInterstitialAdUnitId = "ca-app-pub-3940256099942544/5354046379"
-var rewardedAdAdUnitId = "ca-app-pub-3940256099942544/5224354917"
-
-var size = "Anchored_adaptive"     
-var position = "bottom-center"
-var adaptiveWidth = 320
-
 
 // Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
 // This needs to be done only once, ideally at app launch.
@@ -128,47 +88,174 @@ alert("on Sdk Initialization Complete");
 ```
 
 ## Banner Ads
+
+> __Note__
+### Variable name and index (final) cannot be changed.
+- bannerAdUnitId | index 0
+- position | index 1
+- size | index 2
+- adaptiveWidth | index 3
+
+
 ```sh
-// Load a Show BANNER   cordova.plugins.emiAdmobPlugin.showBannerAd(bannerAdUnitId, size, position);
-// Load a Show BANNER adaptive   cordova.plugins.emiAdmobPlugin.showBannerAd(bannerAdUnitId, size, position, adaptiveWidth);
-// remove cordova.plugins.emiAdmobPlugin.removeBannerAd();
+/// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "BANNER" | (Smart Banners = DEPRECATED) | Inline_adaptive | Anchored_adaptive
+
+/// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "bottom-left"
+
+
+//  Banner Adaptive
+
+let showBannerAdaptive = () => {
+    cordova.plugins.emiAdmobPlugin.showBannerAd(
+    bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111",
+    position = "bottom-center",
+    size = "Inline_adaptive", // | Inline_adaptive | Anchored_adaptive
+    adaptiveWidth = 320,
+
+    (seccess) => { console.log("success") },
+    (error) => { alert(error)
+
+    });
+}
+
+// call showBannerAdaptive();
+
+//  not Adaptive banner
+
+let showBannerNotAdaptive = () => {
+    cordova.plugins.emiAdmobPlugin.showBannerAd(
+    bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111",
+    position = "bottom-center",
+    size = "BANNER",
+    
+    (seccess) => { console.log("success") },
+    (error) => { alert(error)
+
+    });
+}
+
+// call showBannerNotAdaptive();
+
+// Remove Banner
+
+let removeBannerAd = () => {
+    cordova.plugins.emiAdmobPlugin.removeBannerAd();
+}
+
+// call removeBannerAd();
+
 ```
  [Banner ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-banner-ads-) - callback:
 
 
-## Interstitial ads
+## Interstitial Ads
+
+> __Note__
+### Variable name and index (final) cannot be changed.
+- interstitialAdAdUnitId | index 0
+- responseInfo | index 1
 
 ```sh
+// Load Interstitial Ad
 
-// Load cordova.plugins.emiAdmobPlugin.loadInterstitialAd(interstitialAdAdUnitId);
+let loadInterstitialAd = () => {
+    cordova.plugins.emiAdmobPlugin.loadInterstitialAd(
+    interstitialAdAdUnitId = "ca-app-pub-3940256099942544/1033173712",
+    responseInfo = true, // boolean
 
-// Show  cordova.plugins.emiAdmobPlugin.showInterstitialAd();
+    (info) => { alert(info) }, 
+    (error) => { alert(error)
+    
+    });
+}
+
+// call loadInterstitialAd();
+
+// Show Interstitial Ad
+
+let showInterstitialAd = () => {
+    cordova.plugins.emiAdmobPlugin.showInterstitialAd();
+}
+
+// call showInterstitialAd();
+
 ```
 
  [Interstitial ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-interstitial-ads-) - callback:
 
 
 
-## Rewarded ads
+## Rewarded Ads
+
+> __Note__
+### Variable name and index (final) cannot be changed.
+- rewardedAdAdUnitId | index 0
+- responseInfo | index 1
 
 ```sh
 
-// Load cordova.plugins.emiAdmobPlugin.loadRewardedAd(rewardedAdAdUnitId);
+// Load Rewarded Ad
 
-// Show cordova.plugins.emiAdmobPlugin.showRewardedAd();
+let loadRewardedAd = () => {
+    cordova.plugins.emiAdmobPlugin.loadRewardedAd(
+    rewardedAdAdUnitId = "ca-app-pub-3940256099942544/5224354917",
+    responseInfo = true, // boolean
+   
+
+    (info) => { alert(info) },
+    (error) => { alert(error)
+
+    });
+}
+
+// call loadRewardedAd();
+
+// Show Rewarded Ad
+
+let showRewardedAd = () => {
+    cordova.plugins.emiAdmobPlugin.showRewardedAd();
+}
+
+// call showRewardedAd();
+
 
 ```
 
 [Rewarded ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-rewarded-ads-) - callback:
 
 
-## Rewarded interstitial ads
+## Rewarded interstitial Ads
+
+> __Note__
+### Variable name and index (final) cannot be changed.
+- rewardedInterstitialAdUnitId | index 0
+- responseInfo | index 1
 
 ```sh
 
-// Load cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(rewardedInterstitialAdUnitId);
+// load Rewarded Interstitial Ad
 
-// Show cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();
+let loadRewardedInterstitialAd = () => {
+    cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(
+    rewardedInterstitialAdUnitId = "ca-app-pub-3940256099942544/5354046379",
+    responseInfo = true, // boolean
+   
+    (info) => { alert(info) },
+    (error) => { alert(error)
+
+    });
+}
+
+// call loadRewardedInterstitialAd();
+
+// Show Rewarded Interstitial Ad
+
+const showRewardedInterstitialAd = () => {
+    cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();
+}
+
+// cal showRewardedInterstitialAd();
+
 
 ```
 
@@ -197,23 +284,14 @@ alert("on.banner Ad Loaded");
 
 ```
 
+> __Note__
+### (final) cannot be changed.
+
 ## ( SDK )
 - on.SdkInitializationComplete
 
 
 ## ( Banner Ads )
-
-### size
-- Anchored_adaptive
-- Inline_adaptive
-- BANNER
-- LARGE_BANNER
-- MEDIUM_RECTANGLE
-- FULL_BANNER
-- LEADERBOARD
-- Smart Banners = DEPRECATED
-- default: Anchored_adaptive
-
 
 ### position
 
@@ -226,6 +304,18 @@ alert("on.banner Ad Loaded");
 - bottom-right
 - adaptiveWidth = number 
 > default: 320
+
+
+### size
+- Anchored_adaptive
+- Inline_adaptive
+- BANNER
+- LARGE_BANNER
+- MEDIUM_RECTANGLE
+- FULL_BANNER
+- LEADERBOARD
+- Smart Banners = DEPRECATED
+- default: Anchored_adaptive
 
 
 ### Event Load a Show
