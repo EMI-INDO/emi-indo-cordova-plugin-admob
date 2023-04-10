@@ -27,7 +27,9 @@ https://user-images.githubusercontent.com/78555833/228323239-e9e18e74-b814-4ca8-
 
 
 
-
+## 💰Sponsor this project
+  [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)  
+  
  ## Features
 
 - Banner Ads
@@ -61,10 +63,41 @@ cordova plugin rm emi-indo-cordova-plugin-admob
 cordova plugin add emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-app-pub-3940256099942544~3347511713 --variable PLAY_SERVICES_VERSION="xxxx" 
 ```
 
+## Response Info
+- Here is a sample output returned by responseInfo = true showing the debugging data returned for a loaded ad:
 
+```sh
+{
+  "Response ID": "COOllLGxlPoCFdAx4Aod-Q4A0g",
+  "Mediation Adapter Class Name": "com.google.ads.mediation.admob.AdMobAdapter",
+  "Adapter Responses": [
+    {
+      "Adapter": "com.google.ads.mediation.admob.AdMobAdapter",
+      "Latency": 328,
+      "Ad Source Name": "Reservation campaign",
+      "Ad Source ID": "7068401028668408324",
+      "Ad Source Instance Name": "[DO NOT EDIT] Publisher Test Interstitial",
+      "Ad Source Instance ID": "4665218928925097",
+      "Credentials": {},
+      "Ad Error": "null"
+    }
+  ],
+  "Loaded Adapter Response": {
+    "Adapter": "com.google.ads.mediation.admob.AdMobAdapter",
+    "Latency": 328,
+    "Ad Source Name": "Reservation campaign",
+    "Ad Source ID": "7068401028668408324",
+    "Ad Source Instance Name": "[DO NOT EDIT] Publisher Test Interstitial",
+    "Ad Source Instance ID": "4665218928925097",
+    "Credentials": {},
+    "Ad Error": "null"
+  },
+  "Response Extras": {
+    "mediation_group_name": "Campaign"
+  }
+}
+```
 
-## 💰Sponsor this project
-  [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)  
 
 ## deviceready
 
@@ -262,15 +295,6 @@ const showRewardedInterstitialAd = () => {
 [Rewarded interstitial ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-rewarded-ads-) - callback:
 
 
-## handle success or error
-
-[Example code ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/getMediationAdapterName.html)
-```sh
-
-cordova.plugins.emiAdmobPlugin.loadRewardedAd(rewardedAdAdUnitId, success, error);
-
-```
-
 
 # Event | callback:
 ### event code
@@ -389,7 +413,7 @@ alert("on.banner Ad Loaded");
 
 ## get Mediation Adapter Name
 
-[Example code ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/getMediationAdapterName.html) - get Mediation Adapter Name:
+responseInfo = true // (debugging)
 
 <img src="https://user-images.githubusercontent.com/78555833/230655800-0dbc3f12-72fb-4cf3-b4e6-801704fade28.png" width="250">
 
