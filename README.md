@@ -161,7 +161,7 @@ let removeBannerAd = () => {
 let loadInterstitialAd = () => {
     cordova.plugins.emiAdmobPlugin.loadInterstitialAd(
     interstitialAdAdUnitId = "ca-app-pub-3940256099942544/1033173712",
-    responseInfo = true, // boolean
+    responseInfo = true, // boolean (debugging)
 
     (info) => { alert(info) }, 
     (error) => { alert(error)
@@ -199,7 +199,7 @@ let showInterstitialAd = () => {
 let loadRewardedAd = () => {
     cordova.plugins.emiAdmobPlugin.loadRewardedAd(
     rewardedAdAdUnitId = "ca-app-pub-3940256099942544/5224354917",
-    responseInfo = true, // boolean
+    responseInfo = true, // boolean (debugging)
    
 
     (info) => { alert(info) },
@@ -238,7 +238,7 @@ let showRewardedAd = () => {
 let loadRewardedInterstitialAd = () => {
     cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(
     rewardedInterstitialAdUnitId = "ca-app-pub-3940256099942544/5354046379",
-    responseInfo = true, // boolean
+    responseInfo = true, // boolean (debugging)
    
     (info) => { alert(info) },
     (error) => { alert(error)
