@@ -55,10 +55,10 @@ cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob --v
 cordova plugin rm emi-indo-cordova-plugin-admob
 ```
 
-## Upgrade Mobile Ads SDK
+## upgrade Mobile Ads SDK
 [Release Notes Mobile Ads SDK:](https://developers.google.com/admob/android/rel-notes)
 ```sh
-cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-app-pub-3940256099942544~3347511713 --variable PLAY_SERVICES_VERSION="xxxx" 
+cordova plugin add emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-app-pub-3940256099942544~3347511713 --variable PLAY_SERVICES_VERSION="xxxx" 
 ```
 
 
