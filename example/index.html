@@ -7,16 +7,105 @@
 <script>
 
 
-var bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111"
-var interstitialAdAdUnitId = "ca-app-pub-3940256099942544/1033173712"
-var rewardedInterstitialAdUnitId = "ca-app-pub-3940256099942544/5354046379"
-var rewardedAdAdUnitId = "ca-app-pub-3940256099942544/5224354917"
+/// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "BANNER" | (Smart Banners = DEPRECATED) | Inline_adaptive | Anchored_adaptive
+
+/// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "bottom-left"
 
 
-/// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "" = BANNER
-var size = "LARGE_BANNER"
-/// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "" = bottom-left
-var position = "bottom-center"
+//  Banner Adaptive
+
+let showBannerAdaptive = () => {
+    cordova.plugins.emiAdmobPlugin.showBannerAd(
+    bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111",
+    position = "bottom-center",
+    size = "Inline_adaptive", // | Inline_adaptive | Anchored_adaptive
+    adaptiveWidth = 320,
+
+    (seccess) => { console.log("success") },
+    (error) => { alert(error)
+
+    });
+}
+
+//  not Adaptive banner
+
+let showBannerNotAdaptive = () => {
+    cordova.plugins.emiAdmobPlugin.showBannerAd(
+    bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111",
+    position = "bottom-center",
+    size = "BANNER",
+    
+    (seccess) => { console.log("success") },
+    (error) => { alert(error)
+
+    });
+}
+
+// Remove Banner
+
+let removeBannerAd = () => {
+    cordova.plugins.emiAdmobPlugin.removeBannerAd();
+}
+
+
+// Load Interstitial Ad
+
+let loadInterstitialAd = () => {
+    cordova.plugins.emiAdmobPlugin.loadInterstitialAd(
+    interstitialAdAdUnitId = "ca-app-pub-3940256099942544/1033173712",
+    responseInfo = true, // boolean
+
+    (info) => { alert(info) }, 
+    (error) => { alert(error)
+    
+    });
+}
+
+// Show Interstitial Ad
+
+let showInterstitialAd = () => {
+    cordova.plugins.emiAdmobPlugin.showInterstitialAd();
+}
+
+// load Rewarded Interstitial Ad
+
+let loadRewardedInterstitialAd = () => {
+    cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(
+    rewardedInterstitialAdUnitId = "ca-app-pub-3940256099942544/5354046379",
+    responseInfo = true, // boolean
+   
+    (info) => { alert(info) },
+    (error) => { alert(error)
+
+    });
+}
+
+
+// Show Rewarded Interstitial Ad
+
+const showRewardedInterstitialAd = () => {
+    cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();
+}
+
+// Load Rewarded Ad
+
+let loadRewardedAd = () => {
+    cordova.plugins.emiAdmobPlugin.loadRewardedAd(
+    rewardedAdAdUnitId = "ca-app-pub-3940256099942544/5224354917",
+    responseInfo = true, // boolean
+   
+
+    (info) => { alert(info) },
+    (error) => { alert(error)
+
+    });
+}
+
+// Show Rewarded Ad
+
+let showRewardedAd = () => {
+    cordova.plugins.emiAdmobPlugin.showRewardedAd();
+}
 
 
 
@@ -115,17 +204,18 @@ alert("on Rewarded Ad Loaded");
 
 </script>
 
-<p> <button onclick="cordova.plugins.emiAdmobPlugin.showBannerAd(bannerAdUnitId, size, position);">Show Banner Ad</button></p>
-<p> <button onclick="cordova.plugins.emiAdmobPlugin.removeBannerAd();">remove Banner Ad</button></p>
+<p> <button onclick="showBannerAdaptive();">Show Banner adaptive</button></p>
+<p> <button onclick="showBannerNotAdaptive();">show Banner No Adaptive</button></p>
+<p> <button onclick="removeBannerAd();">remove Banner Ad</button></p>
 
-<p> <button onclick="cordova.plugins.emiAdmobPlugin.loadInterstitialAd(interstitialAdAdUnitId);">Load Interstitial Ad</button></p>
-<p> <button onclick="cordova.plugins.emiAdmobPlugin.showInterstitialAd();">Show Interstitial Ad</button></p>
+<p> <button onclick="loadInterstitialAd();">Load Interstitial Ad</button></p>
+<p> <button onclick="showInterstitialAd();">Show Interstitial Ad</button></p>
 
-<p> <button onclick="cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(rewardedInterstitialAdUnitId);">Load Rewarded Interstitial</button></p>
-<p> <button onclick="cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();">Show Rewarded Interstitial</button></p>
+<p> <button onclick="loadRewardedInterstitialAd();">Load Rewarded Interstitial</button></p>
+<p> <button onclick="showRewardedInterstitialAd();">Show Rewarded Interstitial</button></p>
 
-<p> <button onclick="cordova.plugins.emiAdmobPlugin.loadRewardedAd(rewardedAdAdUnitId);">Load Rewarded Ad</button></p>
-<p> <button onclick="cordova.plugins.emiAdmobPlugin.showRewardedAd();">Show Rewarded Ad</button></p>
+<p> <button onclick="loadRewardedAd();">Load Rewarded Ad</button></p>
+<p> <button onclick="showRewardedAd();">Show Rewarded Ad</button></p>
 
 
 </body>
