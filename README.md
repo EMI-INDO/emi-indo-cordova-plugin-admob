@@ -36,11 +36,16 @@ https://user-images.githubusercontent.com/78555833/228323239-e9e18e74-b814-4ca8-
 - Interstitial Ads
 - Rewarded Ads
 - Rewarded interstitial Ads
+- [Consent](https://github.com/EMI-INDO/emi-indo-cordova-plugin-consent)
+- Mediation
 
  ## Coming soon
 - App Open Ads
-- User Consent
-- Mediation ( In the process )
+- User Consent ( Finished ) [emi-indo-cordova-plugin-consent](https://github.com/EMI-INDO/emi-indo-cordova-plugin-consent)
+- Mediation ( Finished )
+
+
+
 
 
 ## Installation
@@ -519,11 +524,15 @@ cordova plugin add emi-indo-cordova-plugin-mediation-meta --variable META_ADAPTE
 - ================================
 
 
-
+emi-indo-cordova-plugin-admob@0.0.5
 
   
 > - ##  Note Release
- [emi-indo-cordova-plugin-admob@0.0.4](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/%400.0.4) 
+- [emi-indo-cordova-plugin-admob@0.0.4](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/%400.0.4) 
+ 
+- [emi-indo-cordova-plugin-admob@0.0.5](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v0.0.5) 
+ 
+ <img src="https://user-images.githubusercontent.com/78555833/231241800-8834ca2a-fa95-4cc2-91ca-1478c6b3c1ef.jpg" width="250">
 
 
 
