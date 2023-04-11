@@ -35,3 +35,11 @@ exports.loadRewardedInterstitialAd = function (arg0, arg1, success, error) {
 exports.showRewardedInterstitialAd = function (arg0, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'showRewardedInterstitialAd', [arg0]);
 };
+
+exports.getConsentRequest = function (arg0, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'getConsentRequest', [arg0]);
+};
+
+exports.consentReset = function (arg0, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'consentReset', [arg0]);
+};
