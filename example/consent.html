@@ -1,0 +1,115 @@
+<html>
+<head>
+    <script type="text/javascript" src="cordova.js"></script>
+</head>
+<body>
+
+<script>
+
+// Installation
+
+// cordova plugin add emi-indo-cordova-plugin-consent
+// cordova plugin add emi-indo-cordova-plugin-admob
+
+
+let _getConsentRequest = () => {
+    cordova.plugins.emiAdmobPlugin.getConsentRequest(
+    setTagForUnderAgeOfConsent = false, // boolean
+
+    (status) => { alert(status) }, // check event code
+    (error) => { alert(error)
+
+    });
+}
+
+// call _getConsentRequest();
+
+
+
+let _consentReset = () => {
+    cordova.plugins.emiAdmobPlugin.consentReset();
+}
+
+// call _consentReset();
+
+
+
+
+document.addEventListener("deviceready", function(){
+
+
+
+
+document.addEventListener('onConsentInfoUpdateSuccess', () => {
+
+alert("on Consent Info Update Success");
+
+});
+
+document.addEventListener('onConsentInfoUpdateFailure', () => {
+
+alert("on Consen Info Update Failure");
+
+});
+
+////////////////////////////////////////////////
+
+// https://developers.google.com/admob/android/privacy/api/reference/com/google/android/ump/ConsentInformation.ConsentStatus
+
+document.addEventListener('on.ConsentStatus.NOT_REQUIRED', () => {
+// Constant Value: 1
+alert("User consent not required.");
+
+});
+
+document.addEventListener('on.ConsentStatus.OBTAINED', () => {
+// Constant Value: 3
+alert("User consent obtained. Personalized vs non-personalized undefined.");
+
+});
+
+document.addEventListener('on.ConsentStatus.REQUIRED', () => {
+// Constant Value: 2
+// is Consent Form Available = the code auto, load Consent Form and consent Form show.
+alert("User consent required but not yet obtained.");
+
+});
+
+document.addEventListener('on.ConsentStatus.UNKNOWN', () => {
+//Constant Value: 0
+alert("Consent status is unknown.");
+
+});
+
+
+////////////////////////////////////////////////////////////
+
+document.addEventListener('on.loadConsentFormError', () => {
+
+alert("on load Consent Form Error");
+
+});
+
+document.addEventListener('on.ConsentFormNotAvailable', () => {
+
+alert("on Consent Form Not Available");
+
+});
+
+
+
+
+}, false);
+</script>
+
+
+
+<p> <button onclick="_getConsentRequest();">get Consent Request</button></p>
+
+<p> <button onclick="_consentReset();">Consent reset</button></p>
+
+
+
+
+</body>
+</html>
