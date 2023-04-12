@@ -331,8 +331,7 @@ alert("on.banner Ad Loaded");
 - right
 - bottom-center
 - bottom-right
-- adaptiveWidth = number 
-> default: 320
+
 
 
 ### size
@@ -343,8 +342,11 @@ alert("on.banner Ad Loaded");
 - MEDIUM_RECTANGLE
 - FULL_BANNER
 - LEADERBOARD
+- adaptiveWidth = number 
 - Smart Banners = DEPRECATED
 - default: Anchored_adaptive
+
+
 
 
 ### Event Load a Show
