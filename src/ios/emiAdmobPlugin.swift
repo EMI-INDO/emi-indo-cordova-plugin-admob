@@ -20,8 +20,7 @@ public class emiAdmobPlugin : CDVPlugin, GADFullScreenContentDelegate, GADBanner
       self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
       
     }
-    
-    
+
     
     @objc
     func showbannerAd(_ command: CDVInvokedUrlCommand) {
