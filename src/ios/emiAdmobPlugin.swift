@@ -31,14 +31,8 @@ public class emiAdmobPlugin : CDVPlugin, GADFullScreenContentDelegate, GADBanner
         bannerView.adUnitID = bannerAdUnitId
         bannerView.rootViewController = self.viewController
         bannerView.load(GADRequest())
-       
-    
         addBannerViewToView(bannerView, position, view: webView)
-        
         bannerView.delegate = self
-        
-        
-       
     }
     
     
@@ -46,19 +40,16 @@ public class emiAdmobPlugin : CDVPlugin, GADFullScreenContentDelegate, GADBanner
         
         bannerView.translatesAutoresizingMaskIntoConstraints = false
         view?.addSubview(bannerView)
-       
-
         if position == "top" {
-            
-            view?.addConstraints(
-            
-            [NSLayoutConstraint(item: bannerView,
+         
+            view?.addConstraints( 
+             [NSLayoutConstraint(item: bannerView,
                                  attribute: .top,
                                  relatedBy: .equal,
                                  toItem: view?.safeAreaLayoutGuide,
                                  attribute: .top,
                                  multiplier: 1,
-                                 constant: 0),
+                                 constant: 0), 
               NSLayoutConstraint(item: bannerView,
                                  attribute: .centerX,
                                  relatedBy: .equal,
@@ -111,7 +102,6 @@ public class emiAdmobPlugin : CDVPlugin, GADFullScreenContentDelegate, GADBanner
             
         } else if position == "bottom-Margin" {
             
-            
             view?.addConstraints(
             
             [NSLayoutConstraint(item: bannerView,
@@ -151,13 +141,9 @@ public class emiAdmobPlugin : CDVPlugin, GADFullScreenContentDelegate, GADBanner
                                  attribute: .centerX,
                                  multiplier: 1,
                                  constant: 0)
-             ])
-            
-            
-        }
-        
-        
-      }
+             ]) 
+        }  
+    }
     
     
     @objc
@@ -173,12 +159,9 @@ public class emiAdmobPlugin : CDVPlugin, GADFullScreenContentDelegate, GADBanner
                                   print("Failed to load interstitial ad with error: \(error.localizedDescription)")
                                     let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "on.InterstitialAdFailedToLoad")
                                     self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
-                                    
-                                  return
-                                    
+                                  return   
                                 }
-                              
-                              
+
                                self.interstitial = ad
                                self.interstitial?.fullScreenContentDelegate = self
                               
@@ -186,26 +169,18 @@ public class emiAdmobPlugin : CDVPlugin, GADFullScreenContentDelegate, GADBanner
                                self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
                                 
                               } )
-        
-        
+
     }
-    
-   
     
     @objc
     func showInterstitialAd(_ command: CDVInvokedUrlCommand) {
-    if interstitial != nil {
+     if interstitial != nil {
         interstitial?.present(fromRootViewController: self.viewController)
-        
       } else {
-        print("Ad wasn't ready")
-        
+        print("Ad wasn't ready")  
       }
-     
     }
-    
 
-    
     @objc
     func loadRewardedAd(_ command: CDVInvokedUrlCommand) {
         let rewardedAdAdUnitId = command.arguments[0] as? String ?? ""
@@ -217,25 +192,19 @@ public class emiAdmobPlugin : CDVPlugin, GADFullScreenContentDelegate, GADBanner
             [self] ad, error in
               if let error = error {
                 print("Failed to load rewarded ad with error: \(error.localizedDescription)")
-                
                 let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "on.RewardedAdFailedToLoad")
                 self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
-                
                 return
               }
               rewardedAd = ad
               print("Rewarded ad loaded.")
                 
                 let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "on.RewardedAdLoaded")
-                self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
-                
-                
+                self.commandDelegate.send(pluginResult, callbackId: command.callbackId) 
             }
-        )
-        
+        )   
     }
- 
-    
+
     @objc
     func showRewardedAd(_ command: CDVInvokedUrlCommand) {
         
@@ -249,9 +218,7 @@ public class emiAdmobPlugin : CDVPlugin, GADFullScreenContentDelegate, GADBanner
             }
           } else {
             print("Ad wasn't ready")
-          }
-        
-        
+          } 
     }
     
     
@@ -263,22 +230,14 @@ public class emiAdmobPlugin : CDVPlugin, GADFullScreenContentDelegate, GADBanner
             request: GADRequest()) { ad, error in
               if let error = error {
                 return print("Failed to load rewarded interstitial ad with error: \(error.localizedDescription)")
-                
                 let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "on.RewardedInterstitialAdFailedToLoad")
                 self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
-                
               }
-
               self.rewardedInterstitialAd = ad
-            
             let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "on.RewardedInterstitialAdLoaded")
             self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
-            
-            }
-        
-        
+            } 
     }
-    
 
     @objc
     func showRewardedInterstitialAd(_ command: CDVInvokedUrlCommand) {
@@ -290,13 +249,9 @@ public class emiAdmobPlugin : CDVPlugin, GADFullScreenContentDelegate, GADBanner
                 let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "on.rewardedInterstitial.rewarded")
                 self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
             }
-   
           } else {
             print("Ad wasn't ready")
-           
-          }
-        
-        
+          } 
     }
     
     
