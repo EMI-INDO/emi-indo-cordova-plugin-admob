@@ -536,6 +536,7 @@ emi-indo-cordova-plugin-admob@0.0.5
  
  <img src="https://user-images.githubusercontent.com/78555833/231241800-8834ca2a-fa95-4cc2-91ca-1478c6b3c1ef.jpg" width="250">
 
+- [emi-indo-cordova-plugin-admob@0.0.6](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v0.0.6) 
 
 
 ### Platform Support
