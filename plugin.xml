@@ -1,6 +1,6 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" 
 	xmlns:android="http://schemas.android.com/apk/res/android" 
-	id="emi-indo-cordova-plugin-admob" version="0.0.6">
+	id="emi-indo-cordova-plugin-admob" version="0.0.7">
 	
     <name>emiAdmobPlugin</name>
   <description>Cordova Plugin Admob Android</description>
