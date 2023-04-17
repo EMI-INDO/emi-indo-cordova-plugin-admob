@@ -561,6 +561,7 @@ emi-indo-cordova-plugin-admob@0.0.5
 
 ### Platform Support
 - Android
+- IOS
 
 
 ## 💰Sponsor this project
