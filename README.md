@@ -394,6 +394,7 @@ alert("on.banner Ad Loaded");
 - on.rewardedAdFailedToShowFullScreenContent
 - on.rewardedAdImpression
 - on.rewardedAdShowedFullScreenContent
+- on.rewarded.rewarded
 
 
 
@@ -412,6 +413,7 @@ alert("on.banner Ad Loaded");
 - on.rewardedInterstitialAdFailedToShowFullScreenContent
 - on.rewardedInterstitialAdImpression
 - on.rewardedInterstitialAdShowedFullScreenContent
+- on.rewardedInterstitial.rewarded
 
 
 # Admob Mediation
