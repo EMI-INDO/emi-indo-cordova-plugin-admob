@@ -16,11 +16,18 @@ public class emiAdmobPlugin : CDVPlugin, GADFullScreenContentDelegate, GADBanner
     @objc
     func initialize(_ command: CDVInvokedUrlCommand) {
 
-     GADMobileAds.sharedInstance().start(completionHandler: nil)
-      
-      let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "on.SdkInitializationComplete")
-      self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
-      
+        let ads = GADMobileAds.sharedInstance()
+            ads.start { status in
+              // Optional: Log each adapter's initialization latency.
+              let adapterStatuses = status.adapterStatusesByClassName
+              for adapter in adapterStatuses {
+                let adapterStatus = adapter.value
+                NSLog("Adapter Name: %@, Description: %@, Latency: %f", adapter.key,
+                adapterStatus.description, adapterStatus.latency)
+              }
+                let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "on.SdkInitializationComplete")
+                self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
+            }
     }
 
     
