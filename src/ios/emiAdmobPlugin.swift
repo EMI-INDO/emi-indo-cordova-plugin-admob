@@ -9,6 +9,8 @@ public class emiAdmobPlugin : CDVPlugin, GADFullScreenContentDelegate, GADBanner
     private var interstitial: GADInterstitialAd?
     private var rewardedAd: GADRewardedAd?
     private var rewardedInterstitialAd: GADRewardedInterstitialAd?
+ 
+    var isBannerShowing = false
    
 
     @objc
@@ -170,6 +172,26 @@ public class emiAdmobPlugin : CDVPlugin, GADFullScreenContentDelegate, GADBanner
                               } )
 
     }
+ 
+
+    @objc
+    func removeBannerAd(_ command: CDVInvokedUrlCommand) {
+        
+        if(bannerView != nil){
+            self.isBannerShowing = true;
+        }
+        
+        if(self.isBannerShowing){
+            
+          self.isBannerShowing = self.unLoadBanner(self.bannerView)
+        }
+    }
+    
+    func unLoadBanner(_ bannerView: UIView?) -> Bool{
+            bannerView?.removeFromSuperview()
+            return false
+    }
+ 
     
     @objc
     func showInterstitialAd(_ command: CDVInvokedUrlCommand) {
