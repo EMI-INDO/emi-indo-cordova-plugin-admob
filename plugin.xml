@@ -1,6 +1,6 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" 
 	xmlns:android="http://schemas.android.com/apk/res/android" 
-	id="emi-indo-cordova-plugin-admob" version="0.0.5">
+	id="emi-indo-cordova-plugin-admob" version="0.0.6">
 	
     <name>emiAdmobPlugin</name>
   <description>Cordova Plugin Admob Android</description>
@@ -29,6 +29,8 @@
             <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:excludeFromRecents="true" android:name="com.google.android.gms.ads.AdActivity" android:noHistory="true" />
             <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="$APP_ID_ANDROID" />
             <meta-data android:name="com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT" android:value="true"/>
+			<meta-data android:name="com.google.android.gms.ads.flag.OPTIMIZE_INITIALIZATION" android:value="true"/>
+			<meta-data android:name="com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING" android:value="true"/>
         </config-file>
 
          <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
