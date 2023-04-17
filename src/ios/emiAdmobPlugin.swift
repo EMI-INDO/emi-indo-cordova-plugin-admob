@@ -23,7 +23,7 @@ public class emiAdmobPlugin : CDVPlugin, GADFullScreenContentDelegate, GADBanner
 
     
     @objc
-    func showbannerAd(_ command: CDVInvokedUrlCommand) {
+    func showBannerAd(_ command: CDVInvokedUrlCommand) {
         let bannerAdUnitId = command.arguments[0] as? String ?? ""
         let position = command.arguments[1] as? String ?? ""
         bannerView = GADBannerView(adSize: GADAdSizeBanner)
