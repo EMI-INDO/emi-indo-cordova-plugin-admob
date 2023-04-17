@@ -1,8 +1,14 @@
 # emi-indo-cordova-plugin-admob
- Cordova Plugin Admob Android
+ Cordova Plugin Admob Android and IOS
 
-### Mobile Ads SDK (Android: 22.0.0)
-[Release Notes:](https://developers.google.com/admob/android/rel-notes)
+### Mobile Ads SDK (Android: 22.0.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
+
+### Mobile Ads SDK (IOS: 10.3.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
+
+###  [Documentation for IOS](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/discussions/3)
+
+-
+
 
 > __Warning__
 > Updating the Mobile Ads SDK version may cause some code to malfunction, as the latest version usually deprecates some older code, [scrrenshot](https://drive.google.com/file/d/1UKaEjdmGRXgdZ2DKfOne8BSq13IUY14_/view) Current plugin code SDK 22.0.0
@@ -423,6 +429,9 @@ alert("on.banner Ad Loaded");
 - on.rewardedInterstitialAdImpression
 - on.rewardedInterstitialAdShowedFullScreenContent
 - on.rewardedInterstitial.rewarded
+
+
+
 
 
 # Admob Mediation
