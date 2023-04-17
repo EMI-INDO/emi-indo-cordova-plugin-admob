@@ -20,6 +20,7 @@ let showBannerAdaptive = () => {
     position = "bottom-center",
     size = "Inline_adaptive", // | Inline_adaptive | Anchored_adaptive
     adaptiveWidth = 320,
+    npa = "1", // String | 0 | 1
 
     (seccess) => { console.log("success") },
     (error) => { alert(error)
@@ -34,6 +35,7 @@ let showBannerNotAdaptive = () => {
     bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111",
     position = "bottom-center",
     size = "BANNER",
+    npa = "1", // String | 0 | 1
     
     (seccess) => { console.log("success") },
     (error) => { alert(error)
@@ -54,6 +56,7 @@ let loadInterstitialAd = () => {
     cordova.plugins.emiAdmobPlugin.loadInterstitialAd(
     interstitialAdAdUnitId = "ca-app-pub-3940256099942544/1033173712",
     responseInfo = true, // boolean
+    npa = "1", // String | 0 | 1
 
     (info) => { alert(info) }, 
     (error) => { alert(error)
@@ -73,6 +76,7 @@ let loadRewardedInterstitialAd = () => {
     cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(
     rewardedInterstitialAdUnitId = "ca-app-pub-3940256099942544/5354046379",
     responseInfo = true, // boolean
+    npa = "1", // String | 0 | 1
    
     (info) => { alert(info) },
     (error) => { alert(error)
@@ -93,6 +97,7 @@ let loadRewardedAd = () => {
     cordova.plugins.emiAdmobPlugin.loadRewardedAd(
     rewardedAdAdUnitId = "ca-app-pub-3940256099942544/5224354917",
     responseInfo = true, // boolean
+    npa = "1", // String | 0 | 1
    
 
     (info) => { alert(info) },
