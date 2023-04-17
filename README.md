@@ -133,6 +133,7 @@ alert("on Sdk Initialization Complete");
 - position | index 1
 - size | index 2
 - adaptiveWidth | index 3
+- npa | index 4
 
 
 ```sh
@@ -149,6 +150,7 @@ let showBannerAdaptive = () => {
     position = "bottom-center",
     size = "Inline_adaptive", // | Inline_adaptive | Anchored_adaptive
     adaptiveWidth = 320,
+    npa = "1", // String | 0 | 1
 
     (seccess) => { console.log("success") },
     (error) => { alert(error)
@@ -165,6 +167,7 @@ let showBannerNotAdaptive = () => {
     bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111",
     position = "bottom-center",
     size = "BANNER",
+    npa = "1", // String | 0 | 1
     
     (seccess) => { console.log("success") },
     (error) => { alert(error)
@@ -192,6 +195,7 @@ let removeBannerAd = () => {
 ### Variable name and index (final) cannot be changed.
 - interstitialAdAdUnitId | index 0
 - responseInfo | index 1
+- npa | index 2
 
 ```sh
 // Load Interstitial Ad
@@ -200,6 +204,7 @@ let loadInterstitialAd = () => {
     cordova.plugins.emiAdmobPlugin.loadInterstitialAd(
     interstitialAdAdUnitId = "ca-app-pub-3940256099942544/1033173712",
     responseInfo = true, // boolean (debugging)
+    npa = "1", // String | 0 | 1
 
     (info) => { alert(info) }, 
     (error) => { alert(error)
@@ -229,6 +234,7 @@ let showInterstitialAd = () => {
 ### Variable name and index (final) cannot be changed.
 - rewardedAdAdUnitId | index 0
 - responseInfo | index 1
+- npa | index 2
 
 ```sh
 
@@ -238,6 +244,7 @@ let loadRewardedAd = () => {
     cordova.plugins.emiAdmobPlugin.loadRewardedAd(
     rewardedAdAdUnitId = "ca-app-pub-3940256099942544/5224354917",
     responseInfo = true, // boolean (debugging)
+    npa = "1", // String | 0 | 1
    
 
     (info) => { alert(info) },
@@ -268,6 +275,7 @@ let showRewardedAd = () => {
 ### Variable name and index (final) cannot be changed.
 - rewardedInterstitialAdUnitId | index 0
 - responseInfo | index 1
+- npa | index 2
 
 ```sh
 
@@ -277,6 +285,7 @@ let loadRewardedInterstitialAd = () => {
     cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(
     rewardedInterstitialAdUnitId = "ca-app-pub-3940256099942544/5354046379",
     responseInfo = true, // boolean (debugging)
+    npa = "1", // String | 0 | 1
    
     (info) => { alert(info) },
     (error) => { alert(error)
