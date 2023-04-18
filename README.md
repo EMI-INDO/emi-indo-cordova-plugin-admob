@@ -27,12 +27,6 @@
 > - [Code source:](https://github.com/googleads/googleads-mobile-android-examples) - Admob:
 
 
-
-
-https://user-images.githubusercontent.com/78555833/228323239-e9e18e74-b814-4ca8-ab86-b2e28437e61c.mp4
-
-
-
 ## 💰Sponsor this project
   [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)  
   
@@ -49,9 +43,6 @@ https://user-images.githubusercontent.com/78555833/228323239-e9e18e74-b814-4ca8-
 - App Open Ads
 - User Consent ( Finished ) [emi-indo-cordova-plugin-consent](https://github.com/EMI-INDO/emi-indo-cordova-plugin-consent)
 - Mediation ( Finished )
-
-
-
 
 
 ## Installation
