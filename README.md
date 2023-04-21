@@ -127,16 +127,41 @@ alert("on Sdk Initialization Complete");
 > __Note__
 ### Variable name and index (final) cannot be changed.
 - bannerAdUnitId | index 0
-- position | index 1
-- size | index 2
-- adaptiveWidth | index 3
-- npa | index 4
+- npa | index 1
+- position | index 2
+- size | index 3
+- adaptiveWidth | index 4
+
 
 
 ```sh
-/// setting banner size:           BANNER | LARGE_BANNER | MEDIUM_RECTANGLE | FULL_BANNER | LEADERBOARD | default: "BANNER" | (Smart Banners = DEPRECATED) | Inline_adaptive | Anchored_adaptive
+/// setting banner size: 
+/*          
+BANNER
+FLUID 
+LARGE_BANNER
+MEDIUM_RECTANGLE
+FULL_BANNER
+LEADERBOARD
+(Smart Banners = DEPRECATED)
+Inline_adaptive
+Anchored_adaptive
+default: Anchored_FULL_WIDTH
 
-/// setting banner position:       top-right | top-center | left | center | right | bottom-center | bottom-right |  default: "bottom-left"
+adaptiveWidth = 320 // number (only adaptive banner)
+
+*/
+/// setting banner position:  
+/*     
+top-right
+top-center
+left
+center
+right
+bottom-center
+bottom-right
+default: "bottom-left"
+*/
 
 
 //  Banner Adaptive
@@ -144,12 +169,13 @@ alert("on Sdk Initialization Complete");
 let showBannerAdaptive = () => {
     cordova.plugins.emiAdmobPlugin.showBannerAd(
     bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111",
-    position = "bottom-center",
-    size = "Inline_adaptive", // | Inline_adaptive | Anchored_adaptive
-    adaptiveWidth = 320,
     npa = "1", // String | 0 | 1
-
-    (seccess) => { console.log("success") },
+    position = "bottom-center",
+    size = "Anchored_FULL_WIDTH", // | Inline_adaptive | Anchored_adaptive
+    adaptiveWidth = 320,
+    responseInfo = true, // boolean (debugging)
+    
+    (info) => { alert(info) },
     (error) => { alert(error)
 
     });
@@ -162,11 +188,12 @@ let showBannerAdaptive = () => {
 let showBannerNotAdaptive = () => {
     cordova.plugins.emiAdmobPlugin.showBannerAd(
     bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111",
-    position = "bottom-center",
-    size = "BANNER",
     npa = "1", // String | 0 | 1
+    position = "bottom-center",
+    size = "FLUID",
+    responseInfo = true, // boolean (debugging)
     
-    (seccess) => { console.log("success") },
+    (info) => { alert(info) },
     (error) => { alert(error)
 
     });
@@ -191,8 +218,8 @@ let removeBannerAd = () => {
 > __Note__
 ### Variable name and index (final) cannot be changed.
 - interstitialAdAdUnitId | index 0
-- responseInfo | index 1
-- npa | index 2
+- npa | index 1
+- responseInfo | index 2
 
 ```sh
 // Load Interstitial Ad
@@ -200,8 +227,8 @@ let removeBannerAd = () => {
 let loadInterstitialAd = () => {
     cordova.plugins.emiAdmobPlugin.loadInterstitialAd(
     interstitialAdAdUnitId = "ca-app-pub-3940256099942544/1033173712",
-    responseInfo = true, // boolean (debugging)
     npa = "1", // String | 0 | 1
+    responseInfo = true, // boolean (debugging)
 
     (info) => { alert(info) }, 
     (error) => { alert(error)
@@ -230,8 +257,8 @@ let showInterstitialAd = () => {
 > __Note__
 ### Variable name and index (final) cannot be changed.
 - rewardedAdAdUnitId | index 0
-- responseInfo | index 1
-- npa | index 2
+- npa | index 1
+- responseInfo | index 2
 
 ```sh
 
@@ -240,9 +267,8 @@ let showInterstitialAd = () => {
 let loadRewardedAd = () => {
     cordova.plugins.emiAdmobPlugin.loadRewardedAd(
     rewardedAdAdUnitId = "ca-app-pub-3940256099942544/5224354917",
-    responseInfo = true, // boolean (debugging)
     npa = "1", // String | 0 | 1
-   
+    responseInfo = true, // boolean (debugging)
 
     (info) => { alert(info) },
     (error) => { alert(error)
@@ -271,8 +297,8 @@ let showRewardedAd = () => {
 > __Note__
 ### Variable name and index (final) cannot be changed.
 - rewardedInterstitialAdUnitId | index 0
-- responseInfo | index 1
-- npa | index 2
+- npa | index 1
+- responseInfo | index 2
 
 ```sh
 
@@ -281,8 +307,8 @@ let showRewardedAd = () => {
 let loadRewardedInterstitialAd = () => {
     cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(
     rewardedInterstitialAdUnitId = "ca-app-pub-3940256099942544/5354046379",
-    responseInfo = true, // boolean (debugging)
     npa = "1", // String | 0 | 1
+    responseInfo = true, // boolean (debugging)
    
     (info) => { alert(info) },
     (error) => { alert(error)
@@ -350,7 +376,7 @@ alert("on.banner Ad Loaded");
 - LEADERBOARD
 - adaptiveWidth = number 
 - Smart Banners = DEPRECATED
-- default: Anchored_adaptive
+- default: Anchored_FULL_WIDTH
 
 
 
