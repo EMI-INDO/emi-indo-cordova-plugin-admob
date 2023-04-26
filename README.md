@@ -593,4 +593,10 @@ emi-indo-cordova-plugin-admob@0.0.5
    - ### emi-indo-cordova-plugin-unityads
   
   [Cordova Plugin Unity:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-unityads) - Ads:
+  
+  ## New Open AI
+ 
+ - ### emi-indo-cordova-plugin-open-ai
+  
+  [Cordova Plugin Open Ai:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-open-ai) - Open AI:
                              
