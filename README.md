@@ -423,6 +423,7 @@ alert("on.banner Ad Loaded");
 - Anchored_adaptive
 - Inline_adaptive
 - BANNER
+- FLUID
 - LARGE_BANNER
 - MEDIUM_RECTANGLE
 - FULL_BANNER
