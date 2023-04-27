@@ -1,12 +1,19 @@
 var exec = require('cordova/exec');
 
-
 exports.initialize = function (arg0, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'initialize', [arg0]);
 };
 
-exports.showBannerAd = function (arg0, arg1, arg2, arg3, arg4, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'showBannerAd', [arg0, arg1, arg2, arg3, arg4]);
+exports.loadAppOpenAd = function (arg0, arg1, arg2, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'loadAppOpenAd', [arg0, arg1, arg2]);
+};
+
+exports.showAppOpenAd = function (arg0, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'showAppOpenAd', [arg0]);
+};
+
+exports.showBannerAd = function (arg0, arg1, arg2, arg3, arg4, arg5, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'showBannerAd', [arg0, arg1, arg2, arg3, arg4, arg5]);
 };
 
 exports.removeBannerAd = function (arg0, success, error) {

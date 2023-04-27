@@ -7,6 +7,27 @@
 <script>
 
 
+// load App Open Ad
+
+let loadAppOpenAd = () => {
+    cordova.plugins.emiAdmobPlugin.loadAppOpenAd(
+    appOpenAdUnitId = "ca-app-pub-3940256099942544/3419835294",
+    npa = "1", // String | 0 | 1
+    responseInfo = true, // boolean
+
+    (info) => { alert(info) },
+    (error) => { alert(error)
+
+    });
+}
+
+// Show App Open Ad
+
+let showAppOpenAd = () => {
+    cordova.plugins.emiAdmobPlugin.showAppOpenAd();
+}
+
+
 /// setting banner size: 
 /*          
 BANNER
@@ -62,7 +83,7 @@ let showBannerNotAdaptive = () => {
     size = "FLUID",
 	responseInfo = true, // boolean
     
-    (seccess) => { console.log("success") },
+    (info) => { alert(info) },
     (error) => { alert(error)
 
     });
@@ -153,6 +174,24 @@ alert("on Sdk Initialization Complete");
 
 });
 
+// AppOpenAd EVEN
+
+/*
+on.open.loaded
+on.open.failed.loaded
+on.open.dismissed
+on.open.failed.show
+on.open.show
+*/
+
+
+document.addEventListener('on.open.loaded', () => {
+
+alert("on app open loaded");
+
+});
+
+
 
 // BANNER EVENT
 
@@ -235,6 +274,9 @@ alert("on Rewarded Ad Loaded");
 }, false);
 
 </script>
+
+<p> <button onclick="loadAppOpenAd();">load App Open Ad</button></p>
+<p> <button onclick="showAppOpenAd();">Show App Open Ad</button></p>
 
 <p> <button onclick="showBannerAdaptive();">Show Banner adaptive</button></p>
 <p> <button onclick="showBannerNotAdaptive();">show Banner No Adaptive</button></p>

@@ -32,6 +32,7 @@
   
  ## Features
 
+- App Open Ads
 - Banner Ads
 - Interstitial Ads
 - Rewarded Ads
@@ -40,7 +41,7 @@
 - Mediation
 
  ## Coming soon
-- App Open Ads
+- App Open Ads ( Finished )
 - User Consent ( Finished ) [emi-indo-cordova-plugin-consent](https://github.com/EMI-INDO/emi-indo-cordova-plugin-consent)
 - Mediation ( Finished )
 
@@ -121,6 +122,43 @@ alert("on Sdk Initialization Complete");
 
 
 ```
+
+
+## App Open Ads
+
+> __Note__
+### Variable name and index (final) cannot be changed.
+- appOpenAdUnitId | index 0
+- npa | index 1
+- responseInfo | index 2
+
+```sh
+// load App Open Ad
+
+let loadAppOpenAd = () => {
+    cordova.plugins.emiAdmobPlugin.loadAppOpenAd(
+    appOpenAdUnitId = "ca-app-pub-3940256099942544/3419835294",
+    npa = "1", // String | 0 | 1
+    responseInfo = true, // boolean
+
+    (info) => { alert(info) },
+    (error) => { alert(error)
+
+    });
+}
+
+// call loadAppOpenAd();
+
+// Show App Open Ad
+
+let showAppOpenAd = () => {
+    cordova.plugins.emiAdmobPlugin.showAppOpenAd();
+}
+
+// call showAppOpenAd();
+
+```
+
 
 ## Banner Ads
 
@@ -352,6 +390,20 @@ alert("on.banner Ad Loaded");
 - on.SdkInitializationComplete
 
 
+## ( App Open Ads )
+
+### Event Load
+
+- on.open.loaded
+- on.open.failed.loaded
+
+### Event Show
+
+- on.open.dismissed
+- on.open.failed.show
+- on.open.show
+
+
 ## ( Banner Ads )
 
 ### position
@@ -367,6 +419,7 @@ alert("on.banner Ad Loaded");
 
 
 ### size
+
 - Anchored_adaptive
 - Inline_adaptive
 - BANNER
