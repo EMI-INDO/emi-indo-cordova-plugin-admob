@@ -653,4 +653,11 @@ emi-indo-cordova-plugin-admob@0.0.5
  - ### emi-indo-cordova-plugin-open-ai
   
   [Cordova Plugin Open Ai:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-open-ai) - Open AI:
+  
+  
+   ## New Firebase Analytics
+ 
+ - ### emi-indo-cordova-plugin-fanalytics
+  
+  [Cordova Plugin Firebase Analytics:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-fanalytics) - Firebase Analytics:
                              
