@@ -43,6 +43,9 @@
 - App Open Ads ( Finished )
 - User Consent ( Finished ) [emi-indo-cordova-plugin-consent](https://github.com/EMI-INDO/emi-indo-cordova-plugin-consent)
 - Mediation ( Finished )
+- https://developers.google.com/admob/android/native/start
+- https://developers.google.com/admob/android/impression-level-ad-revenue
+- https://developers.google.com/admob/android/ssv
 
 
 ## Installation
