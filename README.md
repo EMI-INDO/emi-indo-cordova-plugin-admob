@@ -235,7 +235,7 @@ alert("on Sdk Initialization Complete");
 
 > __Note__
 ### Variable name and index (final) cannot be changed.
-- appOpenAdUnitId | index 0
+- AdUnitId | index 0
 - npa | index 1
 - responseInfo | index 2
 
@@ -244,7 +244,7 @@ alert("on Sdk Initialization Complete");
 
 let loadAppOpenAd = () => {
     cordova.plugins.emiAdmobPlugin.loadAppOpenAd(
-    appOpenAdUnitId = "ca-app-pub-3940256099942544/3419835294",
+    AdUnitId = "ca-app-pub-3940256099942544/3419835294",
     npa = "1", // String | 0 | 1
     responseInfo = true, // boolean
 
@@ -271,7 +271,7 @@ let showAppOpenAd = () => {
 
 > __Note__
 ### Variable name and index (final) cannot be changed.
-- bannerAdUnitId | index 0
+- AdUnitId | index 0
 - npa | index 1
 - position | index 2
 - size | index 3
@@ -313,7 +313,7 @@ default: "bottom-left"
 
 let showBannerAdaptive = () => {
     cordova.plugins.emiAdmobPlugin.showBannerAd(
-    bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111",
+    AdUnitId = "ca-app-pub-3940256099942544/6300978111",
     npa = "1", // String | 0 | 1
     position = "bottom-center",
     size = "Anchored_FULL_WIDTH", // | Inline_adaptive | Anchored_adaptive
@@ -332,7 +332,7 @@ let showBannerAdaptive = () => {
 
 let showBannerNotAdaptive = () => {
     cordova.plugins.emiAdmobPlugin.showBannerAd(
-    bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111",
+    AdUnitId = "ca-app-pub-3940256099942544/6300978111",
     npa = "1", // String | 0 | 1
     position = "bottom-center",
     size = "FLUID",
@@ -362,7 +362,7 @@ let removeBannerAd = () => {
 
 > __Note__
 ### Variable name and index (final) cannot be changed.
-- interstitialAdAdUnitId | index 0
+- AdUnitId | index 0
 - npa | index 1
 - responseInfo | index 2
 
@@ -371,7 +371,7 @@ let removeBannerAd = () => {
 
 let loadInterstitialAd = () => {
     cordova.plugins.emiAdmobPlugin.loadInterstitialAd(
-    interstitialAdAdUnitId = "ca-app-pub-3940256099942544/1033173712",
+    AdUnitId = "ca-app-pub-3940256099942544/1033173712",
     npa = "1", // String | 0 | 1
     responseInfo = true, // boolean (debugging)
 
@@ -401,7 +401,7 @@ let showInterstitialAd = () => {
 
 > __Note__
 ### Variable name and index (final) cannot be changed.
-- rewardedAdAdUnitId | index 0
+- AdUnitId | index 0
 - npa | index 1
 - responseInfo | index 2
 
@@ -411,7 +411,7 @@ let showInterstitialAd = () => {
 
 let loadRewardedAd = () => {
     cordova.plugins.emiAdmobPlugin.loadRewardedAd(
-    rewardedAdAdUnitId = "ca-app-pub-3940256099942544/5224354917",
+    AdUnitId = "ca-app-pub-3940256099942544/5224354917",
     npa = "1", // String | 0 | 1
     responseInfo = true, // boolean (debugging)
 
@@ -441,7 +441,7 @@ let showRewardedAd = () => {
 
 > __Note__
 ### Variable name and index (final) cannot be changed.
-- rewardedInterstitialAdUnitId | index 0
+- AdUnitId | index 0
 - npa | index 1
 - responseInfo | index 2
 
@@ -451,7 +451,7 @@ let showRewardedAd = () => {
 
 let loadRewardedInterstitialAd = () => {
     cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(
-    rewardedInterstitialAdUnitId = "ca-app-pub-3940256099942544/5354046379",
+    AdUnitId = "ca-app-pub-3940256099942544/5354046379",
     npa = "1", // String | 0 | 1
     responseInfo = true, // boolean (debugging)
    
