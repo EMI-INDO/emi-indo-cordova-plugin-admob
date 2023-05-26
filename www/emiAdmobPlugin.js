@@ -55,3 +55,7 @@ exports.consentReset = function (arg0, success, error) {
 exports.targeting = function (arg0, arg1, arg2, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'targeting', [arg0, arg1, arg2]);
 };
+
+exports.globalSettings = function (arg0, arg1, arg2, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'globalSettings', [arg0, arg1, arg2]);
+};

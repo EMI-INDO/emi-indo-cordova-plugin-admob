@@ -1,6 +1,6 @@
 {
   "name": "emi-indo-cordova-plugin-admob",
-  "version": "0.0.9",
+  "version": "1.0.9",
   "description": "Cordova Plugin Admob Android",
   "cordova": {
     "id": "emi-indo-cordova-plugin-admob",

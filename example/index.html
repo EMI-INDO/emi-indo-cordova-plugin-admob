@@ -11,11 +11,12 @@
 
 let loadAppOpenAd = () => {
     cordova.plugins.emiAdmobPlugin.loadAppOpenAd(
-    appOpenAdUnitId = "ca-app-pub-3940256099942544/3419835294",
+    AdUnitId = "ca-app-pub-3940256099942544/3419835294",
     npa = "1", // String | 0 | 1
     responseInfo = true, // boolean
 
-    (info) => { alert(info) },
+    // Optional
+	(info) => { alert(info) },
     (error) => { alert(error)
 
     });
@@ -60,14 +61,15 @@ default: "bottom-left"
 
 let showBannerAdaptive = () => {
     cordova.plugins.emiAdmobPlugin.showBannerAd(
-    bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111",
+    AdUnitId = "ca-app-pub-3940256099942544/6300978111",
 	npa = "1", // String | 0 | 1
     position = "bottom-center",
     size = "Anchored_FULL_WIDTH", // | Inline_adaptive | Anchored_adaptive | default: Anchored_FULL_WIDTH
     adaptiveWidth = 320,
 	responseInfo = true, // boolean
 
-    (info) => { alert(info) },
+    // Optional
+	(info) => { alert(info) },
     (error) => { alert(error)
 
     });
@@ -77,13 +79,15 @@ let showBannerAdaptive = () => {
 
 let showBannerNotAdaptive = () => {
     cordova.plugins.emiAdmobPlugin.showBannerAd(
-    bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111",
+    AdUnitId = "ca-app-pub-3940256099942544/6300978111",
 	npa = "1", // String | 0 | 1
     position = "bottom-center",
     size = "FLUID",
+	adaptiveWidth = 320,
 	responseInfo = true, // boolean
     
-    (info) => { alert(info) },
+    // Optional
+	(info) => { alert(info) },
     (error) => { alert(error)
 
     });
@@ -100,11 +104,12 @@ let removeBannerAd = () => {
 
 let loadInterstitialAd = () => {
     cordova.plugins.emiAdmobPlugin.loadInterstitialAd(
-    interstitialAdAdUnitId = "ca-app-pub-3940256099942544/1033173712",
+    AdUnitId = "ca-app-pub-3940256099942544/1033173712",
 	npa = "1", // String | 0 | 1
     responseInfo = true, // boolean
 
-    (info) => { alert(info) }, 
+    // Optional
+	(info) => { alert(info) }, 
     (error) => { alert(error)
     
     });
@@ -120,11 +125,12 @@ let showInterstitialAd = () => {
 
 let loadRewardedInterstitialAd = () => {
     cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(
-    rewardedInterstitialAdUnitId = "ca-app-pub-3940256099942544/5354046379",
+    AdUnitId = "ca-app-pub-3940256099942544/5354046379",
 	npa = "1", // String | 0 | 1
     responseInfo = true, // boolean
    
-    (info) => { alert(info) },
+    // Optional
+	(info) => { alert(info) },
     (error) => { alert(error)
 
     });
@@ -141,11 +147,11 @@ const showRewardedInterstitialAd = () => {
 
 let loadRewardedAd = () => {
     cordova.plugins.emiAdmobPlugin.loadRewardedAd(
-    rewardedAdAdUnitId = "ca-app-pub-3940256099942544/5224354917",
+    AdUnitId = "ca-app-pub-3940256099942544/5224354917",
 	npa = "1", // String | 0 | 1
     responseInfo = true, // boolean
    
-
+    // Optional
     (info) => { alert(info) },
     (error) => { alert(error)
 
@@ -165,7 +171,43 @@ document.addEventListener("deviceready", function(){
 // Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
 // This needs to be done only once, ideally at app launch.
 
-cordova.plugins.emiAdmobPlugin.initialize();
+cordova.plugins.emiAdmobPlugin.initialize(
+    // Optional
+    (info) => { console.log(info) },
+    (error) => { alert(error)
+
+    });
+
+// Instruction: https://developers.google.com/admob/android/global-settings
+
+cordova.plugins.emiAdmobPlugin.globalSettings(
+
+    setAppMuted = true, // Type Boolean default: true
+    setAppVolume = 1.0, // Type float
+    enableSameAppKey = false, // Type Boolean default: false
+      
+      // Optional
+    (info) => { console.log(info) },
+    (error) => { alert(error)
+
+    });
+	
+	
+	  // You can see the value when the ad is loaded, set responseInfo = true
+     // Instruction: https://developers.google.com/admob/android/targeting
+     // Overview: https://developers.google.com/android/reference/com/google/android/gms/ads/RequestConfiguration
+
+    cordova.plugins.emiAdmobPlugin.targeting(
+      TagForChildDirectedTreatment = 0, // value: 0 | -1 | 1
+      TagForUnderAgeOfConsent = 0, // // value: 0 | -1 | 1
+      MaxAdContentRating = "G", // value: G | MA | PG | T | ""
+
+      // Optional
+     (info) => { console.log(info) },
+     (error) => { alert(error)
+
+     });
+ 
 
 document.addEventListener('on.SdkInitializationComplete', () => {
 
