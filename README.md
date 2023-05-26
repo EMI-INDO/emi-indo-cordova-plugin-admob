@@ -117,8 +117,9 @@ cordova.plugins.emiAdmobPlugin.globalSettings(
     setAppMuted = true, // Type Boolean default: true
     setAppVolume = 1.0, // Type float
     enableSameAppKey = false, // Type Boolean default: false
-
-     (info) => { alert(info) },
+      
+      // Optional
+    (info) => { alert(info) },
     (error) => { alert(error)
 
     });
@@ -138,9 +139,9 @@ cordova.plugins.emiAdmobPlugin.globalSettings(
     TagForUnderAgeOfConsent = 0, // // value: 0 | -1 | 1
     MaxAdContentRating = "G", // value: G | MA | PG | T | ""
 
-    (info) => { alert(info)
-    },
-    (error) => { alert(error)
+   // Optional
+   (info) => { alert(info) },
+   (error) => { alert(error)
 
     });
     
@@ -190,6 +191,7 @@ cordova.plugins.emiAdmobPlugin.globalSettings(
 // This needs to be done only once, ideally at app launch.
 
 cordova.plugins.emiAdmobPlugin.initialize(
+// Optional
 (info) => { alert(info) },
  (error) => { alert(error)
 
@@ -203,8 +205,8 @@ cordova.plugins.emiAdmobPlugin.initialize(
     TagForUnderAgeOfConsent = 0, // // value: 0 | -1 | 1
     MaxAdContentRating = "G", // value: G | MA | PG | T | ""
 
-    (info) => { console.log(info)
-    },
+    // Optional
+    (info) => { console.log(info)},
     (error) => { alert(error)
 
     });
@@ -216,8 +218,9 @@ cordova.plugins.emiAdmobPlugin.initialize(
     setAppVolume = 1.0, // Type float
     enableSameAppKey = false, // Type Boolean default: false
 
+    // Optional
      (info) => { console.log(info) },
-    (error) => { alert(error)
+     (error) => { alert(error)
 
     });
 
@@ -247,7 +250,7 @@ let loadAppOpenAd = () => {
     AdUnitId = "ca-app-pub-3940256099942544/3419835294",
     npa = "1", // String | 0 | 1
     responseInfo = true, // boolean
-
+    // Optional
     (info) => { alert(info) },
     (error) => { alert(error)
 
@@ -320,6 +323,7 @@ let showBannerAdaptive = () => {
     adaptiveWidth = 320,
     responseInfo = true, // boolean (debugging)
     
+    // Optional
     (info) => { alert(info) },
     (error) => { alert(error)
 
@@ -338,6 +342,7 @@ let showBannerNotAdaptive = () => {
     size = "FLUID",
     responseInfo = true, // boolean (debugging)
     
+    // Optional
     (info) => { alert(info) },
     (error) => { alert(error)
 
@@ -374,7 +379,8 @@ let loadInterstitialAd = () => {
     AdUnitId = "ca-app-pub-3940256099942544/1033173712",
     npa = "1", // String | 0 | 1
     responseInfo = true, // boolean (debugging)
-
+    
+    // Optional
     (info) => { alert(info) }, 
     (error) => { alert(error)
     
@@ -414,7 +420,7 @@ let loadRewardedAd = () => {
     AdUnitId = "ca-app-pub-3940256099942544/5224354917",
     npa = "1", // String | 0 | 1
     responseInfo = true, // boolean (debugging)
-
+    // Optional
     (info) => { alert(info) },
     (error) => { alert(error)
 
@@ -454,7 +460,7 @@ let loadRewardedInterstitialAd = () => {
     AdUnitId = "ca-app-pub-3940256099942544/5354046379",
     npa = "1", // String | 0 | 1
     responseInfo = true, // boolean (debugging)
-   
+    // Optional
     (info) => { alert(info) },
     (error) => { alert(error)
 
