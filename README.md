@@ -1,20 +1,13 @@
 # emi-indo-cordova-plugin-admob
  Cordova Plugin Admob Android and IOS
 
-### Mobile Ads SDK (Android: 22.0.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
+### Mobile Ads SDK (Android: 22.1.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
 
 ### Mobile Ads SDK (IOS: 10.3.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
 
 ###  [Documentation for IOS](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/discussions/3)
 
 -
-
-
-> __Warning__
-> Updating the Mobile Ads SDK version may cause some code to malfunction, as the latest version usually deprecates some older code, [scrrenshot](https://drive.google.com/file/d/1UKaEjdmGRXgdZ2DKfOne8BSq13IUY14_/view) Current plugin code SDK 22.0.0
-
-> __Warning__
-> If the cordova admob plugin using Mobile Ads SDK code version 20.6.0 is upgraded to Mobile Ads SDK version 22.0.0, some of the old plugin code will not work.
 
 
   > __Note__
@@ -32,6 +25,9 @@
   
  ## Features
 
+- SDK initialize
+- targeting
+- globalSettings
 - App Open Ads
 - Banner Ads
 - Interstitial Ads
@@ -99,8 +95,89 @@ cordova plugin add emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-ap
     "mediation_group_name": "Campaign"
   }
 }
+
+
+Bundle[{max_ad_content_rating=G, 
+npa=1, 
+is_designed_for_families=0, 
+under_age_of_consent=0] 
+
+
 ```
 
+
+### As suggested by Google, when the SDK initializes this plugin automatically takes the Global Settings and Targeting values.
+
+### Global Settings
+```sh
+// Instruction: https://developers.google.com/admob/android/global-settings
+
+cordova.plugins.emiAdmobPlugin.globalSettings(
+
+    setAppMuted = true, // Type Boolean default: true
+    setAppVolume = 1.0, // Type float
+    enableSameAppKey = false, // Type Boolean default: false
+
+     (info) => { alert(info) },
+    (error) => { alert(error)
+
+    });
+ ```   
+  
+  ### Targeting
+  
+   > __Note__
+> - ## You can see the value when the ad is loaded, set responseInfo = true
+   
+   ```sh
+// Instruction: https://developers.google.com/admob/android/targeting
+// Overview: https://developers.google.com/android/reference/com/google/android/gms/ads/RequestConfiguration
+
+ cordova.plugins.emiAdmobPlugin.targeting(
+    TagForChildDirectedTreatment = 0, // value: 0 | -1 | 1
+    TagForUnderAgeOfConsent = 0, // // value: 0 | -1 | 1
+    MaxAdContentRating = "G", // value: G | MA | PG | T | ""
+
+    (info) => { alert(info)
+    },
+    (error) => { alert(error)
+
+    });
+    
+    
+// (TagForChildDirectedTreatment)
+// Type number:
+// value: 0 | -1 | 1
+// (value description)
+// 0 = FALSE
+// 1 = TRUE
+// -1 = UNSPECIFIED
+// (if else/undefined = false/0)
+
+///////////////////////////////
+
+// (TagForUnderAgeOfConsent)
+// Type number:
+// value: 0 | -1 | 1
+// (value description)
+// 0 = FALSE
+// 1 = TRUE
+// -1 = UNSPECIFIED
+// (if else/undefined = false/0)
+
+//////////////////////////////
+
+// (MaxAdContentRating)
+// Type String:
+// value: G | MA | PG | T | ""
+// (value description)
+// https://developers.google.com/admob/unity/reference/class/google-mobile-ads/api/max-ad-content-rating
+// (if else/undefined/"" = NULL)
+    
+    
+ ```  
+   
+   
 
 ## deviceready
 
@@ -112,7 +189,37 @@ cordova plugin add emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-ap
 // Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
 // This needs to be done only once, ideally at app launch.
 
-cordova.plugins.emiAdmobPlugin.initialize();
+cordova.plugins.emiAdmobPlugin.initialize(
+(info) => { alert(info) },
+ (error) => { alert(error)
+
+ });
+ 
+ 
+ //(Auto Loaded during SDK initialize and ad loaded)
+ 
+ cordova.plugins.emiAdmobPlugin.targeting(
+    TagForChildDirectedTreatment = 0, // value: 0 | -1 | 1
+    TagForUnderAgeOfConsent = 0, // // value: 0 | -1 | 1
+    MaxAdContentRating = "G", // value: G | MA | PG | T | ""
+
+    (info) => { console.log(info)
+    },
+    (error) => { alert(error)
+
+    });
+    
+    
+    cordova.plugins.emiAdmobPlugin.globalSettings(
+
+    setAppMuted = true, // Type Boolean default: true
+    setAppVolume = 1.0, // Type float
+    enableSameAppKey = false, // Type Boolean default: false
+
+     (info) => { console.log(info) },
+    (error) => { alert(error)
+
+    });
 
 document.addEventListener('on.SdkInitializationComplete', () => {
 
