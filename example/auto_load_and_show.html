@@ -1,0 +1,93 @@
+<html>
+<head>
+    <script type="text/javascript" src="cordova.js"></script>
+</head>
+<body>
+
+<script>
+
+
+// For example automatically load Interstitial Ad
+
+// Load Interstitial Ad
+
+let loadInterstitialAd = () => {
+    cordova.plugins.emiAdmobPlugin.loadInterstitialAd(
+    AdUnitId = "ca-app-pub-3940256099942544/1033173712",
+	npa = "1", // String | 0 | 1
+    responseInfo = true, // boolean
+
+    // Optional
+	(info) => { alert(info) }, 
+    (error) => { alert(error)
+    
+    });
+
+    // call loadInterstitialAd();
+}
+
+// Show Interstitial Ad
+
+let showInterstitialAd = () => {
+    cordova.plugins.emiAdmobPlugin.showInterstitialAd();
+
+    // call showInterstitialAd();
+}
+
+
+
+
+// deviceready
+
+document.addEventListener("deviceready", function(){
+
+// Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
+// This needs to be done only once, ideally at app launch.
+
+cordova.plugins.emiAdmobPlugin.initialize();
+
+
+// auto load call loadInterstitialAd();
+
+ loadInterstitialAd();
+
+
+
+
+// Interstitial EVENT
+
+/*
+on.InterstitialAdLoaded
+on.InterstitialAdFailedToLoad
+on.InterstitialAdClicked
+on.InterstitialAdDismissedFullScreenContent
+on.InterstitialAdFailedToShowFullScreenContent
+on.InterstitialAdImpression
+on.InterstitialAdShowedFullScreenContent
+*/
+
+document.addEventListener('on.InterstitialAdLoaded', () => {
+
+    // auto show call showInterstitialAd();
+
+    showInterstitialAd();
+
+    console.log("on Interstitial Ad Loaded");
+
+});
+
+
+
+
+}, false);
+
+</script>
+
+
+<p> <button onclick="loadInterstitialAd();">Load Interstitial Ad</button></p>
+<p> <button onclick="showInterstitialAd();">Show Interstitial Ad</button></p>
+
+
+
+</body>
+</html>
