@@ -26,6 +26,11 @@
 ##  [Check all release notes:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/)
 
 
+## Minimum Cordova Engines
+- cordova version = 10.0.0
+- cordova-android version = 11.0.0
+- cordova-ios version = 6.0.0
+
 ## Features
 
 - SDK initialize
