@@ -1,19 +1,23 @@
 var exec = require('cordova/exec');
 
-exports.initialize = function (arg0, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'initialize', [arg0]);
+exports.initialize = function (success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'initialize', []);
 };
 
 exports.loadAppOpenAd = function (arg0, arg1, arg2, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'loadAppOpenAd', [arg0, arg1, arg2]);
 };
 
-exports.showAppOpenAd = function (arg0, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'showAppOpenAd', [arg0]);
+exports.showAppOpenAd = function (success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'showAppOpenAd', []);
 };
 
-exports.showBannerAd = function (arg0, arg1, arg2, arg3, arg4, arg5, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'showBannerAd', [arg0, arg1, arg2, arg3, arg4, arg5]);
+exports.loadBannerAd = function (arg0, arg1, arg2, arg3, arg4, arg5, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'loadBannerAd', [arg0, arg1, arg2, arg3, arg4, arg5]);
+};
+
+exports.showBannerAd = function (success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'showBannerAd', []);
 };
 
 exports.removeBannerAd = function (arg0, success, error) {
@@ -24,32 +28,32 @@ exports.loadInterstitialAd = function (arg0, arg1, arg2, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'loadInterstitialAd', [arg0, arg1, arg2]);
 };
 
-exports.showInterstitialAd = function (arg0, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'showInterstitialAd', [arg0]);
+exports.showInterstitialAd = function (success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'showInterstitialAd', []);
 };
 
 exports.loadRewardedAd = function (arg0, arg1, arg2, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'loadRewardedAd', [arg0, arg1, arg2]);
 };
 
-exports.showRewardedAd = function (arg0, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'showRewardedAd', [arg0]);
+exports.showRewardedAd = function (success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'showRewardedAd', []);
 };
 
 exports.loadRewardedInterstitialAd = function (arg0, arg1, arg2, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'loadRewardedInterstitialAd', [arg0, arg1, arg2]);
 };
 
-exports.showRewardedInterstitialAd = function (arg0, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'showRewardedInterstitialAd', [arg0]);
+exports.showRewardedInterstitialAd = function (success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'showRewardedInterstitialAd', []);
 };
 
-exports.getConsentRequest = function (arg0, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'getConsentRequest', [arg0]);
+exports.getConsentRequest = function (success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'getConsentRequest', []);
 };
 
-exports.consentReset = function (arg0, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'consentReset', [arg0]);
+exports.consentReset = function (success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'consentReset', []);
 };
 
 exports.targeting = function (arg0, arg1, arg2, success, error) {

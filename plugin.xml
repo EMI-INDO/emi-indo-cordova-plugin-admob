@@ -1,6 +1,6 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" 
 	xmlns:android="http://schemas.android.com/apk/res/android" 
-	id="emi-indo-cordova-plugin-admob" version="1.0.9">
+	id="emi-indo-cordova-plugin-admob" version="1.1.9">
 	
     <name>emiAdmobPlugin</name>
   <description>Cordova Plugin Admob Android</description>
@@ -12,9 +12,12 @@
 </js-module>
 
     <engines>
-        <engine name="cordova" version=">=7.0.0" />
-        <engine name="cordova-android" version=">=6.0.0" />
-   </engines>
+		<engine name="cordova"
+		        version=">=10.0.0"/>
+		<engine name="cordova-android"
+		        version=">=11.0.0"/>
+		
+	</engines>
 
 
 <platform name="android">
@@ -36,7 +39,7 @@
          <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
       
         <preference name="APP_ID_ANDROID" default="ca-app-pub-3940256099942544~3347511713" />
-        <preference name="PLAY_SERVICES_VERSION" default="22.1.0" />
+        <preference name="PLAY_SERVICES_VERSION" default="22.2.0" />
 		
         <framework src="com.google.android.gms:play-services-ads:$PLAY_SERVICES_VERSION" />
 
