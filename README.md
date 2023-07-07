@@ -54,13 +54,6 @@
 
 
 
-  > __Note__
-> - ## Plugin version @1.1.9
-
- [FILL Example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/) - index.html:
-
-
-
 
 ## Installation
 
@@ -82,51 +75,22 @@ cordova plugin rm emi-indo-cordova-plugin-admob
 cordova plugin add emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-app-pub-3940256099942544~3347511713 --variable PLAY_SERVICES_VERSION="xxxx" 
 ```
 
-## Response Info
-- Here is a sample output returned by responseInfo = true showing the debugging data returned for a loaded ad:
-
-```sh
-{
-  "Response ID": "COOllLGxlPoCFdAx4Aod-Q4A0g",
-  "Mediation Adapter Class Name": "com.google.ads.mediation.admob.AdMobAdapter",
-  "Adapter Responses": [
-    {
-      "Adapter": "com.google.ads.mediation.admob.AdMobAdapter",
-      "Latency": 328,
-      "Ad Source Name": "Reservation campaign",
-      "Ad Source ID": "7068401028668408324",
-      "Ad Source Instance Name": "[DO NOT EDIT] Publisher Test Interstitial",
-      "Ad Source Instance ID": "4665218928925097",
-      "Credentials": {},
-      "Ad Error": "null"
-    }
-  ],
-  "Loaded Adapter Response": {
-    "Adapter": "com.google.ads.mediation.admob.AdMobAdapter",
-    "Latency": 328,
-    "Ad Source Name": "Reservation campaign",
-    "Ad Source ID": "7068401028668408324",
-    "Ad Source Instance Name": "[DO NOT EDIT] Publisher Test Interstitial",
-    "Ad Source Instance ID": "4665218928925097",
-    "Credentials": {},
-    "Ad Error": "null"
-  },
-  "Response Extras": {
-    "mediation_group_name": "Campaign"
-  }
-}
 
 
-Bundle[{max_ad_content_rating=G, 
-npa=1, 
-is_designed_for_families=0, 
-under_age_of_consent=0] 
+  > __Note__
+> - # Plugin version @1.1.9
 
+ [FULL Example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/) - index.html:
 
-```
+ ###  [ App Open Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/app_open_ads.html)
+ ###  [ Banner Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/banner_ads.html)
+ ###  [ Interstitial Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/interstitial_ads.html)
+ ###  [ Rewarded interstitial Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_interstitial_ads.html)
+ ###  [ Rewarded Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_ads.html)
 
+ ###  [ Advanced topics: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/Advanced%20topics)
 
-
+ 
 
 
 # Event | callback:
@@ -275,6 +239,51 @@ Note: Smart Banners = DEPRECATED ( Replaced by Adaptive_FULL_WIDTH )
 - on.rewardedInt.ad.skip
 - on.rewardedInt.userEarnedReward
 
+
+
+
+## Response Info
+- Here is a sample output returned by responseInfo = true showing the debugging data returned for a loaded ad:
+
+```sh
+{
+  "Response ID": "COOllLGxlPoCFdAx4Aod-Q4A0g",
+  "Mediation Adapter Class Name": "com.google.ads.mediation.admob.AdMobAdapter",
+  "Adapter Responses": [
+    {
+      "Adapter": "com.google.ads.mediation.admob.AdMobAdapter",
+      "Latency": 328,
+      "Ad Source Name": "Reservation campaign",
+      "Ad Source ID": "7068401028668408324",
+      "Ad Source Instance Name": "[DO NOT EDIT] Publisher Test Interstitial",
+      "Ad Source Instance ID": "4665218928925097",
+      "Credentials": {},
+      "Ad Error": "null"
+    }
+  ],
+  "Loaded Adapter Response": {
+    "Adapter": "com.google.ads.mediation.admob.AdMobAdapter",
+    "Latency": 328,
+    "Ad Source Name": "Reservation campaign",
+    "Ad Source ID": "7068401028668408324",
+    "Ad Source Instance Name": "[DO NOT EDIT] Publisher Test Interstitial",
+    "Ad Source Instance ID": "4665218928925097",
+    "Credentials": {},
+    "Ad Error": "null"
+  },
+  "Response Extras": {
+    "mediation_group_name": "Campaign"
+  }
+}
+
+
+Bundle[{max_ad_content_rating=G, 
+npa=1, 
+is_designed_for_families=0, 
+under_age_of_consent=0] 
+
+
+```
 
 
 
