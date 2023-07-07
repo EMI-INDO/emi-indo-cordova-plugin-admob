@@ -1,7 +1,7 @@
 # emi-indo-cordova-plugin-admob
  Cordova Plugin Admob Android and IOS
 
-### Mobile Ads SDK (Android: 22.1.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
+### Mobile Ads SDK (Android: 22.2.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
 
 ### Mobile Ads SDK (IOS: 10.3.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
 
@@ -49,8 +49,17 @@
 - User Consent ( Finished ) [emi-indo-cordova-plugin-consent](https://github.com/EMI-INDO/emi-indo-cordova-plugin-consent)
 - Mediation ( Finished )
 - https://developers.google.com/admob/android/native/start
-- https://developers.google.com/admob/android/impression-level-ad-revenue
+- https://developers.google.com/admob/android/impression-level-ad-revenue ( Finished ) v1.1.9
 - https://developers.google.com/admob/android/ssv
+
+
+
+  > __Note__
+> - ## Plugin version @1.1.9
+
+ [FILL Example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/) - index.html:
+
+
 
 
 ## Installation
@@ -117,391 +126,16 @@ under_age_of_consent=0]
 ```
 
 
-### As suggested by Google, when the SDK initializes this plugin automatically takes the Global Settings and Targeting values.
-
-### Global Settings
-```sh
-// Instruction: https://developers.google.com/admob/android/global-settings
-
-cordova.plugins.emiAdmobPlugin.globalSettings(
-
-    setAppMuted = true, // Type Boolean default: true
-    setAppVolume = 1.0, // Type float
-    enableSameAppKey = false, // Type Boolean default: false
-      
-      // Optional
-    (info) => { alert(info) },
-    (error) => { alert(error)
-
-    });
- ```   
-  
-  ### Targeting
-  
-   > __Note__
-> - ## You can see the value when the ad is loaded, set responseInfo = true
-   
-   ```sh
-// Instruction: https://developers.google.com/admob/android/targeting
-// Overview: https://developers.google.com/android/reference/com/google/android/gms/ads/RequestConfiguration
-
- cordova.plugins.emiAdmobPlugin.targeting(
-    TagForChildDirectedTreatment = 0, // value: 0 | -1 | 1
-    TagForUnderAgeOfConsent = 0, // // value: 0 | -1 | 1
-    MaxAdContentRating = "G", // value: G | MA | PG | T | ""
-
-   // Optional
-   (info) => { alert(info) },
-   (error) => { alert(error)
-
-    });
-    
-    
-// (TagForChildDirectedTreatment)
-// Type number:
-// value: 0 | -1 | 1
-// (value description)
-// 0 = FALSE
-// 1 = TRUE
-// -1 = UNSPECIFIED
-// (if else/undefined = false/0)
-
-///////////////////////////////
-
-// (TagForUnderAgeOfConsent)
-// Type number:
-// value: 0 | -1 | 1
-// (value description)
-// 0 = FALSE
-// 1 = TRUE
-// -1 = UNSPECIFIED
-// (if else/undefined = false/0)
-
-//////////////////////////////
-
-// (MaxAdContentRating)
-// Type String:
-// value: G | MA | PG | T | ""
-// (value description)
-// https://developers.google.com/admob/unity/reference/class/google-mobile-ads/api/max-ad-content-rating
-// (if else/undefined/"" = NULL)
-    
-    
- ```  
-   
-   
-
-## deviceready
-
-[Example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/index.html) - index.html:
-
-
-```sh
-
-// Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
-// This needs to be done only once, ideally at app launch.
-
-cordova.plugins.emiAdmobPlugin.initialize(
-// Optional
-(info) => { alert(info) },
- (error) => { alert(error)
-
- });
- 
- 
- //(Auto Loaded during SDK initialize and ad loaded)
- 
- cordova.plugins.emiAdmobPlugin.targeting(
-    TagForChildDirectedTreatment = 0, // value: 0 | -1 | 1
-    TagForUnderAgeOfConsent = 0, // // value: 0 | -1 | 1
-    MaxAdContentRating = "G", // value: G | MA | PG | T | ""
-
-    // Optional
-    (info) => { console.log(info)},
-    (error) => { alert(error)
-
-    });
-    
-    
-    cordova.plugins.emiAdmobPlugin.globalSettings(
-
-    setAppMuted = true, // Type Boolean default: true
-    setAppVolume = 1.0, // Type float
-    enableSameAppKey = false, // Type Boolean default: false
-
-    // Optional
-     (info) => { console.log(info) },
-     (error) => { alert(error)
-
-    });
-
-document.addEventListener('on.SdkInitializationComplete', () => {
-
-alert("on Sdk Initialization Complete");
-
-});
-
-
-```
-
-
-## App Open Ads
-
-> __Note__
-### Variable name and index (final) cannot be changed.
-- AdUnitId | index 0
-- npa | index 1
-- responseInfo | index 2
-
-```sh
-// load App Open Ad
-
-let loadAppOpenAd = () => {
-    cordova.plugins.emiAdmobPlugin.loadAppOpenAd(
-    AdUnitId = "ca-app-pub-3940256099942544/3419835294",
-    npa = "1", // String | 0 | 1
-    responseInfo = true, // boolean
-    // Optional
-    (info) => { alert(info) },
-    (error) => { alert(error)
-
-    });
-}
-
-// call loadAppOpenAd();
-
-// Show App Open Ad
-
-let showAppOpenAd = () => {
-    cordova.plugins.emiAdmobPlugin.showAppOpenAd();
-}
-
-// call showAppOpenAd();
-
-```
-
-
-## Banner Ads
-
-> __Note__
-### Variable name and index (final) cannot be changed.
-- AdUnitId | index 0
-- npa | index 1
-- position | index 2
-- size | index 3
-- adaptiveWidth | index 4
-
-
-
-```sh
-/// setting banner size: 
-/*          
-BANNER
-FLUID 
-LARGE_BANNER
-MEDIUM_RECTANGLE
-FULL_BANNER
-LEADERBOARD
-(Smart Banners = DEPRECATED)
-Inline_adaptive
-Anchored_adaptive
-default: Anchored_FULL_WIDTH
-
-adaptiveWidth = 320 // number (only adaptive banner)
-
-*/
-/// setting banner position:  
-/*     
-top-right
-top-center
-left
-center
-right
-bottom-center
-bottom-right
-default: "bottom-left"
-*/
-
-
-//  Banner Adaptive
-
-let showBannerAdaptive = () => {
-    cordova.plugins.emiAdmobPlugin.showBannerAd(
-    AdUnitId = "ca-app-pub-3940256099942544/6300978111",
-    npa = "1", // String | 0 | 1
-    position = "bottom-center",
-    size = "Anchored_FULL_WIDTH", // | Inline_adaptive | Anchored_adaptive
-    adaptiveWidth = 320,
-    responseInfo = true, // boolean (debugging)
-    
-    // Optional
-    (info) => { alert(info) },
-    (error) => { alert(error)
-
-    });
-}
-
-// call showBannerAdaptive();
-
-//  not Adaptive banner
-
-let showBannerNotAdaptive = () => {
-    cordova.plugins.emiAdmobPlugin.showBannerAd(
-    AdUnitId = "ca-app-pub-3940256099942544/6300978111",
-    npa = "1", // String | 0 | 1
-    position = "bottom-center",
-    size = "FLUID",
-    responseInfo = true, // boolean (debugging)
-    
-    // Optional
-    (info) => { alert(info) },
-    (error) => { alert(error)
-
-    });
-}
-
-// call showBannerNotAdaptive();
-
-// Remove Banner
-
-let removeBannerAd = () => {
-    cordova.plugins.emiAdmobPlugin.removeBannerAd();
-}
-
-// call removeBannerAd();
-
-```
- [Banner ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-banner-ads-) - callback:
-
-
-## Interstitial Ads
-
-> __Note__
-### Variable name and index (final) cannot be changed.
-- AdUnitId | index 0
-- npa | index 1
-- responseInfo | index 2
-
-```sh
-// Load Interstitial Ad
-
-let loadInterstitialAd = () => {
-    cordova.plugins.emiAdmobPlugin.loadInterstitialAd(
-    AdUnitId = "ca-app-pub-3940256099942544/1033173712",
-    npa = "1", // String | 0 | 1
-    responseInfo = true, // boolean (debugging)
-    
-    // Optional
-    (info) => { alert(info) }, 
-    (error) => { alert(error)
-    
-    });
-}
-
-// call loadInterstitialAd();
-
-// Show Interstitial Ad
-
-let showInterstitialAd = () => {
-    cordova.plugins.emiAdmobPlugin.showInterstitialAd();
-}
-
-// call showInterstitialAd();
-
-```
-
- [Interstitial ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-interstitial-ads-) - callback:
-
-
-
-## Rewarded Ads
-
-> __Note__
-### Variable name and index (final) cannot be changed.
-- AdUnitId | index 0
-- npa | index 1
-- responseInfo | index 2
-
-```sh
-
-// Load Rewarded Ad
-
-let loadRewardedAd = () => {
-    cordova.plugins.emiAdmobPlugin.loadRewardedAd(
-    AdUnitId = "ca-app-pub-3940256099942544/5224354917",
-    npa = "1", // String | 0 | 1
-    responseInfo = true, // boolean (debugging)
-    // Optional
-    (info) => { alert(info) },
-    (error) => { alert(error)
-
-    });
-}
-
-// call loadRewardedAd();
-
-// Show Rewarded Ad
-
-let showRewardedAd = () => {
-    cordova.plugins.emiAdmobPlugin.showRewardedAd();
-}
-
-// call showRewardedAd();
-
-
-```
-
-[Rewarded ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-rewarded-ads-) - callback:
-
-
-## Rewarded interstitial Ads
-
-> __Note__
-### Variable name and index (final) cannot be changed.
-- AdUnitId | index 0
-- npa | index 1
-- responseInfo | index 2
-
-```sh
-
-// load Rewarded Interstitial Ad
-
-let loadRewardedInterstitialAd = () => {
-    cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(
-    AdUnitId = "ca-app-pub-3940256099942544/5354046379",
-    npa = "1", // String | 0 | 1
-    responseInfo = true, // boolean (debugging)
-    // Optional
-    (info) => { alert(info) },
-    (error) => { alert(error)
-
-    });
-}
-
-// call loadRewardedInterstitialAd();
-
-// Show Rewarded Interstitial Ad
-
-const showRewardedInterstitialAd = () => {
-    cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();
-}
-
-// cal showRewardedInterstitialAd();
-
-
-```
-
-[Rewarded interstitial ads event](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob#-rewarded-ads-) - callback:
 
 
 
 # Event | callback:
-### event code
+### Example event code
 
 ```sh
-document.addEventListener('on.bannerAdLoaded', () => {
+document.addEventListener('on.appOpenAd.loaded', () => {
 
-alert("on.banner Ad Loaded");
+alert("On App Open Ad loaded");
 
 });
 
@@ -511,21 +145,22 @@ alert("on.banner Ad Loaded");
 ### (final) cannot be changed.
 
 ## ( SDK )
-- on.SdkInitializationComplete
-
+- on.sdkInitialization
 
 ## ( App Open Ads )
 
 ### Event Load
 
-- on.open.loaded
-- on.open.failed.loaded
+- on.appOpenAd.loaded
+- on.appOpenAd.failed.loaded
 
 ### Event Show
 
-- on.open.dismissed
-- on.open.failed.show
-- on.open.show
+- on.appOpenAd.dismissed
+- on.appOpenAd.failed.show
+- on.appOpenAd.show
+ ### NEW
+- on.appOpenAd.revenue
 
 
 ## ( Banner Ads )
@@ -554,20 +189,26 @@ alert("on.banner Ad Loaded");
 - LEADERBOARD
 - adaptiveWidth = number 
 - Smart Banners = DEPRECATED
-- default: Anchored_FULL_WIDTH
+- default: Adaptive_FULL_WIDTH
+
+Note: Smart Banners = DEPRECATED ( Replaced by Adaptive_FULL_WIDTH )
 
 
+### Event Load
 
+- on.banner.load
+- on.banner.failed.load
 
-### Event Load a Show
+### Event Show
 
-- on.bannerAdClicked
-- on.bannerAdClosed
-- on.bannerAdFailedToLoad
-- on.bannerAdImpression
-- on.bannerAdLoaded
-- on.bannerAdOpened
-
+- on.banner.click
+- on.banner.close
+- on.banner.impression
+- on.banner.open
+### NEW
+- on.banner.revenue
+- on.banner.remove
+  
 
 
 
@@ -575,16 +216,19 @@ alert("on.banner Ad Loaded");
 
 ### Event Load
 
-- on.InterstitialAdLoaded
-- on.InterstitialAdFailedToLoad
+- on.interstitial.loaded
+- on.interstitial.failed.load
 
 ### Event Show
 
-- on.InterstitialAdClicked
-- on.InterstitialAdDismissedFullScreenContent
-- on.InterstitialAdFailedToShowFullScreenContent
-- on.InterstitialAdImpression
-- on.InterstitialAdShowedFullScreenContent
+- on.interstitial.click
+- on.interstitial.dismissed
+- on.interstitial.failed.show
+- on.interstitial.impression
+- on.interstitial.show
+### NEW
+- on.interstitial.revenue
+
 
 
 
@@ -593,18 +237,21 @@ alert("on.banner Ad Loaded");
 
 ### Event Load
 
-- on.RewardedAdFailedToLoad
-- on.RewardedAdLoaded
+- on.rewarded.loaded
+- on.rewarded.failed.load
 
 
 ### Event Show
 
-- on.rewardedAdClicked
-- on.rewardedAdDismissedFullScreenContent
-- on.rewardedAdFailedToShowFullScreenContent
-- on.rewardedAdImpression
-- on.rewardedAdShowedFullScreenContent
-- on.rewarded.rewarded
+- on.rewarded.click
+- on.rewarded.dismissed
+- on.rewarded.failed.show
+- on.rewarded.impression
+- on.rewarded.show
+### NEW
+- on.rewarded.revenue
+- on.rewarded.ad.skip
+- on.reward.userEarnedReward
 
 
 
@@ -612,18 +259,21 @@ alert("on.banner Ad Loaded");
 
 ### Event Load
 
-- on.RewardedInterstitialAdLoaded
-- on.RewardedInterstitialAdFailedToLoad
+- on.rewardedInt.loaded
+- on.rewardedInt.failed.load
 
 
 ### Event Show
 
-- on.rewardedInterstitialAdClicked
-- on.rewardedInterstitialAdDismissedFullScreenContent
-- on.rewardedInterstitialAdFailedToShowFullScreenContent
-- on.rewardedInterstitialAdImpression
-- on.rewardedInterstitialAdShowedFullScreenContent
-- on.rewardedInterstitial.rewarded
+- on.rewardedInt.click
+- on.rewardedInt.dismissed
+- on.rewardedInt.failed.show
+- on.rewardedInt.impression
+- on.rewardedInt.showed
+### NEW
+- on.rewardedInt.revenue
+- on.rewardedInt.ad.skip
+- on.rewardedInt.userEarnedReward
 
 
 
