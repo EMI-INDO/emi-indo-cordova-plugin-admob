@@ -14,7 +14,7 @@
 
 let _getConsentRequest = () => {
     cordova.plugins.emiAdmobPlugin.getConsentRequest(
-    setTagForUnderAgeOfConsent = false, // boolean
+    // Setting Targeting in Device Ready
 
     (status) => { alert(status) }, // check event code
     (error) => { alert(error)
@@ -35,20 +35,61 @@ let _consentReset = () => {
 
 
 
+
+
+
+      /////  >>>>>> Device Ready <<<<<<
+
 document.addEventListener("deviceready", function(){
 
+cordova.plugins.emiAdmobPlugin.initialize();
 
+cordova.plugins.emiAdmobPlugin.targeting(
+    TagForChildDirectedTreatment = 0, // value: 0 | -1 | 1
+    TagForUnderAgeOfConsent = 0, // // value: 0 | -1 | 1
+    MaxAdContentRating = "G", // value: G | MA | PG | T | ""
 
+    // Optional
+    (info) => { console.log(info)},
+    (error) => { console.log(error)
 
-document.addEventListener('onConsentInfoUpdateSuccess', () => {
+    });
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// Consent Event 
+	
+	
+/*
+on.consent.info.update
+on.consent.info.update.failed
 
-alert("on Consent Info Update Success");
+on.consent.status.not_required
+on.consent.status.obtained
+on.consent.status.required
+on.consent.status.unknown
+
+on.consent.failed.show
+on.consent.failed.load.from
+on.consent.form.not.available
+*/
+	
+
+document.addEventListener('on.consent.info.update', () => {
+
+alert("on.consent.info.update");
 
 });
 
-document.addEventListener('onConsentInfoUpdateFailure', () => {
+document.addEventListener('on.consent.info.update.failed', () => {
 
-alert("on Consen Info Update Failure");
+alert("on.consent.info.update.failed");
 
 });
 
@@ -56,45 +97,33 @@ alert("on Consen Info Update Failure");
 
 // https://developers.google.com/admob/android/privacy/api/reference/com/google/android/ump/ConsentInformation.ConsentStatus
 
-document.addEventListener('on.ConsentStatus.NOT_REQUIRED', () => {
+document.addEventListener('on.consent.status.not_required', () => {
 // Constant Value: 1
 alert("User consent not required.");
 
 });
 
-document.addEventListener('on.ConsentStatus.OBTAINED', () => {
+document.addEventListener('on.consent.status.obtained', () => {
 // Constant Value: 3
 alert("User consent obtained. Personalized vs non-personalized undefined.");
 
 });
 
-document.addEventListener('on.ConsentStatus.REQUIRED', () => {
+document.addEventListener('on.consent.status.required', () => {
 // Constant Value: 2
 // is Consent Form Available = the code auto, load Consent Form and consent Form show.
 alert("User consent required but not yet obtained.");
 
 });
 
-document.addEventListener('on.ConsentStatus.UNKNOWN', () => {
+document.addEventListener('on.consent.status.unknown', () => {
 //Constant Value: 0
 alert("Consent status is unknown.");
 
 });
 
 
-////////////////////////////////////////////////////////////
 
-document.addEventListener('on.loadConsentFormError', () => {
-
-alert("on load Consent Form Error");
-
-});
-
-document.addEventListener('on.ConsentFormNotAvailable', () => {
-
-alert("on Consent Form Not Available");
-
-});
 
 
 

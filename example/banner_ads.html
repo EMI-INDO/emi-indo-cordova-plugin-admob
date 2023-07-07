@@ -1,0 +1,248 @@
+<html>
+<head>
+    <script type="text/javascript" src="cordova.js"></script>
+</head>
+<body>
+
+<label for="event">Debug Event All response :</label>
+<textarea id="event" name="event" rows="5" cols="40"></textarea>
+
+<script>
+
+   let event = document.getElementById('event');
+
+   let cleanText = () => { event.value = '' };
+   
+   let debug = false;
+
+/*
+>>>>>>>>>> Banner position  <<<<<<<<<<<<<<
+
+top-right
+top-center
+left
+center
+right
+bottom-center
+bottom-right
+
+ >>>>>>>>>>> Banner size <<<<<<<<<<<<
+ ( Ad Size Adaptive )
+ 
+Anchored_adaptive
+Inline_adaptive
+default: Adaptive_FULL_WIDTH
+adaptiveWidth = number/default = 320
+
+( Ad Size not Adaptive )
+
+BANNER
+FLUID
+LARGE_BANNER
+MEDIUM_RECTANGLE
+FULL_BANNER
+LEADERBOARD
+
+Smart Banners = DEPRECATED ( Replaced by Adaptive_FULL_WIDTH )
+
+*/
+
+// // Note adaptiveWidth = 320, // This is special size = "Inline_adaptive" or "Anchored_adaptive" if else this field will be ignored
+
+//   Adaptive banner
+
+let loadBannerAdaptive = () => {
+
+    cordova.plugins.emiAdmobPlugin.loadBannerAd(
+    AdUnitId = "ca-app-pub-3940256099942544/6300978111",
+    npa = "1", // String | 0 | 1
+    position = "bottom-center",
+    size = "default", // Inline_adaptive | Anchored_adaptive | default = Adaptive_FULL_WIDTH
+    adaptiveWidth = 320,
+    responseInfo = debug, // boolean
+
+    (info) => {
+    
+	if (debug === true) {
+	
+          event.value += "\n ResponseInfo: " + info; // responseInfo = true
+	
+	   } 
+
+     },
+    (error) => {
+
+    event.value += "\n Error: " + error
+
+    });
+}
+
+
+
+//  not Adaptive banner
+
+let loadBannerNotAdaptive = () => {
+    cordova.plugins.emiAdmobPlugin.loadBannerAd(
+    AdUnitId = "ca-app-pub-3940256099942544/6300978111",
+    npa = "1", // String | 0 | 1
+    position = "bottom-center",
+    size = "BANNER",
+    adaptiveWidth = 320, // Ignored
+    responseInfo = false, // boolean
+
+
+    (info) => {
+
+    if (debug === true) {
+	
+          event.value += "\n ResponseInfo: " + info; // responseInfo = true
+	
+	   } 
+
+     },
+    (error) => {
+
+    event.value += "\n Error: " + error
+
+    });
+}
+
+
+
+// show Banner Ad
+
+let showBannerAd = () => {
+
+    cordova.plugins.emiAdmobPlugin.showBannerAd(
+
+    (info) => {
+    // event name: on.banner.revenue
+    event.value += "\n Micros: " + info.micros;
+    event.value += "\n Currency: " + info.currency;
+    event.value += "\n Precision: " + info.precision;
+    event.value += "\n AdUnitId: " + info.adUnitId;
+
+     },
+    (error) => {
+
+    event.value += "\n Error: " + error
+
+    });
+
+}
+
+
+// Remove Banner
+
+let removeBannerAd = () => {
+    cordova.plugins.emiAdmobPlugin.removeBannerAd();
+}
+
+
+    /////  >>>>>> Device Ready <<<<<<
+
+
+document.addEventListener("deviceready", function(){
+
+// Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
+// This needs to be done only once, ideally at app launch.
+
+  cordova.plugins.emiAdmobPlugin.initialize(
+    // Optional
+    (info) => {
+    event.value += (info)
+    },
+    (error) => {
+
+    event.value += (error)
+
+    });
+
+// SDK EVENT Initialization
+ 
+document.addEventListener('on.sdkInitialization', () => {
+
+event.value += ("\n On Sdk Initialization");
+
+
+});
+
+
+// Banner Ad EVENT
+
+/*
+on.banner.load
+on.banner.failed.load
+on.banner.click
+on.banner.close
+on.banner.impression
+on.banner.open
+on.banner.revenue
+on.banner.remove
+*/
+
+
+document.addEventListener('on.banner.load', () => {
+
+event.value += ("\n on.banner.load");
+
+});
+
+document.addEventListener('on.banner.failed.load', () => {
+
+event.value += ("\n on.banner.failed.load");
+
+});
+
+document.addEventListener('on.banner.click', () => {
+
+event.value += ("\n on.banner.click");
+
+});
+
+document.addEventListener('on.banner.close', () => {
+
+event.value += ("\n on.banner.close");
+
+});
+
+document.addEventListener('on.banner.impression', () => {
+
+event.value += ("\n on.banner.impression");
+
+});
+
+document.addEventListener('on.banner.open', () => {
+
+event.value += ("\n on.banner.open");
+
+});
+
+document.addEventListener('on.banner.revenue', () => {
+
+event.value += ("\n on.banner.revenue");
+
+});
+
+document.addEventListener('on.banner.remove', () => {
+
+event.value += ("\n on.banner.remove");
+
+});
+
+
+}, false);
+
+</script>
+
+<p> <button onclick="loadBannerAdaptive();">load Banner adaptive</button></p>
+<p> <button onclick="loadBannerNotAdaptive();">load Banner No Adaptive</button></p>
+<p> <button onclick="showBannerAd();">show Banner Ad</button></p>
+<p> <button onclick="removeBannerAd();">remove Banner Ad</button></p>
+
+
+<p> <button onclick="cleanText();">Clean response Text</button></p>
+
+
+</body>
+</html>

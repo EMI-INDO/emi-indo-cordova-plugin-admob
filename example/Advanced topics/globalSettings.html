@@ -1,0 +1,39 @@
+<html>
+<head>
+    <script type="text/javascript" src="cordova.js"></script>
+</head>
+<body>
+
+<script>
+
+
+// ### As suggested by Google, when the SDK initializes this plugin automatically takes the Global Settings and Targeting values.
+
+// ### Global Settings
+
+ /////  >>>>>> Device Ready <<<<<<
+
+document.addEventListener("deviceready", function(){
+
+// Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
+// This needs to be done only once, ideally at app launch.
+
+cordova.plugins.emiAdmobPlugin.initialize();
+
+// Instruction: https://developers.google.com/admob/android/global-settings
+
+cordova.plugins.emiAdmobPlugin.globalSettings(
+
+    setAppMuted = false, // Type Boolean default: false
+    setAppVolume = 1.0, // Type float
+    enableSameAppKey = false // Type Boolean default: false
+	
+    });
+
+
+}, false);
+</script>
+
+
+</body>
+</html>

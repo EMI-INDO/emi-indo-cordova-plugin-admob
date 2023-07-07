@@ -1,0 +1,77 @@
+<html>
+<head>
+    <script type="text/javascript" src="cordova.js"></script>
+</head>
+<body>
+
+<script>
+
+
+// ### As suggested by Google, when the SDK initializes this plugin automatically takes the Global Settings and Targeting values.
+
+// ### Targeting
+
+ /////  >>>>>> Device Ready <<<<<<
+
+document.addEventListener("deviceready", function(){
+
+// Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
+// This needs to be done only once, ideally at app launch.
+
+cordova.plugins.emiAdmobPlugin.initialize();
+
+//(Auto Loaded during SDK initialize and ad loaded)
+
+// You can see the value when the ad is loaded, set responseInfo = true
+
+// Instruction: https://developers.google.com/admob/android/targeting
+// Overview: https://developers.google.com/android/reference/com/google/android/gms/ads/RequestConfiguration
+ 
+ cordova.plugins.emiAdmobPlugin.targeting(
+    TagForChildDirectedTreatment = 0, // value: 0 | -1 | 1
+    TagForUnderAgeOfConsent = 0, // // value: 0 | -1 | 1
+    MaxAdContentRating = "G", // value: G | MA | PG | T | ""
+
+    // Optional
+    (info) => { console.log(info)},
+    (error) => { console.log(error)
+
+    });
+	
+	
+// (TagForChildDirectedTreatment)
+// Type number:
+// value: 0 | -1 | 1
+// (value description)
+// 0 = FALSE
+// 1 = TRUE
+// -1 = UNSPECIFIED
+// (if else/undefined = false/0)
+
+///////////////////////////////
+
+// (TagForUnderAgeOfConsent)
+// Type number:
+// value: 0 | -1 | 1
+// (value description)
+// 0 = FALSE
+// 1 = TRUE
+// -1 = UNSPECIFIED
+// (if else/undefined = false/0)
+
+//////////////////////////////
+
+// (MaxAdContentRating)
+// Type String:
+// value: G | MA | PG | T | ""
+// (value description)
+// https://developers.google.com/admob/unity/reference/class/google-mobile-ads/api/max-ad-content-rating
+// (if else/undefined/"" = NULL)
+
+
+}, false);
+</script>
+
+
+</body>
+</html>
