@@ -1,6 +1,6 @@
 {
   "name": "emi-indo-cordova-plugin-admob",
-  "version": "1.1.9",
+  "version": "1.2.9",
   "description": "Cordova Plugin Admob Android",
   "cordova": {
     "id": "emi-indo-cordova-plugin-admob",
@@ -15,15 +15,15 @@
     "javascript",
     "admob",
     "cordova-plugin-admob",
-    "admob-free",
-    "admob-plus",
-    "admob-pro",
+    "cordova-admob-free",
+    "cordova-admob-plus",
+    "cordova-admob-pro",
     "construct 3"
     
   ],
   "author": "EMI INDO",
   "license": "ISC",
-"repository": {
+  "repository": {
     "type": "git",
     "url": "git+https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob.git"
   },
