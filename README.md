@@ -78,7 +78,7 @@ cordova plugin add emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-ap
 
 
   > __Note__
-> - # Plugin version @1.1.9
+> - # Plugin version @1.3.9
 
  [FULL Example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/) - index.html:
 
