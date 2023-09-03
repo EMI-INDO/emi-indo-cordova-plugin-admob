@@ -1,7 +1,7 @@
 # emi-indo-cordova-plugin-admob
  Cordova Plugin Admob Android and IOS
 
-### Mobile Ads SDK (Android: 22.2.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
+### Mobile Ads SDK (Android: 22.3.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
 
 ### Mobile Ads SDK (IOS: 10.3.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
 
