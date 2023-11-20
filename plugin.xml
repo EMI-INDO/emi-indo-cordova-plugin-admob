@@ -39,7 +39,7 @@
          <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
       
         <preference name="APP_ID_ANDROID" default="ca-app-pub-3940256099942544~3347511713" />
-        <preference name="PLAY_SERVICES_VERSION" default="22.3.0" />
+        <preference name="PLAY_SERVICES_VERSION" default="22.5.0" />
 		
         <framework src="com.google.android.gms:play-services-ads:$PLAY_SERVICES_VERSION" />
 
