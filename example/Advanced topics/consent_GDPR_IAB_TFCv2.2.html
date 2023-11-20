@@ -1,0 +1,278 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="cordova.js"></script>
+</head>
+
+<body>
+
+    <label for="event">Debug Event All response :</label>
+    <textarea id="event" name="event" rows="15" cols="40"></textarea>
+
+    <script>
+
+        let event = document.getElementById('event');
+
+        let cleanText = () => { event.value = '' };
+
+        let debug = false;
+
+
+
+        // Load Rewarded Ad
+
+
+        let loadRewardedAd = () => {
+            cordova.plugins.emiAdmobPlugin.loadRewardedAd(
+                AdUnitId = "ca-app-pub-3940256099942544/5224354917",
+                npa = "1", // String | 0 | 1
+                responseInfo = debug, // boolean
+
+
+                (info) => {
+
+                    if (debug === true) {
+
+                        event.value += "\n ResponseInfo: " + info; // responseInfo = true
+
+                    } else
+                        if (debug === false) {
+
+                            // responseInfo = false
+                            // event name: on.rewardedInt.revenue
+
+                            event.value += "\n Micros: " + info.micros;
+                            event.value += "\n Currency: " + info.currency;
+                            event.value += "\n Precision: " + info.precision;
+                            event.value += "\n AdUnitId: " + info.adUnitId;
+
+                        }
+
+                },
+                (error) => {
+
+                    event.value += "\n Error: " + error
+
+                });
+        }
+
+        // Show Rewarded Ad
+
+        let showRewardedAd = () => {
+            cordova.plugins.emiAdmobPlugin.showRewardedAd();
+
+        }
+
+        // >>>>>>>>  User Messaging Platform (UMP) SDK. 
+
+        let getConsentRequest = () => {
+            // https://developers.google.com/admob/android/privacy
+            cordova.plugins.emiAdmobPlugin.getConsentRequest(
+
+                (info) => {
+
+                    event.value += "\n Consent Status: " + info;
+
+                },
+                (error) => {
+
+                    event.value += "\n Error: " + error
+
+                });
+
+        }
+
+
+        let consentReset = () => {
+            cordova.plugins.emiAdmobPlugin.consentReset();
+        }
+
+
+
+        // >>>>>>>>  New features (UMP) SDK v2.1.0
+        let showPrivacyOptionsForm = () => {
+
+            cordova.plugins.emiAdmobPlugin.showPrivacyOptionsForm(
+
+                (info) => {
+
+                    event.value += "\n Show Privacy Option Form: " + info;
+
+                },
+                (error) => {
+
+                    event.value += "\n Error: " + error
+
+                });
+
+        }
+
+        
+
+        /*
+        IAB Europe Transparency & Consent Framework
+        Final v.2.2 May 2023
+        */
+        // >>>>>>>>  New features (UMP) SDK v2.1.0
+        // https://developers.google.com/admob/android/privacy/gdpr
+        let getIabTfc = () => {
+
+            cordova.plugins.emiAdmobPlugin.getIabTfc(
+                /*
+                If the user chooses not to display ads, 
+                you can restrict access to the app, or ban it,
+                until they change their decision back, 
+                Just call showPrivacyOptionsForm();
+                */
+                (info) => {
+                    // How to read consent choices
+                    event.value += "\n IABTCF_gdprApplies: " + info.IABTCF_gdprApplies;
+                    event.value += "\n IABTCF_PurposeConsents: " + info.IABTCF_PurposeConsents; // In order for the ad to be displayed this must be filled in
+                    event.value += "\n IABTCF_TCString: " + info.IABTCF_TCString; // In order for the ad to be displayed this must be filled in
+                    /*
+                                        // A small example
+                                        var fundingChoices;
+                    
+                                        fundingChoices = info.IABTCF_PurposeConsents;
+                                       if (fundingChoices === "1111111111"){
+                                           
+                                       // Enable app features.
+                                        loadRewardedAd();
+                                        
+                                       } else if (fundingChoices === "") {
+                    
+                                           // disable app features.
+                    
+                                       } else {
+                    
+                                          // You have to test everything yourself.
+                    
+                                       }
+                    */
+                },
+                (error) => {
+
+                    event.value += "\n Error: " + error
+
+                });
+
+        }
+
+
+        /////  >>>>>> Device Ready <<<<<<
+
+
+        document.addEventListener("deviceready", function () {
+
+            // Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
+            // This needs to be done only once, ideally at app launch.
+
+            cordova.plugins.emiAdmobPlugin.initialize(
+                // Optional
+                (info) => {
+                    event.value += (info)
+                },
+                (error) => {
+
+                    event.value += (error)
+
+                });
+
+
+            // Rewarded Ad EVENT
+
+            /*
+            on.rewarded.loaded
+            on.rewarded.failed.load
+            on.rewarded.click
+            on.rewarded.dismissed
+            on.rewarded.failed.show
+            on.rewarded.impression
+            on.rewarded.show
+            on.rewarded.revenue
+            on.rewarded.ad.skip
+            on.reward.userEarnedReward
+            */
+
+
+            document.addEventListener('on.rewarded.loaded', () => {
+
+                event.value += ("\n on.rewarded.loaded");
+
+            });
+
+            document.addEventListener('on.rewarded.failed.load', () => {
+
+                event.value += ("\n on.rewarded.failed.load");
+
+            });
+
+            document.addEventListener('on.rewarded.click', () => {
+
+                event.value += ("\n on.rewarded.click");
+
+            });
+
+            document.addEventListener('on.rewarded.dismissed', () => {
+
+                event.value += ("\n on.rewarded.dismissed");
+
+            });
+
+            document.addEventListener('on.rewarded.failed.show', () => {
+
+                event.value += ("\n on.rewarded.failed.show");
+
+            });
+
+            document.addEventListener('on.rewarded.impression', () => {
+
+                event.value += ("\n on.rewarded.impression");
+
+            });
+
+            document.addEventListener('on.rewarded.show', () => {
+
+                event.value += ("\n on.rewarded.show");
+
+            });
+
+            document.addEventListener('on.rewarded.revenue', () => {
+
+                event.value += ("\n on.rewarded.revenue");
+
+            });
+
+            document.addEventListener('on.rewarded.ad.skip', () => {
+
+                event.value += ("\n on.rewarded.ad.skip");
+
+            });
+
+
+            document.addEventListener('on.reward.userEarnedReward', () => {
+
+                event.value += ("\n on.reward.userEarnedReward");
+
+            });
+
+
+
+        }, false);
+
+    </script>
+
+    <p> <button onclick="getConsentRequest();">Get Consent Status</button></p>
+    <p> <button onclick="showPrivacyOptionsForm();">Show Privacy Options Form</button></p>
+    <p> <button onclick="consentReset();">Consent Reset</button></p>
+
+    <p> <button onclick="loadRewardedAd();">Load Rewarded Ad</button></p>
+    <p> <button onclick="showRewardedAd();">Show Rewarded Ad</button></p>
+
+
+    <p> <button onclick="cleanText();">Clean response Text</button></p>
+
+
+</body>
+
+</html>
