@@ -4,6 +4,14 @@ exports.initialize = function (success, error) {
     exec(success, error, 'emiAdmobPlugin', 'initialize', []);
 };
 
+exports.getIabTfc = function (success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'getIabTfc', []);
+};
+
+exports.showPrivacyOptionsForm = function (success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'showPrivacyOptionsForm', []);
+};
+
 exports.loadAppOpenAd = function (arg0, arg1, arg2, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'loadAppOpenAd', [arg0, arg1, arg2]);
 };
