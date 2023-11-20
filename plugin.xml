@@ -1,6 +1,6 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" 
 	xmlns:android="http://schemas.android.com/apk/res/android" 
-	id="emi-indo-cordova-plugin-admob" version="1.3.9">
+	id="emi-indo-cordova-plugin-admob" version="1.4.0">
 	
     <name>emiAdmobPlugin</name>
   <description>Cordova Plugin Admob Android</description>
@@ -42,6 +42,14 @@
         <preference name="PLAY_SERVICES_VERSION" default="22.5.0" />
 		
         <framework src="com.google.android.gms:play-services-ads:$PLAY_SERVICES_VERSION" />
+
+        <preference name="UMP" default="2.1.0" />
+		
+        <framework src="com.google.android.ump:user-messaging-platform:$UMP" />
+
+        <preference name="ANDROID_X" default="1.2.0" />
+		
+        <framework src="androidx.preference:preference:$ANDROID_X" />
 
 
 <config-file parent="/*" target="AndroidManifest.xml"/>
