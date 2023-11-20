@@ -1,7 +1,7 @@
 # emi-indo-cordova-plugin-admob
  Cordova Plugin Admob Android and IOS
 
-### Mobile Ads SDK (Android: 22.3.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
+### Mobile Ads SDK (Android: 22.5.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
 
 ### Mobile Ads SDK (IOS: 10.3.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
 
@@ -41,16 +41,18 @@
 - Interstitial Ads
 - Rewarded Ads
 - Rewarded interstitial Ads
-- [Consent](https://github.com/EMI-INDO/emi-indo-cordova-plugin-consent)
+- [Consent](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html) 
 - Mediation
 
  ## Coming soon
 - App Open Ads ( Finished )
-- User Consent ( Finished ) [emi-indo-cordova-plugin-consent](https://github.com/EMI-INDO/emi-indo-cordova-plugin-consent)
+- User Consent ( Finished ) 
 - Mediation ( Finished )
 - https://developers.google.com/admob/android/native/start
 - https://developers.google.com/admob/android/impression-level-ad-revenue ( Finished ) v1.1.9
 - https://developers.google.com/admob/android/ssv
+- https://developers.google.com/admob/android/privacy/gdpr ( Finished ) v1.4.0 [index.html](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html)
+- https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/ ( Finished ) v1.4.0 [index.html](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html)
 
 
 
@@ -78,6 +80,16 @@ cordova plugin add emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-ap
 
 
   > __Note__
+> 
+
+> - # Plugin version @1.4.0
+
+ ###  [ GDPR | IAB TFC code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html)
+ - replace all AdUnitId to adUnitId
+ - new banner size: FULL_WIDTH
+
+ - 
+
 > - # Plugin version @1.3.9
 
  [FULL Example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/) - index.html:
@@ -90,7 +102,58 @@ cordova plugin add emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-ap
 
  ###  [ Advanced topics: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/Advanced%20topics)
 
- 
+# IAB Europe Transparency & Consent Framework
+### Example How to read consent choices
+
+                
+               // index.html  https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html
+ ```sh
+               // >>>>>>>>  New features (UMP) SDK v2.1.0
+               // https://developers.google.com/admob/android/privacy/gdpr
+                /*
+                If the user chooses not to display ads, 
+                you can restrict access to the app, or ban it,
+                until they change their decision back, 
+                Just call showPrivacyOptionsForm();
+                */
+
+
+             cordova.plugins.emiAdmobPlugin.getIabTfc(
+                (info) => {
+                    // How to read consent choices
+                    console.log("IABTCF_gdprApplies: " + info.IABTCF_gdprApplies);
+                    console.log("IABTCF_PurposeConsents: " + info.IABTCF_PurposeConsents);
+                    console.log("IABTCF_TCString: " + info.IABTCF_TCString);
+
+                                        // A small example
+                                        var fundingChoices;
+                    
+                                        fundingChoices = info.IABTCF_PurposeConsents;
+                                       if (fundingChoices === "1111111111"){
+                                           
+                                       // Enable app features.
+                                        loadRewardedAd();
+                                        
+                                       } else if (fundingChoices === "") {
+                    
+                                           // disable app features.
+                    
+                                       } else {
+                    
+                                          // You have to test everything yourself.
+                                          console.log(info);
+                    
+                                       }
+                   
+                },
+                (error) => {
+                     console.log("Error: " + error);
+                    
+                });
+
+        
+
+```
 
 
 # Event | callback:
@@ -153,7 +216,7 @@ alert("On App Open Ad loaded");
 - LEADERBOARD
 - adaptiveWidth = number 
 - Smart Banners = DEPRECATED
-- default: Adaptive_FULL_WIDTH
+- default: FULL_WIDTH
 
 Note: Smart Banners = DEPRECATED ( Replaced by Adaptive_FULL_WIDTH )
 
