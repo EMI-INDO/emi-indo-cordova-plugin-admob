@@ -11,7 +11,7 @@
 <clobbers target="cordova.plugins.emiAdmobPlugin"/>
 </js-module>
 
-    <engines>
+     <engines>
 		<engine name="cordova"
 		        version=">=10.0.0"/>
 		<engine name="cordova-android"
