@@ -90,8 +90,8 @@ cordova plugin add emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-ap
  ###  [ GDPR | IAB TFC code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html)
  - replace all AdUnitId to adUnitId
  - new banner size: FULL_WIDTH
-
- - 
+### New only on github
+   https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/%401.4.0
 
 > - # Plugin version @1.3.9
 
