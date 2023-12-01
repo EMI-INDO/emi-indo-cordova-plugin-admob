@@ -12,66 +12,27 @@
    let event = document.getElementById('event');
 
    let cleanText = () => { event.value = '' };
-   
-   let debug = false;
 
-/*
->>>>>>>>>> Banner position  <<<<<<<<<<<<<<
+   let debug = true;
 
-top-right
-top-center
-left
-center
-right
-bottom-center
-bottom-right
-
- >>>>>>>>>>> Banner size <<<<<<<<<<<<
- ( Ad Size Adaptive )
- 
-Anchored_adaptive
-Inline_adaptive
-default: Adaptive_FULL_WIDTH
-adaptiveWidth = number/default = 320
-
-( Ad Size not Adaptive )
-
-BANNER
-FLUID
-LARGE_BANNER
-MEDIUM_RECTANGLE
-FULL_BANNER
-LEADERBOARD
-
-Smart Banners = DEPRECATED ( Replaced by Adaptive_FULL_WIDTH )
-
-*/
-
-// // Note adaptiveWidth = 320, // This is special size = "Inline_adaptive" or "Anchored_adaptive" if else this field will be ignored
-
-//   Adaptive banner
-
-let loadBannerAdaptive = () => {
+let loadBannerAd = () => {
 
     cordova.plugins.emiAdmobPlugin.loadBannerAd(
-    AdUnitId = "ca-app-pub-3940256099942544/6300978111",
-    npa = "1", // String | 0 | 1
-    position = "bottom-center",
-    size = "default", // Inline_adaptive | Anchored_adaptive | default = Adaptive_FULL_WIDTH
-    adaptiveWidth = 320,
-    responseInfo = debug, // boolean
+   adUnitId = "ca-app-pub-3940256099942544/6300978111",
+   position = "bottom-center",
+   size = "ANCHORED",
+   collapsible = "bottom", // (BETA) enable in globalSettings
+   adaptive_Width = 320, // Ignored
+   autoShow = false, // boolean
+
 
     (info) => {
-    
-	if (debug === true) {
-	
-          event.value += "\n ResponseInfo: " + info; // responseInfo = true
-	
-	   } 
+
+          event.value += "\n ResponseInfo: " + JSON.stringify(info);
 
      },
     (error) => {
-
+alert(error)
     event.value += "\n Error: " + error
 
     });
@@ -79,37 +40,6 @@ let loadBannerAdaptive = () => {
 
 
 
-//  not Adaptive banner
-
-let loadBannerNotAdaptive = () => {
-    cordova.plugins.emiAdmobPlugin.loadBannerAd(
-    AdUnitId = "ca-app-pub-3940256099942544/6300978111",
-    npa = "1", // String | 0 | 1
-    position = "bottom-center",
-    size = "BANNER",
-    adaptiveWidth = 320, // Ignored
-    responseInfo = false, // boolean
-
-
-    (info) => {
-
-    if (debug === true) {
-	
-          event.value += "\n ResponseInfo: " + info; // responseInfo = true
-	
-	   } 
-
-     },
-    (error) => {
-
-    event.value += "\n Error: " + error
-
-    });
-}
-
-
-
-// show Banner Ad
 
 let showBannerAd = () => {
 
@@ -132,7 +62,55 @@ let showBannerAd = () => {
 }
 
 
-// Remove Banner
+
+
+
+// load App Open Ad
+
+let loadAppOpenAd = () => {
+
+    cordova.plugins.emiAdmobPlugin.loadAppOpenAd(
+    adUnitId = "ca-app-pub-3940256099942544/9257395921",
+    autoShow = true, // boolean 
+
+    (info) => {
+
+	if (debug === true) {
+
+    event.value += "\n ResponseInfo: " + info; // responseInfo = true
+
+	} else
+	if (debug === false) {
+
+	// responseInfo = false
+	// event name: on.appOpenAd.revenue
+
+    event.value += "\n Micros: " + info.micros;
+    event.value += "\n Currency: " + info.currency;
+    event.value += "\n Precision: " + info.precision;
+    event.value += "\n AdUnitId: " + info.adUnitId;
+
+	   }
+
+     },
+    (error) => {
+
+    event.value += "\n Error: " + error
+
+    });
+}
+
+// Show App Open Ad
+
+let showAppOpenAd = () => {
+    cordova.plugins.emiAdmobPlugin.showAppOpenAd();
+}
+
+
+let hideBannerAd = () => {
+    cordova.plugins.emiAdmobPlugin.hideBannerAd();
+
+}
 
 let removeBannerAd = () => {
     cordova.plugins.emiAdmobPlugin.removeBannerAd();
@@ -147,6 +125,8 @@ document.addEventListener("deviceready", function(){
 // Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
 // This needs to be done only once, ideally at app launch.
 
+
+
   cordova.plugins.emiAdmobPlugin.initialize(
     // Optional
     (info) => {
@@ -158,28 +138,32 @@ document.addEventListener("deviceready", function(){
 
     });
 
+    cordova.plugins.emiAdmobPlugin.globalSettings(
+
+    setAppMuted = false, // Type Boolean default: false
+    setAppVolume = 1, // Type float default: 1
+    enableSameAppKey = false, // Type Boolean default: false
+    npa = "1", // string "0" | "1"
+    enableCollapsible = false, // (BETA) activate the collapsible banner ads
+    responseInfo = true, // For debugging and logging purposes
+    // Optional
+    (info) => {
+    event.value += (info)
+    },
+    (error) => {
+
+    });
+
+
 // SDK EVENT Initialization
- 
+// Optional
 document.addEventListener('on.sdkInitialization', () => {
 
 event.value += ("\n On Sdk Initialization");
 
-
 });
 
 
-// Banner Ad EVENT
-
-/*
-on.banner.load
-on.banner.failed.load
-on.banner.click
-on.banner.close
-on.banner.impression
-on.banner.open
-on.banner.revenue
-on.banner.remove
-*/
 
 
 document.addEventListener('on.banner.load', () => {
@@ -231,17 +215,78 @@ event.value += ("\n on.banner.remove");
 });
 
 
+
+
+
+
+
+
+
+// App Open Ad EVENT
+
+/*
+on.appOpenAd.loaded
+on.appOpenAd.failed.loaded
+on.appOpenAd.dismissed
+on.appOpenAd.failed.show
+on.appOpenAd.show
+on.appOpenAd.revenue
+*/
+
+
+document.addEventListener('on.appOpenAd.loaded', () => {
+
+event.value += ("\n on.appOpenAd.loaded");
+
+});
+
+document.addEventListener('on.appOpenAd.failed.loaded', () => {
+
+event.value += ("\n on.appOpenAd.failed.loaded");
+
+});
+
+document.addEventListener('on.appOpenAd.dismissed', () => {
+
+event.value += ("\n on.appOpenAd.dismissed");
+
+});
+
+document.addEventListener('on.appOpenAd.failed.show', () => {
+
+event.value += ("\n on.appOpenAd.failed.show");
+
+});
+
+document.addEventListener('on.appOpenAd.show', () => {
+
+event.value += ("\n on.appOpenAd.show");
+
+});
+
+document.addEventListener('on.appOpenAd.revenue', () => {
+
+event.value += ("\n on.appOpenAd.revenue");
+
+});
+
+
 }, false);
 
 </script>
 
-<p> <button onclick="loadBannerAdaptive();">load Banner adaptive</button></p>
-<p> <button onclick="loadBannerNotAdaptive();">load Banner No Adaptive</button></p>
+<p> <button onclick="loadAppOpenAd();">load App Open Ad</button></p>
+<p> <button onclick="showAppOpenAd();">Show App Open Ad</button></p>
+
+<p> <button onclick="loadBannerAd();">load Banner Ad</button></p>
 <p> <button onclick="showBannerAd();">show Banner Ad</button></p>
 <p> <button onclick="removeBannerAd();">remove Banner Ad</button></p>
+<p> <button onclick="hideBannerAd();">hide Banner Ad</button></p>
+
 
 
 <p> <button onclick="cleanText();">Clean response Text</button></p>
+
 
 
 </body>
