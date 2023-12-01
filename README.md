@@ -43,6 +43,9 @@
 - Rewarded interstitial Ads
 - [Consent](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html) 
 - Mediation
+- impression-level-ad-revenue
+- GDPR IAB TFCv2.2
+- Collapsible banner ads (BETA)
 
  ## Coming soon
 - App Open Ads ( Finished )
