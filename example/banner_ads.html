@@ -12,11 +12,15 @@
    let event = document.getElementById('event');
 
    let cleanText = () => { event.value = '' };
-   
-
 /*
->>>>>>>>>> Banner position  <<<<<<<<<<<<<<
 
+
+>>>>>>>>>>> Banner collapsible position <<<<<<<<<<<<
+top-center
+bottom-center
+
+
+ >>>>>>>>>>> Banner position <<<<<<<<<<<<
 top-right
 top-center
 left
@@ -31,7 +35,7 @@ bottom-right
 ANCHORED
 IN_LINE
 FULL_WIDTH
-adaptive_Width = number/default = 320
+adaptive_Width = 320
 
 ( Ad Size not Adaptive )
 
@@ -41,8 +45,6 @@ LARGE_BANNER
 MEDIUM_RECTANGLE
 FULL_BANNER
 LEADERBOARD
-
-Smart Banners = DEPRECATED ( Replaced by FULL_WIDTH )
 
 */
 
@@ -55,7 +57,7 @@ const bannerConfig = [
    size = "BANNER",
    collapsible = "bottom", // (BETA) enable in globalSettings
    adaptive_Width = 320, // Ignored
-   autoShow = true, // boolean
+   autoShow = true // boolean
 
 ]
 
@@ -72,7 +74,6 @@ let showBannerAd = () => {
     cordova.plugins.emiAdmobPlugin.showBannerAd();
     // call showBannerAd();
 }
-
 
 // Hide Banner Ad
 let hideBannerAd = () => {
@@ -95,6 +96,7 @@ document.addEventListener("deviceready", function(){
 
     const config_globalSettings = [
 
+
     // DEPRECATED enableSameAppKey
     setAppMuted = false, // Type Boolean default: false
     setAppVolume = 1.0, // Type float default: 1
@@ -111,28 +113,18 @@ cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
 // Must be under globalSetting and targeting
   cordova.plugins.emiAdmobPlugin.initialize();
 
+
+
+
 // SDK EVENT Initialization
- 
+// Optional
 document.addEventListener('on.sdkInitialization', () => {
 
 event.value += ("\n On Sdk Initialization");
 
-
 });
 
 
-// Banner Ad EVENT
-
-/*
-on.banner.load
-on.banner.failed.load
-on.banner.click
-on.banner.close
-on.banner.impression
-on.banner.open
-on.banner.revenue
-on.banner.remove
-*/
 
 
 document.addEventListener('on.banner.load', () => {
@@ -184,17 +176,23 @@ event.value += ("\n on.banner.remove");
 });
 
 
+
 }, false);
 
 </script>
+
+
 
 <p> <button onclick="loadBannerAd();">load Banner Ad</button></p>
 <p> <button onclick="showBannerAd();">show Banner Ad</button></p>
 <p> <button onclick="hideBannerAd();">hide Banner Ad</button></p>
 <p> <button onclick="removeBannerAd();">remove Banner Ad</button></p>
+<p> <button onclick="hideBannerAd();">hide Banner Ad</button></p>
+
 
 
 <p> <button onclick="cleanText();">Clean response Text</button></p>
+
 
 
 </body>

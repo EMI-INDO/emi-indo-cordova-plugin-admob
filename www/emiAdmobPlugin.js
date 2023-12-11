@@ -1,12 +1,7 @@
 var exec = require('cordova/exec');
+
 exports.initialize = function (success, error) {
     exec(success, error, 'emiAdmobPlugin', 'initialize', []);
-};
-exports.getIabTfc = function (success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'getIabTfc', []);
-};
-exports.showPrivacyOptionsForm = function (success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'showPrivacyOptionsForm', []);
 };
 exports.loadAppOpenAd = function (arg0, arg1, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'loadAppOpenAd', arg0, arg1);
@@ -56,6 +51,13 @@ exports.consentReset = function (success, error) {
 exports.targeting = function (arg0, arg1, arg2, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'targeting', arg0, arg1, arg2);
 };
+exports.getIabTfc = function (success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'getIabTfc', []);
+};
+exports.showPrivacyOptionsForm = function (success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'showPrivacyOptionsForm', []);
+};
 exports.globalSettings = function (arg0, arg1, arg2, arg3, arg4, arg5, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'globalSettings', arg0, arg1, arg2, arg3, arg4, arg5);
 };
+
