@@ -117,117 +117,23 @@ cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob  --
 cordova plugin rm emi-indo-cordova-plugin-admob
 ```
 
-## upgrade Mobile Ads SDK
-[Release Notes Mobile Ads SDK:](https://developers.google.com/admob/android/rel-notes)
-```sh
-cordova plugin add emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-app-pub-3940256099942544~3347511713 --variable PLAY_SERVICES_VERSION="xxxx" 
-```
 
 
-
-
-## >>>>>> Device Ready <<<<<<
-
-- [AppTrackingTransparency (ATT) framework:](https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/authorizationstatus) 
-- [Consent Management Platform API:](https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20CMP%20API%20v2.md#in-app-details)
-
-- [Example Get Consent Status:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent.html) index.html
-- [Example requestIDFA:]() index.html
-- [Example IABTFC:]() index.html
-```
-// Support Platform: Android or IOS
-<script>
-cordova.plugins.emiAdmobPlugin.globalSettings([config_globalSettings]);
-cordova.plugins.emiAdmobPlugin.targeting([config_Targeting]);
-cordova.plugins.emiAdmobPlugin.initialize();
-
-/*
-cordova.plugins.emiAdmobPlugin.requestIDFA(); // UMP SDK to handle Apple's App Tracking Transparency (ATT) (Platform: IOS)
-cordova.plugins.emiAdmobPlugin.getIabTfc((IABTFC) => {JSONstringify(IABTFC)}); // CMP SDK 2.2 (Platform: Both)
-
-// UMP SDK 2.1.0
-cordova.plugins.emiAdmobPlugin.getConsentRequest(); // (Platform: Both)
-cordova.plugins.emiAdmobPlugin.consentReset(); // (Platform: Both)
-cordova.plugins.emiAdmobPlugin.showPrivacyOptionsForm(); // (Platform: Both)
-*/
-</script>
-```
-
-### AppOpenAd ADS
- [FULL AppOpenAd basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/app_open_ads.html) index.html
-
-```
-<script>
-// Support Platform: Android | IOS
-cordova.plugins.emiAdmobPlugin.loadAppOpenAd([config_AppOpenAd]);
-cordova.plugins.emiAdmobPlugin.showAppOpenAd();
-</script>
-```
-
-
- ### BANNER ADS
- [FULL Banner basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/banner_ads.html) index.html
- ```
- // Support Platform: Android | IOS
- <script>
-cordova.plugins.emiAdmobPlugin.loadBannerAd([bannerConfig]);
-cordova.plugins.emiAdmobPlugin.showBannerAd();
-cordova.plugins.emiAdmobPlugin.hideBannerAd();
-cordova.plugins.emiAdmobPlugin.removeBannerAd();
-</script>
-```
-
-### Interstitial ADS
-[FULL Interstitial basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/interstitial_ads.html) index.html
-```
-// Support Platform: Android | IOS
-<script>
-cordova.plugins.emiAdmobPlugin.loadInterstitialAd([config_Interstitial]);
-cordova.plugins.emiAdmobPlugin.showInterstitialAd();
-</script>
-```
-
-
-### Rewarded Interstitial ADS
-[FULL Rewarded Interstitial basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_interstitial_ads.html) index.html
-```
-// Support Platform: Android | IOS
-<script>
-cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd([config_rewardedInt]);
-cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();
-</script>
-```
-
-### Rewarded ADS
-[FULL Rewarded basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_ads.html) index.html
-```
-// Support Platform: Android | IOS
-<script>
-cordova.plugins.emiAdmobPlugin.loadRewardedAd([config_rewarded]);
-cordova.plugins.emiAdmobPlugin.showRewardedAd();
-</script>
-```
-
-
-## Installation
-
-```sh
-cordova plugin add emi-indo-cordova-plugin-admob --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx --variable APP_ID_IOS=ca-app-pub-xxx~xxx
-```
-### Or
-```sh
-cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx --variable APP_ID_IOS=ca-app-pub-xxx~xxx
-```
-## Remove
-```sh
-cordova plugin rm emi-indo-cordova-plugin-admob
-```
 
 ## Import the Mobile Ads SDK
 ### Then from the command line run:
 - cd platforms/ios
 ### Then from the command line run:
 - pod install --repo-update
+
+
+
+
+
+
+
+
+
 
   > __Note__
 > - ## It's Not a fork, it's purely rewritten, clean of 3rd party code.
