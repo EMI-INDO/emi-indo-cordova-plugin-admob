@@ -1,0 +1,59 @@
+<html>
+<head>
+    <script type="text/javascript" src="cordova.js"></script>
+</head>
+<body>
+
+<script>
+
+
+
+      /////  >>>>>> Device Ready <<<<<<
+
+document.addEventListener("deviceready", function(){
+
+// WARNING config must be an array[] not an object{}
+const config_Targeting = [
+
+    childDirectedTreatment = 0, // value: 0 | -1 | 1
+    underAgeOfConsent = false, // default: false
+    contentRating = "G" // value: G | MA | PG | T | ""
+
+]
+
+
+ cordova.plugins.emiAdmobPlugin.targeting(config_Targeting);
+
+// Must be under globalSetting and targeting
+cordova.plugins.emiAdmobPlugin.initialize();
+	
+
+// event 
+document.addEventListener('on.sdkInitialization', () => {
+
+cordova.plugins.emiAdmobPlugin.requestIDFA(
+
+(ststus) => {
+
+    event.value += "\n IDFA Status: " + ststus;
+
+},
+(error) => {
+
+    event.value += "\n Error: " + error
+
+});
+
+
+});
+	
+
+
+
+}, false);
+</script>
+
+
+
+</body>
+</html>

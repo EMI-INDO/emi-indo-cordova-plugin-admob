@@ -15,63 +15,27 @@
 
         let cleanText = () => { event.value = '' };
 
-        let debug = false;
-
-
-
         // Load Rewarded Ad
+let loadRewardedAd = () => {
+     cordova.plugins.emiAdmobPlugin.loadRewardedAd([adUnitId = "ca-app-pub-3940256099942544/5224354917", autoShow = true ]);
+    // call loadRewardedAd();
+}
 
+// Show Rewarded Ad
+let showRewardedAd = () => {
+    cordova.plugins.emiAdmobPlugin.showRewardedAd();
+    // call showRewardedAd();
+}
 
-        let loadRewardedAd = () => {
-            cordova.plugins.emiAdmobPlugin.loadRewardedAd(
-                AdUnitId = "ca-app-pub-3940256099942544/5224354917",
-                npa = "1", // String | 0 | 1
-                responseInfo = debug, // boolean
-
-
-                (info) => {
-
-                    if (debug === true) {
-
-                        event.value += "\n ResponseInfo: " + info; // responseInfo = true
-
-                    } else
-                        if (debug === false) {
-
-                            // responseInfo = false
-                            // event name: on.rewardedInt.revenue
-
-                            event.value += "\n Micros: " + info.micros;
-                            event.value += "\n Currency: " + info.currency;
-                            event.value += "\n Precision: " + info.precision;
-                            event.value += "\n AdUnitId: " + info.adUnitId;
-
-                        }
-
-                },
-                (error) => {
-
-                    event.value += "\n Error: " + error
-
-                });
-        }
-
-        // Show Rewarded Ad
-
-        let showRewardedAd = () => {
-            cordova.plugins.emiAdmobPlugin.showRewardedAd();
-
-        }
-
-        // >>>>>>>>  User Messaging Platform (UMP) SDK. 
+        // >>>>>>>>  User Messaging Platform (UMP) SDK 2.1.0
 
         let getConsentRequest = () => {
             // https://developers.google.com/admob/android/privacy
             cordova.plugins.emiAdmobPlugin.getConsentRequest(
 
-                (info) => {
+                (ststus) => {
 
-                    event.value += "\n Consent Status: " + info;
+                    event.value += "\n Consent Status: " + ststus;
 
                 },
                 (error) => {
@@ -164,19 +128,18 @@
 
         document.addEventListener("deviceready", function () {
 
-            // Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
-            // This needs to be done only once, ideally at app launch.
+            
+            const config_Targeting = [
 
-            cordova.plugins.emiAdmobPlugin.initialize(
-                // Optional
-                (info) => {
-                    event.value += (info)
-                },
-                (error) => {
+            childDirectedTreatment = 0, // value: 0 | -1 | 1
+            underAgeOfConsent = false, // default: false
+            contentRating = "G" // value: G | MA | PG | T | ""
 
-                    event.value += (error)
+             ]
 
-                });
+
+            cordova.plugins.emiAdmobPlugin.targeting(config_Targeting);
+            cordova.plugins.emiAdmobPlugin.initialize();
 
 
             // Rewarded Ad EVENT
@@ -201,62 +164,7 @@
 
             });
 
-            document.addEventListener('on.rewarded.failed.load', () => {
-
-                event.value += ("\n on.rewarded.failed.load");
-
-            });
-
-            document.addEventListener('on.rewarded.click', () => {
-
-                event.value += ("\n on.rewarded.click");
-
-            });
-
-            document.addEventListener('on.rewarded.dismissed', () => {
-
-                event.value += ("\n on.rewarded.dismissed");
-
-            });
-
-            document.addEventListener('on.rewarded.failed.show', () => {
-
-                event.value += ("\n on.rewarded.failed.show");
-
-            });
-
-            document.addEventListener('on.rewarded.impression', () => {
-
-                event.value += ("\n on.rewarded.impression");
-
-            });
-
-            document.addEventListener('on.rewarded.show', () => {
-
-                event.value += ("\n on.rewarded.show");
-
-            });
-
-            document.addEventListener('on.rewarded.revenue', () => {
-
-                event.value += ("\n on.rewarded.revenue");
-
-            });
-
-            document.addEventListener('on.rewarded.ad.skip', () => {
-
-                event.value += ("\n on.rewarded.ad.skip");
-
-            });
-
-
-            document.addEventListener('on.reward.userEarnedReward', () => {
-
-                event.value += ("\n on.reward.userEarnedReward");
-
-            });
-
-
+            
 
         }, false);
 

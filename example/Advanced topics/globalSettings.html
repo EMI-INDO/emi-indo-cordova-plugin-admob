@@ -15,21 +15,30 @@
 
 document.addEventListener("deviceready", function(){
 
-// Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
-// This needs to be done only once, ideally at app launch.
 
-cordova.plugins.emiAdmobPlugin.initialize();
 
 // Instruction: https://developers.google.com/admob/android/global-settings
 
-cordova.plugins.emiAdmobPlugin.globalSettings(
+// WARNING config must be an array[] not an object{}
+const config_globalSettings = [
 
+    // DEPRECATED enableSameAppKey
     setAppMuted = false, // Type Boolean default: false
-    setAppVolume = 1.0, // Type float
-    enableSameAppKey = false // Type Boolean default: false
-	
-    });
+    setAppVolume = 1.0, // Type float default: 1
+    publisherFirstPartyIdEnabled = true, // Type Boolean default: true  // enableSameAppKey
+    npa = "1", // string "0" | "1" // DEPRECATED Beginning January 16, 2024
+    enableCollapsible = true, // (BETA) activate the collapsible banner ads
+    responseInfo = false, // For debugging and logging purposes
 
+]
+
+cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
+
+// Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
+// This needs to be done only once, ideally at app launch.
+
+// Must be under globalSetting and targeting
+cordova.plugins.emiAdmobPlugin.initialize();
 
 }, false);
 </script>

@@ -12,50 +12,30 @@
    let event = document.getElementById('event');
 
    let cleanText = () => { event.value = '' };
-   
-   let debug = false;
+
+
+   // WARNING config must be an array[] not an object{}
+   const config_Interstitial = [
+
+    adUnitId = "ca-app-pub-3940256099942544/1033173712",
+    autoShow = true
+
+   ]
 
 
 
 // Load Interstitial Ad
-
 let loadInterstitialAd = () => {
-    cordova.plugins.emiAdmobPlugin.loadInterstitialAd(
-    AdUnitId = "ca-app-pub-3940256099942544/1033173712",
-    npa = "1", // String | 0 | 1
-    responseInfo = debug, // boolean
-
-    (info) => {
-    
-	if (debug === true) {
-	
-    event.value += "\n ResponseInfo: " + info; // responseInfo = true
-	
-	} else 
-	if (debug === false) {
-	
-	// responseInfo = false
-	// event name: on.interstitial.revenue
-	
-    event.value += "\n Micros: " + info.micros;
-    event.value += "\n Currency: " + info.currency;
-    event.value += "\n Precision: " + info.precision;
-    event.value += "\n AdUnitId: " + info.adUnitId;
-	
-	   }
-
-     },
-    (error) => {
-
-    event.value += "\n Error: " + error
-
-    });
+    cordova.plugins.emiAdmobPlugin.loadInterstitialAd(config_Interstitial);
+    // Or like this
+    // cordova.plugins.emiAdmobPlugin.loadInterstitialAd([adUnitId = "ca-app-pub-3940256099942544/1033173712", autoShow = false ]);
+    // call loadInterstitialAd();
 }
 
 // Show Interstitial Ad
-
 let showInterstitialAd = () => {
     cordova.plugins.emiAdmobPlugin.showInterstitialAd();
+    // call showInterstitialAd();
 }
 
 
@@ -63,20 +43,24 @@ let showInterstitialAd = () => {
 
 
 document.addEventListener("deviceready", function(){
+// WARNING config must be an array[] not an object{}
+    const config_globalSettings = [
 
-// Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
-// This needs to be done only once, ideally at app launch.
+    // DEPRECATED enableSameAppKey
+    setAppMuted = false, // Type Boolean default: false
+    setAppVolume = 1.0, // Type float default: 1
+    publisherFirstPartyIdEnabled = true, // Type Boolean default: true  // enableSameAppKey
+    npa = "1", // string "0" | "1" // DEPRECATED Beginning January 16, 2024
+    enableCollapsible = true, // (BETA) activate the collapsible banner ads
+    responseInfo = false, // For debugging and logging purposes
 
-  cordova.plugins.emiAdmobPlugin.initialize(
-    // Optional
-    (info) => {
-    event.value += (info)
-    },
-    (error) => {
+]
 
-    event.value += (error)
+cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
 
-    });
+
+// Must be under globalSetting and targeting
+  cordova.plugins.emiAdmobPlugin.initialize();
 
 // SDK EVENT Initialization
  

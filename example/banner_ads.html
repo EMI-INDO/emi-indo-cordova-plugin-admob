@@ -13,7 +13,6 @@
 
    let cleanText = () => { event.value = '' };
    
-   let debug = false;
 
 /*
 >>>>>>>>>> Banner position  <<<<<<<<<<<<<<
@@ -29,10 +28,10 @@ bottom-right
  >>>>>>>>>>> Banner size <<<<<<<<<<<<
  ( Ad Size Adaptive )
  
-Anchored_adaptive
-Inline_adaptive
-default: Adaptive_FULL_WIDTH
-adaptiveWidth = number/default = 320
+ANCHORED
+IN_LINE
+FULL_WIDTH
+adaptive_Width = number/default = 320
 
 ( Ad Size not Adaptive )
 
@@ -43,99 +42,48 @@ MEDIUM_RECTANGLE
 FULL_BANNER
 LEADERBOARD
 
-Smart Banners = DEPRECATED ( Replaced by Adaptive_FULL_WIDTH )
+Smart Banners = DEPRECATED ( Replaced by FULL_WIDTH )
 
 */
 
-// // Note adaptiveWidth = 320, // This is special size = "Inline_adaptive" or "Anchored_adaptive" if else this field will be ignored
 
-//   Adaptive banner
+// WARNING config must be an array[] not an object{}
+const bannerConfig = [
 
-let loadBannerAdaptive = () => {
+   adUnitId = "ca-app-pub-3940256099942544/6300978111",
+   position = "bottom-center",
+   size = "BANNER",
+   collapsible = "bottom", // (BETA) enable in globalSettings
+   adaptive_Width = 320, // Ignored
+   autoShow = true, // boolean
 
-    cordova.plugins.emiAdmobPlugin.loadBannerAd(
-    AdUnitId = "ca-app-pub-3940256099942544/6300978111",
-    npa = "1", // String | 0 | 1
-    position = "bottom-center",
-    size = "default", // Inline_adaptive | Anchored_adaptive | default = Adaptive_FULL_WIDTH
-    adaptiveWidth = 320,
-    responseInfo = debug, // boolean
+]
 
-    (info) => {
-    
-	if (debug === true) {
-	
-          event.value += "\n ResponseInfo: " + info; // responseInfo = true
-	
-	   } 
 
-     },
-    (error) => {
-
-    event.value += "\n Error: " + error
-
-    });
+// load banner ad
+let loadBannerAd = () => {
+    cordova.plugins.emiAdmobPlugin.loadBannerAd(bannerConfig);
+   // call loadBannerAd();
 }
-
-
-
-//  not Adaptive banner
-
-let loadBannerNotAdaptive = () => {
-    cordova.plugins.emiAdmobPlugin.loadBannerAd(
-    AdUnitId = "ca-app-pub-3940256099942544/6300978111",
-    npa = "1", // String | 0 | 1
-    position = "bottom-center",
-    size = "BANNER",
-    adaptiveWidth = 320, // Ignored
-    responseInfo = false, // boolean
-
-
-    (info) => {
-
-    if (debug === true) {
-	
-          event.value += "\n ResponseInfo: " + info; // responseInfo = true
-	
-	   } 
-
-     },
-    (error) => {
-
-    event.value += "\n Error: " + error
-
-    });
-}
-
-
 
 // show Banner Ad
-
 let showBannerAd = () => {
 
-    cordova.plugins.emiAdmobPlugin.showBannerAd(
-
-    (info) => {
-    // event name: on.banner.revenue
-    event.value += "\n Micros: " + info.micros;
-    event.value += "\n Currency: " + info.currency;
-    event.value += "\n Precision: " + info.precision;
-    event.value += "\n AdUnitId: " + info.adUnitId;
-
-     },
-    (error) => {
-
-    event.value += "\n Error: " + error
-
-    });
-
+    cordova.plugins.emiAdmobPlugin.showBannerAd();
+    // call showBannerAd();
 }
 
 
-// Remove Banner
+// Hide Banner Ad
+let hideBannerAd = () => {
+    cordova.plugins.emiAdmobPlugin.hideBannerAd();
+    // call hideBannerAd();
+}
 
+// Remove Banner
 let removeBannerAd = () => {
     cordova.plugins.emiAdmobPlugin.removeBannerAd();
+    // call removeBannerAd();
 }
 
 
@@ -144,19 +92,24 @@ let removeBannerAd = () => {
 
 document.addEventListener("deviceready", function(){
 
-// Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
-// This needs to be done only once, ideally at app launch.
 
-  cordova.plugins.emiAdmobPlugin.initialize(
-    // Optional
-    (info) => {
-    event.value += (info)
-    },
-    (error) => {
+    const config_globalSettings = [
 
-    event.value += (error)
+    // DEPRECATED enableSameAppKey
+    setAppMuted = false, // Type Boolean default: false
+    setAppVolume = 1.0, // Type float default: 1
+    publisherFirstPartyIdEnabled = true, // Type Boolean default: true  // enableSameAppKey
+    npa = "1", // string "0" | "1" // DEPRECATED Beginning January 16, 2024
+    enableCollapsible = true, // (BETA) activate the collapsible banner ads
+    responseInfo = false, // For debugging and logging purposes
 
-    });
+]
+
+cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
+
+
+// Must be under globalSetting and targeting
+  cordova.plugins.emiAdmobPlugin.initialize();
 
 // SDK EVENT Initialization
  
@@ -235,9 +188,9 @@ event.value += ("\n on.banner.remove");
 
 </script>
 
-<p> <button onclick="loadBannerAdaptive();">load Banner adaptive</button></p>
-<p> <button onclick="loadBannerNotAdaptive();">load Banner No Adaptive</button></p>
+<p> <button onclick="loadBannerAd();">load Banner Ad</button></p>
 <p> <button onclick="showBannerAd();">show Banner Ad</button></p>
+<p> <button onclick="hideBannerAd();">hide Banner Ad</button></p>
 <p> <button onclick="removeBannerAd();">remove Banner Ad</button></p>
 
 

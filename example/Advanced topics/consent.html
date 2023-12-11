@@ -6,35 +6,50 @@
 
 <script>
 
-// Installation
 
-// cordova plugin add emi-indo-cordova-plugin-consent
-// cordova plugin add emi-indo-cordova-plugin-admob
+ // >>>>>>>>  User Messaging Platform (UMP) SDK 2.1.0
+
+ let getConsentStatus = () => {
+            // https://developers.google.com/admob/android/privacy
+            cordova.plugins.emiAdmobPlugin.getConsentRequest(
+
+                (ststus) => {
+
+                    event.value += "\n Consent Status: " + ststus;
+
+                },
+                (error) => {
+
+                    event.value += "\n Error: " + error
+
+                });
+
+        }
 
 
-let _getConsentRequest = () => {
-    cordova.plugins.emiAdmobPlugin.getConsentRequest(
-    // Setting Targeting in Device Ready
-
-    (status) => { alert(status) }, // check event code
-    (error) => { alert(error)
-
-    });
-}
-
-// call _getConsentRequest();
-
-
-
-let _consentReset = () => {
-    cordova.plugins.emiAdmobPlugin.consentReset();
-}
-
-// call _consentReset();
-
+        let consentReset = () => {
+            cordova.plugins.emiAdmobPlugin.consentReset();
+        }
 
 
 
+        // >>>>>>>>  New features (UMP) SDK v2.1.0
+        let showPrivacyOptionsForm = () => {
+
+            cordova.plugins.emiAdmobPlugin.showPrivacyOptionsForm(
+
+                (info) => {
+
+                    event.value += "\n Show Privacy Option Form: " + info;
+
+                },
+                (error) => {
+
+                    event.value += "\n Error: " + error
+
+                });
+
+        }
 
 
 
@@ -42,18 +57,20 @@ let _consentReset = () => {
 
 document.addEventListener("deviceready", function(){
 
+// WARNING config must be an array[] not an object{}
+const config_Targeting = [
+
+    childDirectedTreatment = 0, // value: 0 | -1 | 1
+    underAgeOfConsent = false, // default: false
+    contentRating = "G" // value: G | MA | PG | T | ""
+
+]
+
+
+ cordova.plugins.emiAdmobPlugin.targeting(config_Targeting);
+
+// Must be under globalSetting and targeting
 cordova.plugins.emiAdmobPlugin.initialize();
-
-cordova.plugins.emiAdmobPlugin.targeting(
-    TagForChildDirectedTreatment = 0, // value: 0 | -1 | 1
-    TagForUnderAgeOfConsent = 0, // // value: 0 | -1 | 1
-    MaxAdContentRating = "G", // value: G | MA | PG | T | ""
-
-    // Optional
-    (info) => { console.log(info)},
-    (error) => { console.log(error)
-
-    });
 	
 	
 	
@@ -63,10 +80,11 @@ cordova.plugins.emiAdmobPlugin.targeting(
 	
 	
 	
-	// Consent Event 
-	
+	// Optional Consent Event 
 	
 /*
+
+
 on.consent.info.update
 on.consent.info.update.failed
 
@@ -122,18 +140,12 @@ alert("Consent status is unknown.");
 
 });
 
-
-
-
-
-
-
 }, false);
 </script>
 
-
-
-<p> <button onclick="_getConsentRequest();">get Consent Request</button></p>
+<p> <button onclick="getConsentStatus();">Get Consent Status</button></p>
+<p> <button onclick="showPrivacyOptionsForm();">Show Privacy Options Form</button></p>
+<p> <button onclick="consentReset();">Consent Reset</button></p>
 
 <p> <button onclick="_consentReset();">Consent reset</button></p>
 

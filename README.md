@@ -1,14 +1,125 @@
 # emi-indo-cordova-plugin-admob
  Cordova Plugin Admob Android and IOS
 
-### Mobile Ads SDK (Android: 22.5.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
+### Mobile Ads SDK (Android: 22.6.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
 
-### Mobile Ads SDK (IOS: 10.3.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
+### Mobile Ads SDK (IOS: 10.14.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
 
-###  [Documentation for IOS](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/discussions/3)
+## Minimum Cordova Engines
+- cordova-android version = 12.0.0
+- cordova-ios version = 7.0.0
 
--
+## Minimum macOS | Xcode, and others
+- Monterey
+- Xcode 14.1 or higher
+- Command Line Tools 14.1 or higher
+- Target iOS 11.0 or higher
+https://developers.google.com/admob/ios/quick-start
 
+
+
+## >>>>>> Device Ready <<<<<<
+
+- [AppTrackingTransparency (ATT) framework:](https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/authorizationstatus) 
+- [Consent Management Platform API:](https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20CMP%20API%20v2.md#in-app-details)
+
+- [Example Get Consent Status:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent.html) index.html
+- [Example requestIDFA:]() index.html
+- [Example IABTFC:]() index.html
+```
+// Support Platform: Android or IOS
+<script>
+cordova.plugins.emiAdmobPlugin.globalSettings([config_globalSettings]);
+cordova.plugins.emiAdmobPlugin.targeting([config_Targeting]);
+cordova.plugins.emiAdmobPlugin.initialize();
+
+/*
+cordova.plugins.emiAdmobPlugin.requestIDFA(); // UMP SDK to handle Apple's App Tracking Transparency (ATT) (Platform: IOS)
+cordova.plugins.emiAdmobPlugin.getIabTfc((IABTFC) => {JSONstringify(IABTFC)}); // CMP SDK 2.2 (Platform: Both)
+
+// UMP SDK 2.1.0
+cordova.plugins.emiAdmobPlugin.getConsentRequest(); // (Platform: Both)
+cordova.plugins.emiAdmobPlugin.consentReset(); // (Platform: Both)
+cordova.plugins.emiAdmobPlugin.showPrivacyOptionsForm(); // (Platform: Both)
+*/
+</script>
+```
+
+### AppOpenAd ADS
+ [FULL AppOpenAd basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/app_open_ads.html) index.html
+
+```
+<script>
+// Support Platform: Android | IOS
+cordova.plugins.emiAdmobPlugin.loadAppOpenAd([config_AppOpenAd]);
+cordova.plugins.emiAdmobPlugin.showAppOpenAd();
+</script>
+```
+
+
+ ### BANNER ADS
+ [FULL Banner basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/banner_ads.html) index.html
+ ```
+ // Support Platform: Android | IOS
+ <script>
+cordova.plugins.emiAdmobPlugin.loadBannerAd([bannerConfig]);
+cordova.plugins.emiAdmobPlugin.showBannerAd();
+cordova.plugins.emiAdmobPlugin.hideBannerAd();
+cordova.plugins.emiAdmobPlugin.removeBannerAd();
+</script>
+```
+
+### Interstitial ADS
+[FULL Interstitial basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/interstitial_ads.html) index.html
+```
+// Support Platform: Android | IOS
+<script>
+cordova.plugins.emiAdmobPlugin.loadInterstitialAd([config_Interstitial]);
+cordova.plugins.emiAdmobPlugin.showInterstitialAd();
+</script>
+```
+
+
+### Rewarded Interstitial ADS
+[FULL Rewarded Interstitial basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_interstitial_ads.html) index.html
+```
+// Support Platform: Android | IOS
+<script>
+cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd([config_rewardedInt]);
+cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();
+</script>
+```
+
+### Rewarded ADS
+[FULL Rewarded basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_ads.html) index.html
+```
+// Support Platform: Android | IOS
+<script>
+cordova.plugins.emiAdmobPlugin.loadRewardedAd([config_rewarded]);
+cordova.plugins.emiAdmobPlugin.showRewardedAd();
+</script>
+```
+
+
+## Installation
+
+```sh
+cordova plugin add emi-indo-cordova-plugin-admob --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx --variable APP_ID_IOS=ca-app-pub-xxx~xxx
+```
+### Or
+```sh
+cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx --variable APP_ID_IOS=ca-app-pub-xxx~xxx
+```
+## Remove
+```sh
+cordova plugin rm emi-indo-cordova-plugin-admob
+```
+
+## Import the Mobile Ads SDK
+### Then from the command line run:
+- cd platforms/ios
+### Then from the command line run:
+- pod install --repo-update
 
   > __Note__
 > - ## It's Not a fork, it's purely rewritten, clean of 3rd party code.
@@ -26,23 +137,24 @@
 ##  [Check all release notes:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/)
 
 
-## Minimum Cordova Engines
-- cordova version = 10.0.0
-- cordova-android version = 11.0.0
-- cordova-ios version = 6.0.0
+
 
 ## Features
 
 - SDK initialize
-- targeting
+- targeting   
 - globalSettings
 - App Open Ads
 - Banner Ads
 - Interstitial Ads
 - Rewarded Ads
 - Rewarded interstitial Ads
-- [Consent](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html) 
+- [Consent](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent.html)
 - Mediation
+- impression-level-ad-revenue
+- GDPR IAB TFCv2.2
+- AppTrackingTransparency (ATT)
+- Collapsible banner ads (BETA)
 
  ## Coming soon
 - App Open Ads ( Finished )
@@ -57,25 +169,7 @@
 
 
 
-## Installation
 
-```sh
-cordova plugin add emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-app-pub-3940256099942544~3347511713
-```
-### Or
-```sh
-cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-app-pub-3940256099942544~3347511713
-```
-## Remove
-```sh
-cordova plugin rm emi-indo-cordova-plugin-admob
-```
-
-## upgrade Mobile Ads SDK
-[Release Notes Mobile Ads SDK:](https://developers.google.com/admob/android/rel-notes)
-```sh
-cordova plugin add emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-app-pub-3940256099942544~3347511713 --variable PLAY_SERVICES_VERSION="xxxx" 
-```
 
 
 
@@ -87,8 +181,8 @@ cordova plugin add emi-indo-cordova-plugin-admob --variable APP_ID_ANDROID=ca-ap
  ###  [ GDPR | IAB TFC code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html)
  - replace all AdUnitId to adUnitId
  - new banner size: FULL_WIDTH
-
- - 
+### New only on github
+   https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/%401.4.0
 
 > - # Plugin version @1.3.9
 
@@ -206,19 +300,17 @@ alert("On App Open Ad loaded");
 
 ### size
 
-- Anchored_adaptive
-- Inline_adaptive
+- ANCHORED
+- IN_LINE
+- FULL_WIDTH
 - BANNER
 - FLUID
 - LARGE_BANNER
 - MEDIUM_RECTANGLE
 - FULL_BANNER
 - LEADERBOARD
-- adaptiveWidth = number 
+- adaptive_Width = number 
 - Smart Banners = DEPRECATED
-- default: FULL_WIDTH
-
-Note: Smart Banners = DEPRECATED ( Replaced by Adaptive_FULL_WIDTH )
 
 
 ### Event Load
@@ -235,6 +327,7 @@ Note: Smart Banners = DEPRECATED ( Replaced by Adaptive_FULL_WIDTH )
 ### NEW
 - on.banner.revenue
 - on.banner.remove
+- on.banner.hide
   
 
 
@@ -301,54 +394,6 @@ Note: Smart Banners = DEPRECATED ( Replaced by Adaptive_FULL_WIDTH )
 - on.rewardedInt.revenue
 - on.rewardedInt.ad.skip
 - on.rewardedInt.userEarnedReward
-
-
-
-
-## Response Info
-- Here is a sample output returned by responseInfo = true showing the debugging data returned for a loaded ad:
-
-```sh
-{
-  "Response ID": "COOllLGxlPoCFdAx4Aod-Q4A0g",
-  "Mediation Adapter Class Name": "com.google.ads.mediation.admob.AdMobAdapter",
-  "Adapter Responses": [
-    {
-      "Adapter": "com.google.ads.mediation.admob.AdMobAdapter",
-      "Latency": 328,
-      "Ad Source Name": "Reservation campaign",
-      "Ad Source ID": "7068401028668408324",
-      "Ad Source Instance Name": "[DO NOT EDIT] Publisher Test Interstitial",
-      "Ad Source Instance ID": "4665218928925097",
-      "Credentials": {},
-      "Ad Error": "null"
-    }
-  ],
-  "Loaded Adapter Response": {
-    "Adapter": "com.google.ads.mediation.admob.AdMobAdapter",
-    "Latency": 328,
-    "Ad Source Name": "Reservation campaign",
-    "Ad Source ID": "7068401028668408324",
-    "Ad Source Instance Name": "[DO NOT EDIT] Publisher Test Interstitial",
-    "Ad Source Instance ID": "4665218928925097",
-    "Credentials": {},
-    "Ad Error": "null"
-  },
-  "Response Extras": {
-    "mediation_group_name": "Campaign"
-  }
-}
-
-
-Bundle[{max_ad_content_rating=G, 
-npa=1, 
-is_designed_for_families=0, 
-under_age_of_consent=0] 
-
-
-```
-
-
 
 
 # Admob Mediation

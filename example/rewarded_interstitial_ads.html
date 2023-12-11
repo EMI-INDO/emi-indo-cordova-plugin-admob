@@ -13,51 +13,29 @@
 
    let cleanText = () => { event.value = '' };
    
-   let debug = false;
+   // WARNING config must be an array[] not an object{}
+   const config_rewardedInt = [
+
+    adUnitId = "ca-app-pub-3940256099942544/5354046379",
+    autoShow = true
+
+   ]
 
 
 
 // load Rewarded Interstitial Ad
-
 let loadRewardedInterstitialAd = () => {
-    cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(
-    AdUnitId = "ca-app-pub-3940256099942544/5354046379",
-    npa = "1", // String | 0 | 1
-    responseInfo = debug, // boolean
-
-    (info) => {
-    
-	if (debug === true) {
-	
-    event.value += "\n ResponseInfo: " + info; // responseInfo = true
-	
-	} else 
-	if (debug === false) {
-	
-	// responseInfo = false
-	// event name: on.rewardedInt.revenue
-	
-    event.value += "\n Micros: " + info.micros;
-    event.value += "\n Currency: " + info.currency;
-    event.value += "\n Precision: " + info.precision;
-    event.value += "\n AdUnitId: " + info.adUnitId;
-	
-	   }
-
-     },
-    (error) => {
-
-    event.value += "\n Error: " + error
-
-    });
-
+    cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(config_rewardedInt);
+    // Or like this
+    // cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd([adUnitId = "ca-app-pub-3940256099942544/5354046379", autoShow = false ]);
+    // call loadRewardedInterstitialAd();
 }
 
 
 // Show Rewarded Interstitial Ad
-
 const showRewardedInterstitialAd = () => {
     cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();
+   // call showRewardedInterstitialAd();
 }
 
 
@@ -66,19 +44,24 @@ const showRewardedInterstitialAd = () => {
 
 document.addEventListener("deviceready", function(){
 
-// Before loading ads, have your app initialize the Google Mobile Ads SDK by calling
-// This needs to be done only once, ideally at app launch.
+// WARNING config must be an array[] not an object{}
+const config_globalSettings = [
 
-  cordova.plugins.emiAdmobPlugin.initialize(
-    // Optional
-    (info) => {
-    event.value += (info)
-    },
-    (error) => {
+// DEPRECATED enableSameAppKey
+setAppMuted = false, // Type Boolean default: false
+setAppVolume = 1.0, // Type float default: 1
+publisherFirstPartyIdEnabled = true, // Type Boolean default: true  // enableSameAppKey
+npa = "1", // string "0" | "1" // DEPRECATED Beginning January 16, 2024
+enableCollapsible = true, // (BETA) activate the collapsible banner ads
+responseInfo = false, // For debugging and logging purposes
 
-    event.value += (error)
+]
 
-    });
+cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
+
+
+// Must be under globalSetting and targeting
+cordova.plugins.emiAdmobPlugin.initialize();
 
 // SDK EVENT Initialization
  
