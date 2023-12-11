@@ -118,7 +118,6 @@ cordova plugin rm emi-indo-cordova-plugin-admob
 
 
 
-
 ## Import the Mobile Ads SDK
 ### Then from the command line run:
 - cd platforms/ios
@@ -126,141 +125,6 @@ cordova plugin rm emi-indo-cordova-plugin-admob
 - pod install --repo-update
 
 
-
-
-
-
-
-
-
-
-  > __Note__
-> - ## It's Not a fork, it's purely rewritten, clean of 3rd party code.
-
- > __Note__
-> - ### No Ad-Sharing
-> - ### No Remote Control
-> - ### I guarantee 100% revenue for you.
-> - [Code source:](https://github.com/googleads/googleads-mobile-android-examples) - Admob:
-
-
-## 💰Sponsor this project
-  [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)  
-  
-##  [Check all release notes:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/)
-
-
-
-
-## Features
-
-- SDK initialize
-- targeting   
-- globalSettings
-- App Open Ads
-- Banner Ads
-- Interstitial Ads
-- Rewarded Ads
-- Rewarded interstitial Ads
-- [Consent](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent.html)
-- Mediation
-- impression-level-ad-revenue
-- GDPR IAB TFCv2.2
-- AppTrackingTransparency (ATT)
-- Collapsible banner ads (BETA)
-
- ## Coming soon
-- App Open Ads ( Finished )
-- User Consent ( Finished ) 
-- Mediation ( Finished )
-- https://developers.google.com/admob/android/native/start
-- https://developers.google.com/admob/android/impression-level-ad-revenue ( Finished ) v1.1.9
-- https://developers.google.com/admob/android/ssv
-- https://developers.google.com/admob/android/privacy/gdpr ( Finished ) v1.4.0 [index.html](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html)
-- https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/ ( Finished ) v1.4.0 [index.html](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html)
-
-
-
-
-
-
-
-
-  > __Note__
-> 
-
-> - # Plugin version @1.4.0
-
- ###  [ GDPR | IAB TFC code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html)
- - replace all AdUnitId to adUnitId
- - new banner size: FULL_WIDTH
-### New only on github
-   https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/%401.4.0
-
-> - # Plugin version @1.3.9
-
- [FULL Example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/) - index.html:
-
- ###  [ App Open Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/app_open_ads.html)
- ###  [ Banner Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/banner_ads.html)
- ###  [ Interstitial Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/interstitial_ads.html)
- ###  [ Rewarded interstitial Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_interstitial_ads.html)
- ###  [ Rewarded Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_ads.html)
-
- ###  [ Advanced topics: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/Advanced%20topics)
-
-# IAB Europe Transparency & Consent Framework
-### Example How to read consent choices
-
-                
-               // index.html  https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html
- ```sh
-               // >>>>>>>>  New features (UMP) SDK v2.1.0
-               // https://developers.google.com/admob/android/privacy/gdpr
-                /*
-                If the user chooses not to display ads, 
-                you can restrict access to the app, or ban it,
-                until they change their decision back, 
-                Just call showPrivacyOptionsForm();
-                */
-
-
-             cordova.plugins.emiAdmobPlugin.getIabTfc(
-                (info) => {
-                    // How to read consent choices
-                    console.log("IABTCF_gdprApplies: " + info.IABTCF_gdprApplies);
-                    console.log("IABTCF_PurposeConsents: " + info.IABTCF_PurposeConsents);
-                    console.log("IABTCF_TCString: " + info.IABTCF_TCString);
-
-                                        // A small example
-                                        var fundingChoices;
-                    
-                                        fundingChoices = info.IABTCF_PurposeConsents;
-                                       if (fundingChoices === "1111111111"){
-                                           
-                                       // Enable app features.
-                                        loadRewardedAd();
-                                        
-                                       } else if (fundingChoices === "") {
-                    
-                                           // disable app features.
-                    
-                                       } else {
-                    
-                                          // You have to test everything yourself.
-                                          console.log(info);
-                    
-                                       }
-                   
-                },
-                (error) => {
-                     console.log("Error: " + error);
-                    
-                });
-
-        
-
-```
 
 
 # Event | callback:
@@ -407,6 +271,141 @@ alert("On App Open Ad loaded");
 - on.rewardedInt.revenue
 - on.rewardedInt.ad.skip
 - on.rewardedInt.userEarnedReward
+
+
+
+
+
+  > __Note__
+> - ## It's Not a fork, it's purely rewritten, clean of 3rd party code.
+
+ > __Note__
+> - ### No Ad-Sharing
+> - ### No Remote Control
+> - ### I guarantee 100% revenue for you.
+> - [Code source:](https://github.com/googleads/googleads-mobile-android-examples) - Admob:
+
+
+## 💰Sponsor this project
+  [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)  
+  
+##  [Check all release notes:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/)
+
+
+
+
+## Features
+
+- SDK initialize
+- targeting   
+- globalSettings
+- App Open Ads
+- Banner Ads
+- Interstitial Ads
+- Rewarded Ads
+- Rewarded interstitial Ads
+- [Consent](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent.html)
+- Mediation
+- impression-level-ad-revenue
+- GDPR IAB TFCv2.2
+- AppTrackingTransparency (ATT)
+- Collapsible banner ads (BETA)
+
+ ## Coming soon
+- App Open Ads ( Finished )
+- User Consent ( Finished ) 
+- Mediation ( Finished )
+- https://developers.google.com/admob/android/native/start
+- https://developers.google.com/admob/android/impression-level-ad-revenue ( Finished ) v1.1.9
+- https://developers.google.com/admob/android/ssv
+- https://developers.google.com/admob/android/privacy/gdpr ( Finished ) v1.4.0 [index.html](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html)
+- https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/ ( Finished ) v1.4.0 [index.html](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html)
+
+
+
+
+
+
+
+
+  > __Note__
+> 
+
+> - # Plugin version @1.4.0
+
+ ###  [ GDPR | IAB TFC code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html)
+ - replace all AdUnitId to adUnitId
+ - new banner size: FULL_WIDTH
+### New only on github
+   https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/%401.4.0
+
+> - # Plugin version @1.3.9
+
+ [FULL Example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/) - index.html:
+
+ ###  [ App Open Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/app_open_ads.html)
+ ###  [ Banner Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/banner_ads.html)
+ ###  [ Interstitial Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/interstitial_ads.html)
+ ###  [ Rewarded interstitial Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_interstitial_ads.html)
+ ###  [ Rewarded Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_ads.html)
+
+ ###  [ Advanced topics: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/Advanced%20topics)
+
+# IAB Europe Transparency & Consent Framework
+### Example How to read consent choices
+
+                
+               // index.html  https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html
+ ```sh
+               // >>>>>>>>  New features (UMP) SDK v2.1.0
+               // https://developers.google.com/admob/android/privacy/gdpr
+                /*
+                If the user chooses not to display ads, 
+                you can restrict access to the app, or ban it,
+                until they change their decision back, 
+                Just call showPrivacyOptionsForm();
+                */
+
+
+             cordova.plugins.emiAdmobPlugin.getIabTfc(
+                (info) => {
+                    // How to read consent choices
+                    console.log("IABTCF_gdprApplies: " + info.IABTCF_gdprApplies);
+                    console.log("IABTCF_PurposeConsents: " + info.IABTCF_PurposeConsents);
+                    console.log("IABTCF_TCString: " + info.IABTCF_TCString);
+
+                                        // A small example
+                                        var fundingChoices;
+                    
+                                        fundingChoices = info.IABTCF_PurposeConsents;
+                                       if (fundingChoices === "1111111111"){
+                                           
+                                       // Enable app features.
+                                        loadRewardedAd();
+                                        
+                                       } else if (fundingChoices === "") {
+                    
+                                           // disable app features.
+                    
+                                       } else {
+                    
+                                          // You have to test everything yourself.
+                                          console.log(info);
+                    
+                                       }
+                   
+                },
+                (error) => {
+                     console.log("Error: " + error);
+                    
+                });
+
+        
+
+```
+
+
+
 
 
 # Admob Mediation
