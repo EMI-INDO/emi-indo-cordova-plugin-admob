@@ -20,7 +20,31 @@ https://developers.google.com/admob/ios/quick-start
 
 
 
-## >>>>>> Device Ready <<<<<<
+## Installation
+
+```sh
+cordova plugin add emi-indo-cordova-plugin-admob  --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx --variable APP_ID_IOS=ca-app-pub-xxx~xxx
+```
+### Or
+```sh
+cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob  --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx --variable APP_ID_IOS=ca-app-pub-xxx~xxx
+```
+## Remove
+```sh
+cordova plugin rm emi-indo-cordova-plugin-admob
+```
+
+
+
+## Import the Mobile Ads SDK
+### Then from the command line run:
+- cd platforms/ios
+### Then from the command line run:
+- pod install --repo-update
+
+
+
+# >>>>>> Device Ready <<<<<<
 
 - [AppTrackingTransparency (ATT) framework:](https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/authorizationstatus) 
 - [Consent Management Platform API:](https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20CMP%20API%20v2.md#in-app-details)
@@ -102,27 +126,7 @@ cordova.plugins.emiAdmobPlugin.showRewardedAd();
 ```
 
 
-## Installation
 
-```sh
-cordova plugin add emi-indo-cordova-plugin-admob  --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx --variable APP_ID_IOS=ca-app-pub-xxx~xxx
-```
-### Or
-```sh
-cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob  --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx --variable APP_ID_IOS=ca-app-pub-xxx~xxx
-```
-## Remove
-```sh
-cordova plugin rm emi-indo-cordova-plugin-admob
-```
-
-
-
-## Import the Mobile Ads SDK
-### Then from the command line run:
-- cd platforms/ios
-### Then from the command line run:
-- pod install --repo-update
 
 
 
