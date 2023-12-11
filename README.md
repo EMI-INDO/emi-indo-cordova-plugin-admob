@@ -26,8 +26,8 @@ https://developers.google.com/admob/ios/quick-start
 - [Consent Management Platform API:](https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20CMP%20API%20v2.md#in-app-details)
 
 - [Example Get Consent Status:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent.html) index.html
-- [Example requestIDFA:]() index.html
-- [Example IABTFC:]() index.html
+- [Example requestIDFA:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/requestIDFA.html) index.html
+- [Example IABTFC:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/IABTFC.html) index.html
 ```
 // Support Platform: Android or IOS
 <script>
