@@ -49,7 +49,6 @@ cordova.plugins.emiAdmobPlugin.showPrivacyOptionsForm(); // (Platform: Both)
 
 ### AppOpenAd ADS
  [FULL AppOpenAd basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/app_open_ads.html) index.html
-//[:]() index.html
 ```
 <script>
 // Support Platform: Android | IOS
