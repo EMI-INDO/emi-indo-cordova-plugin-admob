@@ -21,7 +21,7 @@ https://developers.google.com/admob/ios/quick-start
 
 ## Features
 <details>
-<summary>Features</summary>
+<summary>Features #1</summary>
 <ul>
 <li> initialize</li>
 <li> targeting</li>
@@ -65,7 +65,7 @@ cordova plugin rm emi-indo-cordova-plugin-admob
 ## >>> Device Ready <<<
 
 <details>
-<summary>Methods:</summary>
+<summary>Methods: #2</summary>
 <pre> 
  // Support Platform: Android | IOS
 cordova.plugins.emiAdmobPlugin.globalSettings([config_globalSettings]);
@@ -81,7 +81,7 @@ cordova.plugins.emiAdmobPlugin.getIabTfc((IABTFC) => { console.log(JSONstringify
 
 </pre>
 <details>
-<summary>Note setDebugGeography</summary>
+<summary>Note setDebugGeography #2</summary>
 Testing is very easy, no need for VPN, TEST-DEVICE-HASHED-ID, or anything else, everything has been made programmatically.
 
 must be false if the application is released to the play store / app store.
@@ -126,12 +126,12 @@ cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
 
 
 <details>
-<summary>Event UMP SDK</summary>
+<summary>Event UMP SDK #3</summary>
 <pre> 
  on.get.consent.status
  <br>
 </pre>
- <li>example:</li></ul>
+ <li>example:#4</li></ul>
 <pre> 
 document.addEventListener('on.get.consent.status', () => {
 
@@ -142,7 +142,7 @@ document.addEventListener('on.get.consent.status', () => {
 </details>
 
 <details>
-<summary>Event CMP SDK</summary>
+<summary>Event CMP SDK #5</summary>
 <pre> 
 on.getIabTfc
 on.TCString.expired
@@ -151,10 +151,10 @@ on.TCString.remove
 </pre>
 
 <details>
-<summary>Note</summary>
+<summary>Note #6</summary>
 TCString expires 360 days, plugin automatically deletes it after 360 days. call consentRest()
 </details>
- <li>example:</li></ul>
+ <li>example: #7</li></ul>
 <pre> 
 document.addEventListener('on.TCString.expired', () => {
 
