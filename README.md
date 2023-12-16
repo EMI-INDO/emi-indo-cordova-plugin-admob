@@ -1,3 +1,5 @@
+
+
 # emi-indo-cordova-plugin-admob
  Cordova Plugin Admob Android and IOS
 
@@ -36,7 +38,7 @@ cordova plugin rm emi-indo-cordova-plugin-admob
 
 
 
-## Import the Mobile Ads SDK
+## Import the Mobile Ads SDK IOS
 ### Then from the command line run:
 - cd platforms/ios
 ### Then from the command line run:
@@ -44,7 +46,60 @@ cordova plugin rm emi-indo-cordova-plugin-admob
 
 
 
-# >>>>>> Device Ready <<<<<<
+## >>> Device Ready <<<
+
+<details>
+<summary>Methods:</summary>
+<pre> 
+ // Support Platform: Android | IOS
+cordova.plugins.emiAdmobPlugin.globalSettings([config_globalSettings]);
+cordova.plugins.emiAdmobPlugin.targeting([config_Targeting]);
+cordova.plugins.emiAdmobPlugin.initialize();
+// UMP SDK 2.1.0
+cordova.plugins.emiAdmobPlugin.getConsentRequest(); // (Platform: Both)
+cordova.plugins.emiAdmobPlugin.consentReset(); // (Platform: Both)
+cordova.plugins.emiAdmobPlugin.showPrivacyOptionsForm(); // (Platform: Both)
+// CMP SDK 2.2.0
+cordova.plugins.emiAdmobPlugin.requestIDFA(); // UMP SDK to handle Apple's App Tracking Transparency (ATT) (Platform: IOS)
+cordova.plugins.emiAdmobPlugin.getIabTfc((IABTFC) => { console.log(JSONstringify(IABTFC)) }); // CMP SDK 2.2 (Platform: Both)
+
+</pre>
+
+<li>example</li></ul>
+<pre> 
+ 
+
+document.addEventListener("deviceready", function(){
+
+    const config_globalSettings = [
+    setAppMuted = false, //  default: false
+    setAppVolume = 1, //  float: default: 1
+    enableSameAppKey = false, // default: false
+    npa = "1", // string "0" | "1"
+    enableCollapsible = true, // (BETA) activate the collapsible banner ads
+    responseInfo = false, // default: false
+    setDebugGeography = false // default: false
+    ]
+
+cordova.plugins.emiAdmobPlugin.getConsentRequest( (ststus) => { console.log("Consent Status: " + ststus) });
+cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
+ 
+ document.addEventListener('on.get.consent.status', () => {
+
+  // Regardless of the state, call SDK initialize
+   
+   cordova.plugins.emiAdmobPlugin.initialize();
+   cordova.plugins.emiAdmobPlugin.getIabTfc((IABTFC) => { console.log(JSONstringify(IABTFC)) }); 
+
+});
+
+}, false);
+
+</pre>
+
+</details>
+
+
 
 - [AppTrackingTransparency (ATT) framework:](https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/authorizationstatus) 
 - [Consent Management Platform API:](https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20CMP%20API%20v2.md#in-app-details)
@@ -52,47 +107,128 @@ cordova plugin rm emi-indo-cordova-plugin-admob
 - [Example Get Consent Status:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent.html) index.html
 - [Example requestIDFA:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/requestIDFA.html) index.html
 - [Example IABTFC:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/IABTFC.html) index.html
-```
-// Support Platform: Android or IOS
-<script>
-cordova.plugins.emiAdmobPlugin.globalSettings([config_globalSettings]);
-cordova.plugins.emiAdmobPlugin.targeting([config_Targeting]);
-cordova.plugins.emiAdmobPlugin.initialize();
 
-/*
-cordova.plugins.emiAdmobPlugin.requestIDFA(); // UMP SDK to handle Apple's App Tracking Transparency (ATT) (Platform: IOS)
-cordova.plugins.emiAdmobPlugin.getIabTfc((IABTFC) => {JSONstringify(IABTFC)}); // CMP SDK 2.2 (Platform: Both)
-
-// UMP SDK 2.1.0
-cordova.plugins.emiAdmobPlugin.getConsentRequest(); // (Platform: Both)
-cordova.plugins.emiAdmobPlugin.consentReset(); // (Platform: Both)
-cordova.plugins.emiAdmobPlugin.showPrivacyOptionsForm(); // (Platform: Both)
-*/
-</script>
-```
 
 ### AppOpenAd ADS
- [FULL AppOpenAd basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/app_open_ads.html) index.html
-```
-<script>
-// Support Platform: Android | IOS
-cordova.plugins.emiAdmobPlugin.loadAppOpenAd([config_AppOpenAd]);
-cordova.plugins.emiAdmobPlugin.showAppOpenAd();
-</script>
-```
-
-
- ### BANNER ADS
- [FULL Banner basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/banner_ads.html) index.html
- ```
+ 
+<details>
+<summary>Methods:</summary>
+<pre> 
  // Support Platform: Android | IOS
- <script>
+ cordova.plugins.emiAdmobPlugin.loadAppOpenAd([config_AppOpenAd]);
+ cordova.plugins.emiAdmobPlugin.showAppOpenAd();
+ <br> 
+</pre>
+</details>
+
+<details>
+<summary>Event</summary>
+<pre> 
+ on.appOpenAd.loaded
+ on.appOpenAd.failed.loaded
+ on.appOpenAd.dismissed
+ on.appOpenAd.failed.show
+ on.appOpenAd.show
+ on.appOpenAd.revenue
+ <br>
+</pre>
+ <li>example</li></ul>
+<pre> 
+ document.addEventListener('on.appOpenAd.loaded', () => {
+
+   console.log("On App Open Ad loaded");
+
+});</pre>
+</details>
+
+- [FULL AppOpenAd basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/app_open_ads.html) -index.html
+
+
+
+ 
+ ### BANNER ADS
+
+<details>
+<summary>Methods:</summary>
+<pre> 
 cordova.plugins.emiAdmobPlugin.loadBannerAd([bannerConfig]);
 cordova.plugins.emiAdmobPlugin.showBannerAd();
 cordova.plugins.emiAdmobPlugin.hideBannerAd();
 cordova.plugins.emiAdmobPlugin.removeBannerAd();
-</script>
-```
+</pre>
+  <li>example</li></ul>
+<pre> 
+ // WARNING config must be an array[] not an object{}
+const bannerConfig = [
+
+   adUnitId = "ca-app-pub-3940256099942544/6300978111",
+   position = "bottom-center",
+   size = "BANNER",
+   collapsible = "bottom", // (BETA) enable in globalSettings
+   adaptive_Width = 320, // Ignored
+   autoShow = true // boolean
+
+]
+
+cordova.plugins.emiAdmobPlugin.loadBannerAd([bannerConfig]);
+
+</pre>
+</details>
+
+<details>
+<summary>Position type string</summary>
+<pre>
+top-right
+top-center
+left
+center
+right
+bottom-center
+bottom-right
+</pre>
+</details>
+
+<details>
+<summary>Size type string</summary>
+<pre>
+ANCHORED
+IN_LINE
+FULL_WIDTH
+BANNER
+FLUID
+LARGE_BANNER
+MEDIUM_RECTANGLE
+FULL_BANNER
+LEADERBOARD
+adaptive_Width = number
+</pre>
+</details>
+
+<details>
+<summary>Event</summary>
+<pre>
+on.banner.load
+on.banner.failed.load
+on.banner.click
+on.banner.close
+on.banner.impression
+on.banner.open
+ // new
+on.banner.revenue
+on.banner.remove
+on.banner.hide
+</pre>
+ <li>example</li></ul>
+<pre> 
+ document.addEventListener('on.banner.load', () => {
+
+   console.log("on banner load");
+
+});</pre>
+</details>
+
+ [FULL Banner basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/banner_ads.html) index.html
+
 
 ### Interstitial ADS
 [FULL Interstitial basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/interstitial_ads.html) index.html
@@ -148,6 +284,18 @@ alert("On App Open Ad loaded");
 
 ## ( SDK )
 - on.sdkInitialization
+
+
+
+
+<details>
+<summary>Event</summary>
+<pre>
+ 
+</pre>
+</details>
+
+
 
 ## ( App Open Ads )
 
