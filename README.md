@@ -64,7 +64,16 @@ cordova.plugins.emiAdmobPlugin.requestIDFA(); // UMP SDK to handle Apple's App T
 cordova.plugins.emiAdmobPlugin.getIabTfc((IABTFC) => { console.log(JSONstringify(IABTFC)) }); // CMP SDK 2.2 (Platform: Both)
 
 </pre>
+<details>
+<summary>Note setDebugGeography</summary>
+Testing is very easy, no need for VPN, TEST-DEVICE-HASHED-ID, or anything else, everything has been made programmatically.
 
+must be false if the application is released to the play store / app store.
+consent from will continue to be called regardless of its status 0,1,2,3, 
+until the value is changed to false.
+
+setDebugGeography = true | false
+</details>
 <li>example</li></ul>
 <pre> 
  
@@ -100,6 +109,49 @@ cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
 </details>
 
 
+<details>
+<summary>Event UMP SDK</summary>
+<pre> 
+ on.get.consent.status
+ <br>
+</pre>
+ <li>example:</li></ul>
+<pre> 
+document.addEventListener('on.get.consent.status', () => {
+
+   console.log("on get consent status");
+
+});
+</pre>
+</details>
+
+<details>
+<summary>Event CMP SDK</summary>
+<pre> 
+on.getIabTfc
+on.TCString.expired
+on.TCString.remove
+ <br>
+</pre>
+
+<details>
+<summary>Note</summary>
+TCString expires 360 days, plugin automatically deletes it after 360 days. call consentRest()
+</details>
+ <li>example:</li></ul>
+<pre> 
+document.addEventListener('on.TCString.expired', () => {
+
+   console.log("on TCString expires 360 days");
+   cordova.plugins.emiAdmobPlugin.consentReset();
+
+});
+</pre>
+</details>
+
+
+
+
 - [AppTrackingTransparency (ATT) framework:](https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/authorizationstatus) 
 - [Consent Management Platform API:](https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20CMP%20API%20v2.md#in-app-details)
 
@@ -109,7 +161,7 @@ cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
 
 
 
-## Global Variable adunitID
+## Global Variable adunitId
 
 ```
 <script>
