@@ -19,8 +19,24 @@
 - Target iOS 11.0 or higher
 https://developers.google.com/admob/ios/quick-start
 
-
-
+## Features
+<details>
+<summary>Features</summary>
+<ul>
+<li> initialize</li>
+<li> targeting</li>
+<li> globalSettings</li>
+<li> AppTrackingTransparency (ATT)</li>
+<li> CMP SDK</li>
+<li> UMP SDK</li>
+<li> App Open Ads</li>
+<li> Banner Ads</li>
+<li> Interstitial Ads</li>
+<li> Rewarded Ads</li>
+<li> Mediation</li>
+<li> impression-level-ad-revenue</li>
+</ul>
+</details>
 
 ## Installation
 
