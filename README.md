@@ -72,6 +72,7 @@ cordova.plugins.emiAdmobPlugin.getIabTfc((IABTFC) => { console.log(JSONstringify
 document.addEventListener("deviceready", function(){
 
     const config_globalSettings = [
+    
     setAppMuted = false, //  default: false
     setAppVolume = 1, //  float: default: 1
     enableSameAppKey = false, // default: false
@@ -79,18 +80,17 @@ document.addEventListener("deviceready", function(){
     enableCollapsible = true, // (BETA) activate the collapsible banner ads
     responseInfo = false, // default: false
     setDebugGeography = false // default: false
+    
     ]
 
 cordova.plugins.emiAdmobPlugin.getConsentRequest( (ststus) => { console.log("Consent Status: " + ststus) });
 cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
  
  document.addEventListener('on.get.consent.status', () => {
-
   // Regardless of the state, call SDK initialize
    
    cordova.plugins.emiAdmobPlugin.initialize();
    cordova.plugins.emiAdmobPlugin.getIabTfc((IABTFC) => { console.log(JSONstringify(IABTFC)) }); 
-
 });
 
 }, false);
@@ -98,7 +98,6 @@ cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
 </pre>
 
 </details>
-
 
 
 - [AppTrackingTransparency (ATT) framework:](https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/authorizationstatus) 
@@ -109,7 +108,42 @@ cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
 - [Example IABTFC:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/IABTFC.html) index.html
 
 
-### AppOpenAd ADS
+
+## Global Variable adunitID
+
+```
+<script>
+Ad format	Demo ad unit ID
+// https://developers.google.com/admob/android/test-ads
+// https://developers.google.com/admob/ios/test-ads
+
+var App_Open_ID;
+var Banner_ID;
+var Interstitial_ID;
+var Rewarded_ID;
+var Rewarded_Interstitial_ID;
+
+if (window.cordova.platformId === 'ios') {
+   
+    App_Open_ID = 'ca-app-pub-3940256099942544/5575463023';
+    Banner_ID = 'ca-app-pub-3940256099942544/2934735716';
+    Interstitial_ID = 'ca-app-pub-3940256099942544/4411468910';
+    Rewarded_ID = 'ca-app-pub-3940256099942544/1712485313';
+    Rewarded_Interstitial_ID = 'ca-app-pub-3940256099942544/6978759866';
+    
+} else {
+    // Assume Android
+    App_Open_ID = 'ca-app-pub-3940256099942544/9257395921';
+    Banner_ID = 'ca-app-pub-3940256099942544/6300978111';
+    Interstitial_ID = 'ca-app-pub-3940256099942544/1033173712';
+    Rewarded_ID = 'ca-app-pub-3940256099942544/5224354917';
+    Rewarded_Interstitial_ID = 'ca-app-pub-3940256099942544/5354046379';
+}
+ </script>
+```
+
+
+## AppOpenAd ADS
  
 <details>
 <summary>Methods:</summary>
@@ -118,6 +152,14 @@ cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
  cordova.plugins.emiAdmobPlugin.loadAppOpenAd([config_AppOpenAd]);
  cordova.plugins.emiAdmobPlugin.showAppOpenAd();
  <br> 
+</pre>
+ <li>example:</li></ul>
+<pre> 
+
+// WARNING config must be an array[] not an object{}
+// adUnitId = call Global Variable
+
+ cordova.plugins.emiAdmobPlugin.loadAppOpenAd([ adUnitId = App_Open_ID, autoShow = true ]);
 </pre>
 </details>
 
@@ -132,13 +174,14 @@ cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
  on.appOpenAd.revenue
  <br>
 </pre>
- <li>example</li></ul>
+ <li>example:</li></ul>
 <pre> 
- document.addEventListener('on.appOpenAd.loaded', () => {
+document.addEventListener('on.appOpenAd.loaded', () => {
 
    console.log("On App Open Ad loaded");
 
-});</pre>
+});
+</pre>
 </details>
 
 - [FULL AppOpenAd basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/app_open_ads.html) -index.html
@@ -146,7 +189,7 @@ cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
 
 
  
- ### BANNER ADS
+ ## BANNER ADS
 
 <details>
 <summary>Methods:</summary>
@@ -156,12 +199,14 @@ cordova.plugins.emiAdmobPlugin.showBannerAd();
 cordova.plugins.emiAdmobPlugin.hideBannerAd();
 cordova.plugins.emiAdmobPlugin.removeBannerAd();
 </pre>
-  <li>example</li></ul>
+  <li>example:</li></ul>
 <pre> 
  // WARNING config must be an array[] not an object{}
+ // adUnitId = call Global Variable
+
 const bannerConfig = [
 
-   adUnitId = "ca-app-pub-3940256099942544/6300978111",
+   adUnitId = Banner_ID,
    position = "bottom-center",
    size = "BANNER",
    collapsible = "bottom", // (BETA) enable in globalSettings
@@ -170,7 +215,7 @@ const bannerConfig = [
 
 ]
 
-cordova.plugins.emiAdmobPlugin.loadBannerAd([bannerConfig]);
+cordova.plugins.emiAdmobPlugin.loadBannerAd(bannerConfig);
 
 </pre>
 </details>
@@ -218,9 +263,9 @@ on.banner.revenue
 on.banner.remove
 on.banner.hide
 </pre>
- <li>example</li></ul>
+ <li>example:</li></ul>
 <pre> 
- document.addEventListener('on.banner.load', () => {
+document.addEventListener('on.banner.load', () => {
 
    console.log("on banner load");
 
@@ -230,199 +275,164 @@ on.banner.hide
  [FULL Banner basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/banner_ads.html) index.html
 
 
-### Interstitial ADS
-[FULL Interstitial basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/interstitial_ads.html) index.html
-```
-// Support Platform: Android | IOS
-<script>
-cordova.plugins.emiAdmobPlugin.loadInterstitialAd([config_Interstitial]);
-cordova.plugins.emiAdmobPlugin.showInterstitialAd();
-</script>
-```
-
-
-### Rewarded Interstitial ADS
-[FULL Rewarded Interstitial basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_interstitial_ads.html) index.html
-```
-// Support Platform: Android | IOS
-<script>
-cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd([config_rewardedInt]);
-cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();
-</script>
-```
-
-### Rewarded ADS
-[FULL Rewarded basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_ads.html) index.html
-```
-// Support Platform: Android | IOS
-<script>
-cordova.plugins.emiAdmobPlugin.loadRewardedAd([config_rewarded]);
-cordova.plugins.emiAdmobPlugin.showRewardedAd();
-</script>
-```
-
-
-
-
-
-
-
-# Event | callback:
-### Example event code
-
-```sh
-document.addEventListener('on.appOpenAd.loaded', () => {
-
-alert("On App Open Ad loaded");
-
-});
-
-```
-
-> __Note__
-### (final) cannot be changed.
-
-## ( SDK )
-- on.sdkInitialization
-
-
+## Interstitial ADS
 
 
 <details>
+<summary>Methods:</summary>
+<pre> 
+ // Support Platform: Android | IOS
+cordova.plugins.emiAdmobPlugin.loadInterstitialAd([config_Interstitial]);
+cordova.plugins.emiAdmobPlugin.showInterstitialAd();
+ <br> 
+</pre>
+ <li>example:</li></ul>
+<pre> 
+
+// WARNING config must be an array[] not an object{}
+// adUnitId = call Global Variable
+
+ cordova.plugins.emiAdmobPlugin.loadInterstitialAd([ adUnitId = Interstitial_ID, autoShow = true ]);
+</pre>
+</details>
+
+<details>
 <summary>Event</summary>
-<pre>
- 
+<pre> 
+on.interstitial.loaded
+on.interstitial.failed.load
+on.interstitial.click
+on.interstitial.dismissed
+on.interstitial.failed.show
+on.interstitial.impression
+on.interstitial.show
+ // new
+ on.interstitial.revenue
+ <br>
+</pre>
+ <li>example:</li></ul>
+<pre> 
+document.addEventListener('on.interstitial.loaded', () => {
+
+   console.log("on interstitial Ad loaded");
+
+});
 </pre>
 </details>
 
 
-
-## ( App Open Ads )
-
-### Event Load
-
-- on.appOpenAd.loaded
-- on.appOpenAd.failed.loaded
-
-### Event Show
-
-- on.appOpenAd.dismissed
-- on.appOpenAd.failed.show
-- on.appOpenAd.show
- ### NEW
-- on.appOpenAd.revenue
-
-
-## ( Banner Ads )
-
-### position
-
-- top-right
-- top-center
-- left
-- center
-- right
-- bottom-center
-- bottom-right
-
-
-
-### size
-
-- ANCHORED
-- IN_LINE
-- FULL_WIDTH
-- BANNER
-- FLUID
-- LARGE_BANNER
-- MEDIUM_RECTANGLE
-- FULL_BANNER
-- LEADERBOARD
-- adaptive_Width = number 
-- Smart Banners = DEPRECATED
-
-
-### Event Load
-
-- on.banner.load
-- on.banner.failed.load
-
-### Event Show
-
-- on.banner.click
-- on.banner.close
-- on.banner.impression
-- on.banner.open
-### NEW
-- on.banner.revenue
-- on.banner.remove
-- on.banner.hide
-  
-
-
-
-## ( Interstitial Ads )
-
-### Event Load
-
-- on.interstitial.loaded
-- on.interstitial.failed.load
-
-### Event Show
-
-- on.interstitial.click
-- on.interstitial.dismissed
-- on.interstitial.failed.show
-- on.interstitial.impression
-- on.interstitial.show
-### NEW
-- on.interstitial.revenue
+[FULL Interstitial basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/interstitial_ads.html) index.html
 
 
 
 
-
-## ( Rewarded Ads )
-
-### Event Load
-
-- on.rewarded.loaded
-- on.rewarded.failed.load
-
-
-### Event Show
-
-- on.rewarded.click
-- on.rewarded.dismissed
-- on.rewarded.failed.show
-- on.rewarded.impression
-- on.rewarded.show
-### NEW
-- on.rewarded.revenue
-- on.rewarded.ad.skip
-- on.reward.userEarnedReward
+## Rewarded Interstitial ADS
 
 
 
-## ( Rewarded interstitial Ads )
+<details>
+<summary>Methods:</summary>
+<pre> 
+ // Support Platform: Android | IOS
+cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd([config_rewardedInt]);
+cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();
+ <br> 
+</pre>
+ <li>example:</li></ul>
+<pre> 
 
-### Event Load
+// WARNING config must be an array[] not an object{}
+// adUnitId = call Global Variable
 
-- on.rewardedInt.loaded
-- on.rewardedInt.failed.load
+ cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd([ adUnitId = Rewarded_Interstitial_ID, autoShow = true ]);
+</pre>
+</details>
+
+<details>
+<summary>Event</summary>
+<pre> 
+on.rewardedInt.loaded
+on.rewardedInt.failed.load
+on.rewardedInt.click
+on.rewardedInt.dismissed
+on.rewardedInt.failed.show
+on.rewardedInt.impression
+on.rewardedInt.showed
+on.rewardedInt.userEarnedReward
+ // new
+on.rewardedInt.revenue
+on.rewardedInt.ad.skip
+ <br>
+</pre>
+ <li>example:</li></ul>
+<pre> 
+document.addEventListener('on.rewardedInt.loaded', () => {
+
+   console.log("on rewarded Interstitial load");
+
+});
+</pre>
+</details>
+
+[FULL Rewarded Interstitial basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_interstitial_ads.html) index.html
 
 
-### Event Show
 
-- on.rewardedInt.click
-- on.rewardedInt.dismissed
-- on.rewardedInt.failed.show
-- on.rewardedInt.impression
-- on.rewardedInt.showed
-### NEW
-- on.rewardedInt.revenue
-- on.rewardedInt.ad.skip
-- on.rewardedInt.userEarnedReward
+## Rewarded ADS
+
+
+
+<details>
+<summary>Methods:</summary>
+<pre> 
+ // Support Platform: Android | IOS
+cordova.plugins.emiAdmobPlugin.loadRewardedAd([config_rewarded]);
+cordova.plugins.emiAdmobPlugin.showRewardedAd();
+ <br> 
+</pre>
+ <li>example:</li></ul>
+<pre> 
+// adUnitId = call Global Variable
+
+ cordova.plugins.emiAdmobPlugin.loadRewardedAd([ adUnitId = Rewarded_ID, autoShow = true ]);
+</pre>
+</details>
+
+<details>
+<summary>Event</summary>
+<pre> 
+on.rewarded.loaded
+on.rewarded.failed.load
+on.rewarded.click
+on.rewarded.dismissed
+on.rewarded.failed.show
+on.rewarded.impression
+on.rewarded.show
+on.reward.userEarnedReward
+ // new
+on.rewarded.revenue
+on.rewarded.ad.skip
+
+ <br>
+</pre>
+ <li>example:</li></ul>
+<pre> 
+document.addEventListener('on.rewarded.loaded', () => {
+
+   console.log("on rewarded Ad loaded");
+
+});
+</pre>
+</details>
+[FULL Rewarded basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_ads.html) index.html
+
+
+
+
+
+
+## ( SDK )
+- on.sdkInitialization
 
 
 
