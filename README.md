@@ -19,6 +19,25 @@
 - Target iOS 11.0 or higher
 https://developers.google.com/admob/ios/quick-start
 
+<details>
+<summary>Guaranteed income using this plugin #14</summary>
+
+  > __Note__
+> - ## It's Not a fork, it's purely rewritten, clean of 3rd party code.
+
+ > __Note__
+> - ### No Ad-Sharing
+> - ### No Remote Control
+> - ### I guarantee 100% revenue for you.
+> - [Code source:](https://github.com/googleads/googleads-mobile-android-examples) - Admob:
+> - 
+</details>
+
+## 💰Sponsor this project
+  [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)  
+  
+##  [Check all release notes:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/)
+
 ## Features
 <details>
 <summary>Features #1</summary>
@@ -499,30 +518,17 @@ document.addEventListener('on.rewarded.loaded', () => {
 
 
 
-## ( SDK )
-- on.sdkInitialization
 
 
 
 
 
-  > __Note__
-> - ## It's Not a fork, it's purely rewritten, clean of 3rd party code.
-
- > __Note__
-> - ### No Ad-Sharing
-> - ### No Remote Control
-> - ### I guarantee 100% revenue for you.
-> - [Code source:](https://github.com/googleads/googleads-mobile-android-examples) - Admob:
-
-
-## 💰Sponsor this project
-  [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)  
-  
-##  [Check all release notes:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/)
 
 
 
+
+<details>
+<summary>Features and Coming soon #13</summary>
 
 ## Features
 
@@ -552,38 +558,16 @@ document.addEventListener('on.rewarded.loaded', () => {
 - https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/ ( Finished ) v1.4.0 [index.html](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html)
 
 
+</details>
 
 
 
 
-
-
-  > __Note__
-> 
-
-> - # Plugin version @1.4.0
-
- ###  [ GDPR | IAB TFC code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html)
- - replace all AdUnitId to adUnitId
- - new banner size: FULL_WIDTH
-### New only on github
-   https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/%401.4.0
-
-> - # Plugin version @1.3.9
-
- [FULL Example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/) - index.html:
-
- ###  [ App Open Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/app_open_ads.html)
- ###  [ Banner Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/banner_ads.html)
- ###  [ Interstitial Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/interstitial_ads.html)
- ###  [ Rewarded interstitial Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_interstitial_ads.html)
- ###  [ Rewarded Ad code example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_ads.html)
-
- ###  [ Advanced topics: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/Advanced%20topics)
 
 # IAB Europe Transparency & Consent Framework
-### Example How to read consent choices
 
+<details>
+<summary>Example How to read consent choices #12</summary>
                 
                // index.html  https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent_GDPR_IAB_TFCv2.2.html
  ```sh
@@ -634,11 +618,17 @@ document.addEventListener('on.rewarded.loaded', () => {
 
 ```
 
-
+</details>
 
 
 
 # Admob Mediation
+
+<details>
+<summary>Mediation #9</summary>
+
+
+
 <img src="https://user-images.githubusercontent.com/78555833/229587307-91a7e380-aa2d-4140-a62d-fa8e6a8dd153.png" width="500">
 
 
@@ -713,10 +703,16 @@ cordova plugin add emi-indo-cordova-plugin-mediation-chartboost
 ```sh
 cordova plugin add emi-indo-cordova-plugin-mediation-ironsource
 ```
+</details>
 
 
 
 ## Variables name or preference name
+
+<details>
+<summary>Variables name #10</summary>
+
+
 > __Warning__
 > This is so that if I don't have time to update the Mediation Adapter version later, you can do it yourself as below. 
 
@@ -748,24 +744,10 @@ cordova plugin add emi-indo-cordova-plugin-mediation-meta --variable META_ADAPTE
 - IRONSOURCE_ADAPTER_VERSION
 
 - ================================
+</details>
 
 
-emi-indo-cordova-plugin-admob@0.0.5
 
-  
-> - ##  Note Release
-- [emi-indo-cordova-plugin-admob@0.0.4](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/%400.0.4) 
- 
-- [emi-indo-cordova-plugin-admob@0.0.5](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v0.0.5) 
- 
- <img src="https://user-images.githubusercontent.com/78555833/231241800-8834ca2a-fa95-4cc2-91ca-1478c6b3c1ef.jpg" width="250">
-
-- [emi-indo-cordova-plugin-admob@0.0.6](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v0.0.6) 
-
-
-### Platform Support
-- Android
-- IOS
 
 
 ## 💰Sponsor this project
@@ -773,6 +755,10 @@ emi-indo-cordova-plugin-admob@0.0.5
   
 
  ## Earn more money, with other ad networks.
+
+<details>
+<summary>Other plugins #11</summary>
+ 
   - ### emi-indo-cordova-plugin-fan
   
   [Facebook Audience Network:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-fan) - Ads:
@@ -793,4 +779,4 @@ emi-indo-cordova-plugin-admob@0.0.5
  - ### emi-indo-cordova-plugin-fanalytics
   
   [Cordova Plugin Firebase Analytics:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-fanalytics) - Firebase Analytics:
-                             
+ </details>                            
