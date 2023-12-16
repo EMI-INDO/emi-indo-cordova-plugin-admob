@@ -511,6 +511,7 @@ document.addEventListener('on.rewarded.loaded', () => {
 });
 </pre>
 </details>
+
 [FULL Rewarded basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_ads.html) index.html
 
 
