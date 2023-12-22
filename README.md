@@ -11,7 +11,6 @@
 - cordova-android version = 12.0.0
 - cordova-ios version = 7.0.0
 
-
 ## Minimum macOS | Xcode, and others
 - Monterey
 - Xcode 14.1 or higher
@@ -32,6 +31,9 @@ https://developers.google.com/admob/ios/quick-start
 > - [Code source:](https://github.com/googleads/googleads-mobile-android-examples) - Admob:
 > - 
 </details>
+
+## IOS Test Plugin with construct 3
+[![Video](https://i9.ytimg.com/vi_webp/lELJRKDrkNk/mq3.webp?sqp=CITWlawG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGEUgEyh_MA8=&amp;rs=AOn4CLDYD7KpupptdlALU58JVH9ibfjZIQ)](https://youtu.be/lELJRKDrkNk)
 
 ## 💰Sponsor this project
   [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)  
