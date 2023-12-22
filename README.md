@@ -32,10 +32,20 @@ https://developers.google.com/admob/ios/quick-start
 > - 
 </details>
 
-## Test UMP CMP SDK
+## VIDEO Test Collapsible banner ads
+- Test Plugin with construct 3
+  
+[![Video](https://i9.ytimg.com/vi_webp/uUivVBC0cqs/mq2.webp?sqp=CNzalawG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgZShlMA8=&amp;rs=AOn4CLB5lKiCQAR08oDAP0oWkyDYkW1gLw)](https://youtu.be/uUivVBC0cqs)
+
+## VIDEO Test UMP or CMP SDK
 - Test Plugin with construct 3
   
 [![Video](https://i9.ytimg.com/vi_webp/lELJRKDrkNk/mq3.webp?sqp=CITWlawG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGEUgEyh_MA8=&amp;rs=AOn4CLDYD7KpupptdlALU58JVH9ibfjZIQ)](https://youtu.be/lELJRKDrkNk)
+
+## VIDEO Test Ad Type with Xcode/IOS
+- Test Plugin with construct 3
+  
+[![Video](https://i9.ytimg.com/vi_webp/YYMJuf7gIsg/mq3.webp?sqp=CNzalawG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGBkgZSgsMA8=&amp;rs=AOn4CLAT_8U37b_ZJEg0wC3E-4eC63W82g)](https://youtu.be/YYMJuf7gIsg)
 
 ## 💰Sponsor this project
   [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)  
