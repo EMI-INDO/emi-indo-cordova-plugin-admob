@@ -35,17 +35,27 @@ https://developers.google.com/admob/ios/quick-start
 ## VIDEO Test Collapsible banner ads
 - Test Plugin with construct 3
   
-[![Video](https://i9.ytimg.com/vi_webp/uUivVBC0cqs/mq2.webp?sqp=CNzalawG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgZShlMA8=&amp;rs=AOn4CLB5lKiCQAR08oDAP0oWkyDYkW1gLw)](https://youtu.be/uUivVBC0cqs)
+[![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjqRuVXfAVO7-FbCOxzdKfYuo1d38Sl53IdbE3X3o90_Lb_uUBCWq1RWVb3zQV666DfSoeiYt3L9xJjJmumGKXPxtsWNA9KcE8BMeKKlMXyXUT-D2CSmpBInCqdbRW-3bhUuap0V5LbijgLnAYXyOgtVhTHNX-wbNWBnYr3V6nIh0XSVvk1KPOQNy14Wsoj/s320/mq2%20%281%29.webp)](https://youtu.be/uUivVBC0cqs)
 
-## VIDEO Test UMP or CMP SDK
+## VIDEO Test UMP or CMP SDK Android
 - Test Plugin with construct 3
   
-[![Video](https://i9.ytimg.com/vi_webp/lELJRKDrkNk/mq3.webp?sqp=CITWlawG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGEUgEyh_MA8=&amp;rs=AOn4CLDYD7KpupptdlALU58JVH9ibfjZIQ)](https://youtu.be/lELJRKDrkNk)
+[![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgV7bX3Xs_l4O3DFvF4mWjL2VgbpGObIhSUN4dVY9Q_TSAD2_gZYlMKXcd1ZfyQ_I8utF2nOHOKRAg0E3q20n77o7nd6Zcd9bX9YfQcf4J7j3jeCeG0K4CkkHEF3rieRhvxaCb0cseRi4v3yoYzb4MTJ60C3cjjiaS-JCPGXqc8iVKXcTBpXV58I7DnN3_N/s320/mq3.webp)](https://youtu.be/lELJRKDrkNk)
+
+## VIDEO Test UMP or CMP SDK IOS
+- Test Plugin with construct 3
+  
+[![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjFtHnWLmECsTePul7q6s9oC2QGPtVxrrBAgl6h_tN-IGR_lNqQ6-q3-1Qpv9hyphenhyphenpRoBx1BLx0TZdEd6QXVfXLv3mRadVJZNrd5hP1_tqj1j8YMmPXX-8_i8IxFX2iZw61VDjUvrupA4cbdqFXR36DZsvTfeMu372S65K_UVNzbbfU_0kiyvm02aKJZmlQHS/s320/mq2.webp)](https://youtu.be/d2dSn4LBvro)
 
 ## VIDEO Test Ad Type with Xcode/IOS
 - Test Plugin with construct 3
   
-[![Video](https://i9.ytimg.com/vi_webp/YYMJuf7gIsg/mq3.webp?sqp=CNzalawG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGBkgZSgsMA8=&amp;rs=AOn4CLAT_8U37b_ZJEg0wC3E-4eC63W82g)](https://youtu.be/YYMJuf7gIsg)
+[![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiCMj8HrgSvO8WYm8wjv5KsM1CCmcX-w472iRZ0ynW715Pj0hMrTlCDLYxhLHme3oFowVW9ap7pQZqosXBDWWQ_SMuqw2g_Beh1CX0igO7jY7KCvBCXbQCqyFekgI9bKIl92opoucOkXbqsgRhBTeB41ho5l_0tx-YVfKt9jrbONt_nv080beeaYOmoN4w7/s320/mq3%20%281%29.webp)](https://youtu.be/YYMJuf7gIsg)
+
+
+
+
+
 
 ## 💰Sponsor this project
   [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)  
