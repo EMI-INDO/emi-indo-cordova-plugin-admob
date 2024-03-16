@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your App Title</title>
+    <!-- Cordova reference, this is added automatically when you build your app -->
+    <script src="cordova.js"></script>
+</head>
+
+<body>
+    <textarea id="logTextArea" rows="10" cols="50"></textarea>
+    <script>
+        document.addEventListener('deviceready', async function () {
+            try {
+                
+				
+				
+				await new Promise((resolve, reject) => {
+                    // First get UMP status
+                    cordova.plugins.emiAdmobPlugin.getConsentRequest(
+                        async (status) => {
+                            // Second check the platform if IOS if yes get ATT status
+                            if (window.cordova && window.cordova.platformId === 'ios') {
+                                await new Promise((idfaResolve, idfaReject) => {
+                                    cordova.plugins.emiAdmobPlugin.requestIDFA(
+                                        async (idfaStatus) => {
+                                            // Whatever the status is install admob sdk
+                                            // Here ATT status
+                                            if (idfaStatus) {
+                                                console.log("ATT status:", idfaStatus);
+                                                appendToLog("ATT status: " + idfaStatus);
+                                                await cordova.plugins.emiAdmobPlugin.initialize();
+                                            }
+                                            idfaResolve();
+                                        },
+                                        async (error) => { // error ATT
+                                            // Whatever happens even when there is an error, keep installing the admob sdk
+                                            await cordova.plugins.emiAdmobPlugin.initialize();
+                                            console.log("ATT error:", error);
+                                            appendToLog("ATT error: " + error);
+                                            idfaReject(error);
+                                        }
+                                    );
+                                });
+                            }
+                            // Here UMP status
+                            // Whatever the status is install admob sdk
+							
+                            if (status) {
+                                console.log("UMP status:", status);
+                                appendToLog("UMP status: " + status);
+                                await cordova.plugins.emiAdmobPlugin.initialize();
+                            }
+                            resolve();
+                        },
+                        async (error) => { // error UMP
+                            // Whatever happens even when there is an error, keep installing the admob sdk
+                            await cordova.plugins.emiAdmobPlugin.initialize();
+                            console.log("UMP error:", error);
+                            appendToLog("UMP error: " + error);
+                            reject(error);
+                        }
+                    );
+                });
+            } catch (error) {
+                console.error(error);
+                appendToLog(error);
+                // Handle errors here
+            }
+
+            document.addEventListener('on.sdkInitialization', () => {
+                console.log("On Sdk Initialization");
+                appendToLog("On Sdk Initialization");
+                // load ads
+                cordova.plugins.emiAdmobPlugin.loadInterstitialAd(["ca-app-pub-3940256099942544/1033173712", true]);
+            });
+
+            function appendToLog(message) {
+                var logTextArea = document.getElementById("logTextArea");
+                logTextArea.value += message + "\n";
+            }
+        }, false);
+    </script>
+</body>
+
+</html>
