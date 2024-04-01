@@ -14,10 +14,8 @@
     <script>
         document.addEventListener('deviceready', async function () {
             try {
-                
-				
-				
-				await new Promise((resolve, reject) => {
+                	
+		await new Promise((resolve, reject) => {
                     // First get UMP status
                     cordova.plugins.emiAdmobPlugin.getConsentRequest(
                         async (status) => {
@@ -47,13 +45,28 @@
                             }
                             // Here UMP status
                             // Whatever the status is install admob sdk
-							
-                            if (status) {
-                                console.log("UMP status:", status);
-                                appendToLog("UMP status: " + status);
+		           // https://developers.google.com/admob/android/privacy/api/reference/com/google/android/ump/ConsentInformation.ConsentStatus.html
+                            var ump_Status = status; 
+						
+                            if (ump_Status === 1) {
+                                console.log("User consent not required:", status);
+                                appendToLog("User consent not required: " + status);
+                                await cordova.plugins.emiAdmobPlugin.initialize();
+                            } else if (ump_Status === 3) {
+                                console.log("User consent obtained. Personalized vs non-personalized undefined.:", status);
+                                appendToLog("User consent obtained. Personalized vs non-personalized undefined. " + status);
+                                await cordova.plugins.emiAdmobPlugin.initialize();
+                            } else  if (ump_Status === 2) {
+                                console.log("User consent required but not yet obtained.", status);
+                                appendToLog("User consent required but not yet obtained.: " + status);
+                                await cordova.plugins.emiAdmobPlugin.initialize();
+                            } else  if (ump_Status === 0) {
+                                console.log("Consent status is unknown. ", status);
+                                appendToLog("Consent status is unknown.  " + status);
                                 await cordova.plugins.emiAdmobPlugin.initialize();
                             }
                             resolve();
+				
                         },
                         async (error) => { // error UMP
                             // Whatever happens even when there is an error, keep installing the admob sdk
