@@ -54,6 +54,9 @@ WARNING: Failure to follow the issue template guidelines below will result in th
 
 **Environment information**
 <!-- Please supply full details of your development environment including: -->
+- Plugin version 
+	- `Plugin version: xxxx`
+
 - Cordova CLI version 
 	- `cordova -v`
 - Cordova platform version
