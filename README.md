@@ -86,10 +86,7 @@ https://developers.google.com/admob/ios/quick-start
 ```sh
 cordova plugin add emi-indo-cordova-plugin-admob  --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx --variable APP_ID_IOS=ca-app-pub-xxx~xxx
 ```
-### Or
-```sh
-cordova plugin add https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob  --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx --variable APP_ID_IOS=ca-app-pub-xxx~xxx
-```
+
 ## Remove
 ```sh
 cordova plugin rm emi-indo-cordova-plugin-admob
