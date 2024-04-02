@@ -39,6 +39,24 @@
               Rewarded_ID = "ca-app-pub-3940256099942544/5224354917";
               Rewarded_Interstitial_ID = "ca-app-pub-3940256099942544/5354046379";
             }
+
+
+
+
+	    const config_globalSettings = [
+
+             setAppMuted = false, // Type Boolean default: false
+             setAppVolume = 1.0, // Type float default: 1
+             publisherFirstPartyIdEnabled = true, // Type Boolean default: true  // DEPRECATED enableSameAppKey > Replace with: publisherFirstPartyIdEnabled
+             npa = "1", // string "0" | "1" // DEPRECATED Beginning January 16, 2024
+             enableCollapsible = false, // (BETA) activate the collapsible banner ads
+             responseInfo = false, // For debugging and logging purposes
+             // The UMP SDK provides a way to test your app's behavior as though the device was located in the EEA or UK using the setDebugGeography
+             setDebugGeography = true // Force a geography:  default: false
+
+            ]
+
+            cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
     
 
 		    
