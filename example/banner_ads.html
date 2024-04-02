@@ -48,46 +48,33 @@ LEADERBOARD
 
 */
 
+            //       Ad format	Demo ad unit ID
+            // https://developers.google.com/admob/android/test-ads
+            // https://developers.google.com/admob/ios/test-ads
 
-// WARNING config must be an array[] not an object{}
-const bannerConfig = [
+            var App_Open_ID;
+            var Banner_ID;
+            var Interstitial_ID;
+            var Rewarded_ID;
+            var Rewarded_Interstitial_ID;
 
-   adUnitId = "ca-app-pub-3940256099942544/6300978111",
-   position = "bottom-center",
-   size = "BANNER",
-   collapsible = "bottom", // (BETA) enable in globalSettings
-   adaptive_Width = 320, // Ignored
-   autoShow = true // boolean
-
-]
-
-
-// load banner ad
-let loadBannerAd = () => {
-    cordova.plugins.emiAdmobPlugin.loadBannerAd(bannerConfig);
-   // call loadBannerAd();
-}
-
-// show Banner Ad
-let showBannerAd = () => {
-
-    cordova.plugins.emiAdmobPlugin.showBannerAd();
-    // call showBannerAd();
-}
-
-// Hide Banner Ad
-let hideBannerAd = () => {
-    cordova.plugins.emiAdmobPlugin.hideBannerAd();
-    // call hideBannerAd();
-}
-
-// Remove Banner
-let removeBannerAd = () => {
-    cordova.plugins.emiAdmobPlugin.removeBannerAd();
-    // call removeBannerAd();
-}
+            if (window.cordova.platformId === "ios") {
+              App_Open_ID = "ca-app-pub-3940256099942544/5575463023";
+              Banner_ID = "ca-app-pub-3940256099942544/2934735716";
+              Interstitial_ID = "ca-app-pub-3940256099942544/4411468910";
+              Rewarded_ID = "ca-app-pub-3940256099942544/1712485313";
+              Rewarded_Interstitial_ID = "ca-app-pub-3940256099942544/6978759866";
+            } else {
+              // Assume Android
+              App_Open_ID = "ca-app-pub-3940256099942544/9257395921";
+              Banner_ID = "ca-app-pub-3940256099942544/6300978111";
+              Interstitial_ID = "ca-app-pub-3940256099942544/1033173712";
+              Rewarded_ID = "ca-app-pub-3940256099942544/5224354917";
+              Rewarded_Interstitial_ID = "ca-app-pub-3940256099942544/5354046379";
+            }
 
 
+let loadBannerAd, showBannerAd, hideBannerAd, removeBannerAd;
     /////  >>>>>> Device Ready <<<<<<
 
 
@@ -125,6 +112,44 @@ event.value += ("\n On Sdk Initialization");
 });
 
 
+
+// WARNING config must be an array[] not an object{}
+const bannerConfig = [
+
+   adUnitId = Banner_ID,
+   position = "bottom-center",
+   size = "BANNER",
+   collapsible = "bottom", // (BETA) enable in globalSettings
+   adaptive_Width = 320, // Ignored
+   autoShow = true // boolean
+
+]
+
+
+// load banner ad
+ loadBannerAd = () => {
+    cordova.plugins.emiAdmobPlugin.loadBannerAd(bannerConfig);
+   // call loadBannerAd();
+}
+
+// show Banner Ad
+ showBannerAd = () => {
+
+    cordova.plugins.emiAdmobPlugin.showBannerAd();
+    // call showBannerAd();
+}
+
+// Hide Banner Ad
+ hideBannerAd = () => {
+    cordova.plugins.emiAdmobPlugin.hideBannerAd();
+    // call hideBannerAd();
+}
+
+// Remove Banner
+ removeBannerAd = () => {
+    cordova.plugins.emiAdmobPlugin.removeBannerAd();
+    // call removeBannerAd();
+}
 
 
 document.addEventListener('on.banner.load', () => {
@@ -177,6 +202,7 @@ event.value += ("\n on.banner.remove");
 
 
 
+
 }, false);
 
 </script>
@@ -187,8 +213,6 @@ event.value += ("\n on.banner.remove");
 <p> <button onclick="showBannerAd();">show Banner Ad</button></p>
 <p> <button onclick="hideBannerAd();">hide Banner Ad</button></p>
 <p> <button onclick="removeBannerAd();">remove Banner Ad</button></p>
-<p> <button onclick="hideBannerAd();">hide Banner Ad</button></p>
-
 
 
 <p> <button onclick="cleanText();">Clean response Text</button></p>
