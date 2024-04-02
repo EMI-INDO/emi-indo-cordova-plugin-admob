@@ -49,24 +49,41 @@
                         async (status) => {
                             // Second check the platform if IOS if yes get ATT status
                             if (window.cordova && window.cordova.platformId === 'ios') {
-                                await new Promise((idfaResolve, idfaReject) => {
+				await new Promise((ATTResolve, ATTReject) => {
                                     cordova.plugins.emiAdmobPlugin.requestIDFA(
-                                        async (idfaStatus) => {
-                                            // Whatever the status is install admob sdk
-                                            // Here ATT status
-                                            if (idfaStatus) {
-                                                console.log("ATT status:", idfaStatus);
-                                                appendToLog("ATT status: " + idfaStatus);
-                                                await cordova.plugins.emiAdmobPlugin.initialize();
-                                            }
-                                            idfaResolve();
+                                      async (ATTStatus) => {
+                                // Whatever the status is install admob sdk
+                               // Here ATT status
+                              // https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/authorizationstatus
+                             var ATTracking = ATTStatus;
+
+                           if (ATTracking === 0) {
+                                console.log("ATT status: NotDetermined ", ATTStatus);
+                                appendToLog("ATT status: NotDetermined " + ATTStatus);
+                                await cordova.plugins.emiAdmobPlugin.initialize();
+                           } else if (ATTracking === 1) {
+                                console.log("ATT status: Restricted ", ATTStatus);
+                                appendToLog("ATT status: Restricted " + ATTStatus);
+                                await cordova.plugins.emiAdmobPlugin.initialize();
+                           } else if (ATTracking === 3) {
+                                console.log("ATT status: Authorized ", ATTStatus);
+                                appendToLog("ATT status: Authorized " + ATTStatus);
+                                await cordova.plugins.emiAdmobPlugin.initialize();
+                          } else if (ATTracking === 2) {
+                                console.log("ATT status: Denied ", ATTStatus);
+                                appendToLog("ATT status: Denied " + ATTStatus);
+                                await cordova.plugins.emiAdmobPlugin.initialize();
+                            }
+				
+                                  ATTResolve();
+				
                                         },
                                         async (error) => { // error ATT
                                             // Whatever happens even when there is an error, keep installing the admob sdk
                                             await cordova.plugins.emiAdmobPlugin.initialize();
                                             console.log("ATT error:", error);
                                             appendToLog("ATT error: " + error);
-                                            idfaReject(error);
+                                            ATTReject(error);
                                         }
                                     );
                                 });
