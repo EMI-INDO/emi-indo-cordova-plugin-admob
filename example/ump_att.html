@@ -14,6 +14,34 @@
     <script>
         document.addEventListener('deviceready', async function () {
             try {
+
+            //       Ad format	Demo ad unit ID
+            // https://developers.google.com/admob/android/test-ads
+            // https://developers.google.com/admob/ios/test-ads
+
+            var App_Open_ID;
+            var Banner_ID;
+            var Interstitial_ID;
+            var Rewarded_ID;
+            var Rewarded_Interstitial_ID;
+
+            if (window.cordova.platformId === "ios") {
+              App_Open_ID = "ca-app-pub-3940256099942544/5575463023";
+              Banner_ID = "ca-app-pub-3940256099942544/2934735716";
+              Interstitial_ID = "ca-app-pub-3940256099942544/4411468910";
+              Rewarded_ID = "ca-app-pub-3940256099942544/1712485313";
+              Rewarded_Interstitial_ID = "ca-app-pub-3940256099942544/6978759866";
+            } else {
+              // Assume Android
+              App_Open_ID = "ca-app-pub-3940256099942544/9257395921";
+              Banner_ID = "ca-app-pub-3940256099942544/6300978111";
+              Interstitial_ID = "ca-app-pub-3940256099942544/1033173712";
+              Rewarded_ID = "ca-app-pub-3940256099942544/5224354917";
+              Rewarded_Interstitial_ID = "ca-app-pub-3940256099942544/5354046379";
+            }
+    
+
+		    
                 	
 		await new Promise((resolve, reject) => {
                     // First get UMP status
@@ -87,7 +115,7 @@
                 console.log("On Sdk Initialization");
                 appendToLog("On Sdk Initialization");
                 // load ads
-                cordova.plugins.emiAdmobPlugin.loadInterstitialAd(["ca-app-pub-3940256099942544/1033173712", true]);
+                cordova.plugins.emiAdmobPlugin.loadInterstitialAd([Interstitial_ID, true]);
             });
 
             function appendToLog(message) {
