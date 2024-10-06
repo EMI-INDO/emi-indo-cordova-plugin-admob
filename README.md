@@ -3,9 +3,9 @@
 # emi-indo-cordova-plugin-admob
  Cordova Plugin Admob Android and IOS
 
-### Mobile Ads SDK (Android: 22.6.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
+### Mobile Ads SDK (Android: 23.4.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
 
-### Mobile Ads SDK (IOS: 10.14.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
+### Mobile Ads SDK (IOS: 11.10.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
 
 ## Minimum Cordova Engines
 - cordova-android version = 12.0.0
@@ -62,6 +62,18 @@ https://developers.google.com/admob/ios/quick-start
   
 ##  [Check all release notes:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/)
 
+> [!WARNING]  
+> WARNING options configuration was previously an array [], now v.1.4.9 or later must be an object{}
+> example
+```
+previous example 
+[ adUnitId = App_Open_ID, autoShow = true ] // Deprecated
+now
+{ adUnitId: App_Open_ID, autoShow: true }
+
+ cordova.plugins.emiAdmobPlugin.loadAppOpenAd({ adUnitId: App_Open_ID, autoShow: true }); 
+ ```
+
 ## Features
 <details>
 <summary>Features #1</summary>
@@ -107,15 +119,38 @@ cordova plugin rm emi-indo-cordova-plugin-admob
 <details>
 <summary>Methods: #2</summary>
 <pre> 
+
+cordova.plugins.emiAdmobPlugin.initialize({
+
+  isUsingAdManagerRequest: true, // true = AdManagerAdRequest.Builder | false = AdRequest.Builder (Default true)
+  isResponseInfo: true, // Default false (Debug true)
+  isConsentDebug: true, // Default false (Debug true)
+
+  }
+
+document.addEventListener('on.sdkInitialization', (data) => {
+// JSON.stringify(data)
+   const sdkVersion = data.version;
+// const adAdapter = data.adapters;
+// const conStatus = data.consentStatus;
+// const gdprApplie = data.gdprApplies;
+// const purposeConsent = data.purposeConsents;
+// const vendorConsents = data.vendorConsents;
+// const conTCString = data.consentTCString;
+// const additionalConsent = data.additionalConsent;
+console.log("On Sdk Initialization version: " + sdkVersion);
+
+});
+ 
  // Support Platform: Android | IOS
-cordova.plugins.emiAdmobPlugin.globalSettings([config_globalSettings]);
-cordova.plugins.emiAdmobPlugin.targeting([config_Targeting]);
-cordova.plugins.emiAdmobPlugin.initialize();
+cordova.plugins.emiAdmobPlugin.globalSettings([config_globalSettings]); // Optional
+cordova.plugins.emiAdmobPlugin.targeting([config_Targeting]); // Optional
 // UMP SDK 2.1.0
-cordova.plugins.emiAdmobPlugin.getConsentRequest(); // (Platform: Both)
-cordova.plugins.emiAdmobPlugin.consentReset(); // (Platform: Both)
-cordova.plugins.emiAdmobPlugin.showPrivacyOptionsForm(); // (Platform: Both)
+cordova.plugins.emiAdmobPlugin.getConsentRequest(); // (Platform: Both)  // Deprecated
+cordova.plugins.emiAdmobPlugin.consentReset(); // (Platform: Both) // Optional
+cordova.plugins.emiAdmobPlugin.showPrivacyOptionsForm(); // (Platform: Both) // Optional
 // CMP SDK 2.2.0
+ // Optional
 cordova.plugins.emiAdmobPlugin.requestIDFA(); // UMP SDK to handle Apple's App Tracking Transparency (ATT) (Platform: IOS)
 cordova.plugins.emiAdmobPlugin.getIabTfc((IABTFC) => { console.log(JSONstringify(IABTFC)) }); // CMP SDK 2.2 (Platform: Both)
 
@@ -128,7 +163,7 @@ must be false if the application is released to the play store / app store.
 consent from will continue to be called regardless of its status 0,1,2,3, 
 until the value is changed to false.
 
-setDebugGeography = true | false
+isConsentDebug: true | false
 </details>
 <li>example</li></ul>
 <pre> 
@@ -136,27 +171,24 @@ setDebugGeography = true | false
 
 document.addEventListener("deviceready", function(){
 
-    const config_globalSettings = [
-    
-    setAppMuted = false, //  default: false
-    setAppVolume = 1, //  float: default: 1
-    enableSameAppKey = false, // default: false
-    npa = "1", // string "0" | "1"
-    enableCollapsible = true, // (BETA) activate the collapsible banner ads
-    responseInfo = false, // default: false
-    setDebugGeography = false // default: false
-    
-    ]
+document.addEventListener('on.sdkInitialization', (data) => {
+// JSON.stringify(data)
+   const sdkVersion = data.version;
+// const adAdapter = data.adapters;
+// const conStatus = data.consentStatus;
+// const gdprApplie = data.gdprApplies;
+// const purposeConsent = data.purposeConsents;
+// const vendorConsents = data.vendorConsents;
+// const conTCString = data.consentTCString;
+// const additionalConsent = data.additionalConsent;
+console.log("On Sdk Initialization version: " + data.consentStatus);
 
-cordova.plugins.emiAdmobPlugin.getConsentRequest( (ststus) => { console.log("Consent Status: " + ststus) });
-cordova.plugins.emiAdmobPlugin.globalSettings(config_globalSettings);
- 
- document.addEventListener('on.get.consent.status', () => {
-  // Regardless of the state, call SDK initialize
-   
-   cordova.plugins.emiAdmobPlugin.initialize();
-   cordova.plugins.emiAdmobPlugin.getIabTfc((IABTFC) => { console.log(JSONstringify(IABTFC)) }); 
 });
+
+// cordova.plugins.emiAdmobPlugin.getConsentRequest( (ststus) => { console.log("Consent Status: " + ststus) }); // Deprecated
+// cordova.plugins.emiAdmobPlugin.showPrivacyOptionsForm();
+
+
 
 }, false);
 
@@ -247,6 +279,62 @@ if (window.cordova.platformId === 'ios') {
     Rewarded_ID = 'ca-app-pub-3940256099942544/5224354917';
     Rewarded_Interstitial_ID = 'ca-app-pub-3940256099942544/5354046379';
 }
+
+
+  cordova.plugins.emiAdmobPlugin.initialize({
+  isUsingAdManagerRequest: true, // true = AdManagerAdRequest.Builder | false = AdRequest.Builder (Default true)
+  isResponseInfo: true, // Default false
+  isConsentDebug: true, // Default false
+ });
+
+
+ document.addEventListener('on.sdkInitialization', (data) => {
+// JSON.stringify(data)
+   const sdkVersion = data.version;
+// const adAdapter = data.adapters;
+// const conStatus = data.consentStatus;
+// const gdprApplie = data.gdprApplies;
+// const purposeConsent = data.purposeConsents;
+// const vendorConsents = data.vendorConsents;
+// const conTCString = data.consentTCString;
+// const additionalConsent = data.additionalConsent;
+console.log("On Sdk Initialization version: " + sdkVersion);
+
+
+cordova.plugins.emiAdmobPlugin.loadInterstitialAd({
+adUnitId: "ca-app-pub-3940256099942544/1033173712", 
+autoShow: true
+});
+
+});
+
+
+document.addEventListener('on.interstitial.loaded', () => {
+
+   console.log("on interstitial Ad loaded");
+
+});
+
+// all events that contain the keyword dismissed there is a block to load the ad after it is closed by the user.
+// 'on.interstitial.dismissed' | 'on.rewardedInt.dismissed' | 'on.rewarded.dismissed'
+document.addEventListener('on.interstitial.dismissed', () => {
+
+   console.log("on interstitial Ad dismissed");
+   console.log("you can load ads automatically after the ads are closed by users");
+   // loadInterstitialAd();
+
+});
+
+function loadInterstitialAd(){
+
+cordova.plugins.emiAdmobPlugin.loadInterstitialAd({
+adUnitId: "ca-app-pub-3940256099942544/1033173712", 
+autoShow: false
+});
+
+}
+
+
  </script>
 ```
 
@@ -257,17 +345,42 @@ if (window.cordova.platformId === 'ios') {
 <summary>Methods:</summary>
 <pre> 
  // Support Platform: Android | IOS
- cordova.plugins.emiAdmobPlugin.loadAppOpenAd([config_AppOpenAd]);
- cordova.plugins.emiAdmobPlugin.showAppOpenAd();
+ cordova.plugins.emiAdmobPlugin.loadAppOpenAd({config});
+ cordova.plugins.emiAdmobPlugin.showAppOpenAd(); // default
+
+//  Advanced Show (Optional)
+    cordova.plugins.emiAdmobPlugin.showAppOpenAd(
+
+    (data) => {
+
+    console.log("Micros: " + data.micros);
+    console.log("Currency: " + data.currency);
+    console.log("Precision: " + data.precision);
+    console.log("AdUnitId: " + data.adUnitId};
+
+     },
+    (error) => {
+
+     console.error("Error: " + error);
+
+    });
+
+ 
  <br> 
 </pre>
  <li>example:</li></ul>
 <pre> 
+ 
+WARNING options configuration was previously an array [], now v.1.4.9 or later must be an object{}
+example
+```
+previous example 
+[ adUnitId = App_Open_ID, autoShow = true ] // Deprecated
+now
+{ adUnitId: App_Open_ID, autoShow: true }
 
-// WARNING config must be an array[] not an object{}
-// adUnitId = call Global Variable
-
- cordova.plugins.emiAdmobPlugin.loadAppOpenAd([ adUnitId = App_Open_ID, autoShow = true ]);
+ cordova.plugins.emiAdmobPlugin.loadAppOpenAd({ adUnitId: App_Open_ID, autoShow: true }); 
+ ```
 </pre>
 </details>
 
@@ -289,10 +402,11 @@ document.addEventListener('on.appOpenAd.loaded', () => {
    console.log("On App Open Ad loaded");
 
 });
+
 </pre>
 </details>
 
-- [FULL AppOpenAd basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/app_open_ads.html) -index.html
+- [FULL AppOpenAd basic: Not yet updated](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/app_open_ads.html) -index.html
 
 
 
@@ -302,16 +416,17 @@ document.addEventListener('on.appOpenAd.loaded', () => {
 <details>
 <summary>Methods:</summary>
 <pre> 
-cordova.plugins.emiAdmobPlugin.loadBannerAd([bannerConfig]);
-cordova.plugins.emiAdmobPlugin.showBannerAd();
-cordova.plugins.emiAdmobPlugin.hideBannerAd();
-cordova.plugins.emiAdmobPlugin.removeBannerAd();
+cordova.plugins.emiAdmobPlugin.loadBannerAd({config});
+cordova.plugins.emiAdmobPlugin.showBannerAd(); // default
+cordova.plugins.emiAdmobPlugin.hideBannerAd(); // default
+cordova.plugins.emiAdmobPlugin.removeBannerAd(); // default
 </pre>
   <li>example:</li></ul>
 <pre> 
- // WARNING config must be an array[] not an object{}
- // adUnitId = call Global Variable
+ WARNING options configuration was previously an array [], now v.1.4.9 or later must be an object{}
 
+// Deprecated
+/*
 const bannerConfig = [
 
    adUnitId = Banner_ID,
@@ -320,10 +435,41 @@ const bannerConfig = [
    collapsible = "bottom", // (BETA) enable in globalSettings
    adaptive_Width = 320, // Ignored
    autoShow = true // boolean
-
 ]
+*/
+
+// NEW
+
+const bannerConfig = {
+
+   adUnitId: "ca-app-pub-3940256099942544/9214589741", //Banner_ID,
+   position: "bottom-center",
+   size: "responsive_adaptive", // autoResize: true (only responsive_adaptive)
+   collapsible: "bottom", // position: top | bottom (disable, empty string)
+   autoResize: true, // on.screen.rotated === orientation.portrait || on.screen.rotated === orientation.landscape
+   autoShow: true, // boolean
+
+}
 
 cordova.plugins.emiAdmobPlugin.loadBannerAd(bannerConfig);
+
+
+    //  Advanced Show (Optional)
+    cordova.plugins.emiAdmobPlugin.showBannerAd(
+
+    (data) => {
+
+    console.log("Micros: " + data.micros);
+    console.log("Currency: " + data.currency);
+    console.log("Precision: " + data.precision);
+    console.log("AdUnitId: " + data.adUnitId};
+
+     },
+    (error) => {
+
+     console.error("Error: " + error);
+
+    });
 
 </pre>
 </details>
@@ -344,16 +490,28 @@ bottom-right
 <details>
 <summary>Size type string</summary>
 <pre>
-ANCHORED
-IN_LINE
-FULL_WIDTH
-BANNER
-FLUID
-LARGE_BANNER
-MEDIUM_RECTANGLE
-FULL_BANNER
-LEADERBOARD
-adaptive_Width = number
+
+responsive_adaptive
+anchored_adaptive
+full_width_adaptive
+in_line_adaptive
+banner
+large_banner
+medium_rectangle
+full_banner
+leaderboard
+fluid
+ 
+ANCHORED // Deprecated
+IN_LINE // Deprecated
+FULL_WIDTH // Deprecated
+BANNER // Deprecated
+FLUID // Deprecated
+LARGE_BANNER // Deprecated
+MEDIUM_RECTANGLE // Deprecated
+FULL_BANNER // Deprecated
+LEADERBOARD // Deprecated
+adaptive_Width = number // Deprecated
 </pre>
 </details>
 
@@ -370,6 +528,8 @@ on.banner.open
 on.banner.revenue
 on.banner.remove
 on.banner.hide
+ // new
+ on.is.collapsible
 </pre>
  <li>example:</li></ul>
 <pre> 
@@ -377,10 +537,17 @@ document.addEventListener('on.banner.load', () => {
 
    console.log("on banner load");
 
-});</pre>
+});
+
+document.addEventListener('on.is.collapsible', function(event) {
+// bannerConfig collapsible: "bottom", // position: top | bottom (disable, empty string)
+console.log("Collapsible Status: " + event.collapsible);
+
+});
+</pre>
 </details>
 
- [FULL Banner basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/banner_ads.html) index.html
+ [FULL Banner basic: Not yet updated](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/banner_ads.html) index.html
 
 
 ## Interstitial ADS
@@ -390,17 +557,42 @@ document.addEventListener('on.banner.load', () => {
 <summary>Methods:</summary>
 <pre> 
  // Support Platform: Android | IOS
-cordova.plugins.emiAdmobPlugin.loadInterstitialAd([config_Interstitial]);
-cordova.plugins.emiAdmobPlugin.showInterstitialAd();
+cordova.plugins.emiAdmobPlugin.loadInterstitialAd({config});
+cordova.plugins.emiAdmobPlugin.showInterstitialAd(); // default
+
+ //  Advanced Show (Optional)
+    cordova.plugins.emiAdmobPlugin.showInterstitialAd(
+
+    (data) => {
+
+    console.log("Micros: " + data.micros);
+    console.log("Currency: " + data.currency);
+    console.log("Precision: " + data.precision);
+    console.log("AdUnitId: " + data.adUnitId};
+
+     },
+    (error) => {
+
+     console.error("Error: " + error);
+
+    });
  <br> 
 </pre>
  <li>example:</li></ul>
 <pre> 
 
-// WARNING config must be an array[] not an object{}
-// adUnitId = call Global Variable
+WARNING options configuration was previously an array [], now v.1.4.9 or later must be an object{}
+example
+```
+/*
+previous example 
+[ adUnitId = Interstitial_ID, autoShow = true ] // Deprecated
+now
+{ adUnitId: Interstitial_ID, autoShow: true }
+*/
+ cordova.plugins.emiAdmobPlugin.loadInterstitialAd({ adUnitId: "ca-app-pub-3940256099942544/1033173712", autoShow: true });
+ ```
 
- cordova.plugins.emiAdmobPlugin.loadInterstitialAd([ adUnitId = Interstitial_ID, autoShow = true ]);
 </pre>
 </details>
 
@@ -425,11 +617,23 @@ document.addEventListener('on.interstitial.loaded', () => {
    console.log("on interstitial Ad loaded");
 
 });
+
+// all events that contain the keyword dismissed there is a block to load the ad after it is closed by the user.
+// 'on.interstitial.dismissed' | 'on.rewardedInt.dismissed' | 'on.rewarded.dismissed'
+document.addEventListener('on.interstitial.dismissed', () => {
+
+   console.log("on interstitial Ad dismissed");
+   console.log("you can load ads automatically after the ads are closed by users");
+   // loadInterstitialAd();
+
+});
+
+
 </pre>
 </details>
 
 
-[FULL Interstitial basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/interstitial_ads.html) index.html
+[FULL Interstitial basic: Not yet updated](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/interstitial_ads.html) index.html
 
 
 
@@ -442,17 +646,34 @@ document.addEventListener('on.interstitial.loaded', () => {
 <summary>Methods:</summary>
 <pre> 
  // Support Platform: Android | IOS
-cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd([config_rewardedInt]);
-cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd();
+cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd({config});
+cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd(); // default
  <br> 
 </pre>
  <li>example:</li></ul>
 <pre> 
 
-// WARNING config must be an array[] not an object{}
-// adUnitId = call Global Variable
+ cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd({ adUnitId: Rewarded_Interstitial_ID, autoShow: true });
 
- cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd([ adUnitId = Rewarded_Interstitial_ID, autoShow = true ]);
+    //  Advanced Show (Optional)
+    cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd(
+
+    (data) => {
+
+    console.log("Micros: " + data.micros);
+    console.log("Currency: " + data.currency);
+    console.log("Precision: " + data.precision);
+    console.log("AdUnitId: " + data.adUnitId};
+
+     },
+    (error) => {
+
+     console.error("Error: " + error);
+
+    });
+
+
+ 
 </pre>
 </details>
 
@@ -479,10 +700,22 @@ document.addEventListener('on.rewardedInt.loaded', () => {
    console.log("on rewarded Interstitial load");
 
 });
+
+// all events that contain the keyword dismissed there is a block to load the ad after it is closed by the user.
+// 'on.interstitial.dismissed' | 'on.rewardedInt.dismissed' | 'on.rewarded.dismissed'
+document.addEventListener('on.rewardedInt.dismissed', () => {
+
+   console.log("on interstitial Ad dismissed");
+   console.log("you can load ads automatically after the ads are closed by users");
+   // loadRewardedInterstitialAd();
+
+});
+
+
 </pre>
 </details>
 
-[FULL Rewarded Interstitial basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_interstitial_ads.html) index.html
+[FULL Rewarded Interstitial basic: Not yet updated](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_interstitial_ads.html) index.html
 
 
 
@@ -494,15 +727,33 @@ document.addEventListener('on.rewardedInt.loaded', () => {
 <summary>Methods:</summary>
 <pre> 
  // Support Platform: Android | IOS
-cordova.plugins.emiAdmobPlugin.loadRewardedAd([config_rewarded]);
-cordova.plugins.emiAdmobPlugin.showRewardedAd();
+cordova.plugins.emiAdmobPlugin.loadRewardedAd({config});
+cordova.plugins.emiAdmobPlugin.showRewardedAd(); // default
  <br> 
 </pre>
  <li>example:</li></ul>
 <pre> 
-// adUnitId = call Global Variable
 
- cordova.plugins.emiAdmobPlugin.loadRewardedAd([ adUnitId = Rewarded_ID, autoShow = true ]);
+ cordova.plugins.emiAdmobPlugin.loadRewardedAd({ adUnitId: Rewarded_ID, autoShow: true });
+
+//  Advanced Show (Optional)
+    cordova.plugins.emiAdmobPlugin.showRewardedAd(
+
+    (data) => {
+
+    console.log("Micros: " + data.micros);
+    console.log("Currency: " + data.currency);
+    console.log("Precision: " + data.precision);
+    console.log("AdUnitId: " + data.adUnitId};
+
+     },
+    (error) => {
+
+     console.error("Error: " + error);
+
+    });
+
+ 
 </pre>
 </details>
 
@@ -530,10 +781,22 @@ document.addEventListener('on.rewarded.loaded', () => {
    console.log("on rewarded Ad loaded");
 
 });
+
+// all events that contain the keyword dismissed there is a block to load the ad after it is closed by the user.
+// 'on.interstitial.dismissed' | 'on.rewardedInt.dismissed' | 'on.rewarded.dismissed'
+document.addEventListener('on.rewarded.dismissed', () => {
+
+   console.log("on interstitial Ad dismissed");
+   console.log("you can load ads automatically after the ads are closed by users");
+   // loadRewardedAd();
+
+});
+
+
 </pre>
 </details>
 
-[FULL Rewarded basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_ads.html) index.html
+[FULL Rewarded basic: Not yet updated](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_ads.html) index.html
 
 
 
@@ -542,7 +805,16 @@ document.addEventListener('on.rewarded.loaded', () => {
 
 
 
+ ## GLOBAL EVENT Screen (Optional)
 
+<details>
+<summary>Event:</summary>
+<pre> 
+on.screen.rotated
+on.orientation.portrait
+on.orientation.landscape
+</pre>
+</details>
 
 
 
@@ -562,7 +834,7 @@ document.addEventListener('on.rewarded.loaded', () => {
 - Interstitial Ads
 - Rewarded Ads
 - Rewarded interstitial Ads
-- [Consent](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent.html)
+- [Consent Not yet updated](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent.html)
 - Mediation
 - impression-level-ad-revenue
 - GDPR IAB TFCv2.2
