@@ -143,8 +143,8 @@ console.log("On Sdk Initialization version: " + sdkVersion);
 });
  
  // Support Platform: Android | IOS
-cordova.plugins.emiAdmobPlugin.globalSettings([config_globalSettings]); // Optional
-cordova.plugins.emiAdmobPlugin.targeting([config_Targeting]); // Optional
+cordova.plugins.emiAdmobPlugin.globalSettings({config_globalSettings}); // Optional
+cordova.plugins.emiAdmobPlugin.targeting({config_Targeting}); // Optional
 // UMP SDK 2.1.0
 cordova.plugins.emiAdmobPlugin.getConsentRequest(); // (Platform: Both)  // Deprecated
 cordova.plugins.emiAdmobPlugin.consentReset(); // (Platform: Both) // Optional
@@ -587,7 +587,7 @@ example
 /*
 previous example 
 [ adUnitId = Interstitial_ID, autoShow = true ] // Deprecated
-now
+New
 { adUnitId: Interstitial_ID, autoShow: true }
 */
  cordova.plugins.emiAdmobPlugin.loadInterstitialAd({ adUnitId: "ca-app-pub-3940256099942544/1033173712", autoShow: true });
