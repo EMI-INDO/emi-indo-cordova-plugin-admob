@@ -7,6 +7,12 @@
 
 ### Mobile Ads SDK (IOS: 11.10.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
 
+### User Messaging Platform (UMP: 3.0.0) [Release Notes:](https://developers.google.com/admob/android/privacy/release-notes)
+### IAB Europe Transparency & Consent Framework (CPM: 2.2.0)
+
+
+
+
 ## Minimum Cordova Engines
 - cordova-android version = 12.0.0
 - cordova-ios version = 7.0.0
