@@ -5,7 +5,7 @@
 
 ### Mobile Ads SDK (Android: 23.4.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
 
-### Mobile Ads SDK (IOS: 11.10.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
+### Mobile Ads SDK (IOS: 11.5.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
 
 ### User Messaging Platform (UMP: 3.0.0) [Release Notes:](https://developers.google.com/admob/android/privacy/release-notes)
 ### IAB Europe Transparency & Consent Framework (CPM: 2.2.0)
@@ -17,11 +17,14 @@
 - cordova-android version = 12.0.0
 - cordova-ios version = 7.0.0
 
+> [!WARNING]  
+> - Minimum supported Xcode version to 14.3
+> - Maximum supported Xcode version up to 15.2
 ## Minimum macOS | Xcode, and others
 - Monterey
-- Xcode 14.1 or higher
+- Xcode min 14.3 > max 15.2
 - Command Line Tools 14.1 or higher
-- Target iOS 11.0 or higher
+- Target iOS 12.0
 https://developers.google.com/admob/ios/quick-start
 
 <details>
@@ -247,11 +250,11 @@ document.addEventListener('on.TCString.expired', () => {
 
 
 - [AppTrackingTransparency (ATT) framework:](https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/authorizationstatus) 
-- [Consent Management Platform API:](https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20CMP%20API%20v2.md#in-app-details)
+- [Consent Management Platform API:](https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20CMP%20API%20v2.md#in-app-details) 
 
-- [Example Get Consent Status:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent.html) index.html
-- [Example requestIDFA:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/requestIDFA.html) index.html
-- [Example IABTFC:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/IABTFC.html) index.html
+- [Example Get Consent Status:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/consent.html) index.html (Not yet updated)
+- [Example requestIDFA:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/requestIDFA.html) index.html (Not yet updated)
+- [Example IABTFC:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/IABTFC.html) index.html (Not yet updated)
 
 
 
@@ -422,6 +425,7 @@ document.addEventListener('on.appOpenAd.loaded', () => {
 <details>
 <summary>Methods:</summary>
 <pre> 
+cordova.plugins.emiAdmobPlugin.styleBannerAd({ padding: 50, margins: 50 });  // (Optional)
 cordova.plugins.emiAdmobPlugin.loadBannerAd({config});
 cordova.plugins.emiAdmobPlugin.showBannerAd(); // default
 cordova.plugins.emiAdmobPlugin.hideBannerAd(); // default
@@ -593,8 +597,8 @@ example
 /*
 previous example 
 [ adUnitId = Interstitial_ID, autoShow = true ] // Deprecated
-New
-{ adUnitId: Interstitial_ID, autoShow: true }
+
+{ adUnitId: Interstitial_ID, autoShow: true } // NEW
 */
  cordova.plugins.emiAdmobPlugin.loadInterstitialAd({ adUnitId: "ca-app-pub-3940256099942544/1033173712", autoShow: true });
  ```
@@ -805,6 +809,168 @@ document.addEventListener('on.rewarded.dismissed', () => {
 [FULL Rewarded basic: Not yet updated](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/rewarded_ads.html) index.html
 
 
+
+
+## New Method (Only Android)
+### Ad Request Control
+> [!WARNING]  
+> - isUsingAdManagerRequest: true 
+> - Must run before ad load
+
+- cordova.plugins.emiAdmobPlugin.targetingAdRequest({configAdRequest});
+- cordova.plugins.emiAdmobPlugin.setPersonalizationState({config});
+- cordova.plugins.emiAdmobPlugin.setPPS({config});
+
+<details>
+<summary>targetingAdRequest</summary>
+<pre> 
+
+
+// Check documentation:  https://developers.google.com/ad-manager/mobile-ads-sdk/android/targeting
+
+```
+const configAdRequest = {
+
+// enabled, disabled
+customTargetingEnabled: false,
+categoryExclusionsEnabled: false,
+ppIdEnabled: false,
+contentURLEnabled: false,
+brandSafetyEnabled: false,
+
+// set Value
+customTargetingValue:  ["24", "25", "26"],     // age 
+categoryExclusionsValue: "automobile",       // automobile or boat
+ppIdValue: "AB123456789",    
+contentURLValue: "https://www.example.com",
+brandSafetyArr: ["https://www.mycontenturl1.com", "https://www.mycontenturl2.com"],
+
+}
+
+cordova.plugins.emiAdmobPlugin.targetingAdRequest(configAdRequest);
+```
+
+</pre>
+</details>
+
+
+
+
+<details>
+<summary>setPersonalizationState</summary>
+<pre>
+
+// Check documentation:  https://developers.google.com/ad-manager/mobile-ads-sdk/android/targeting
+
+cordova.plugins.emiAdmobPlugin.setPersonalizationState({
+
+setPersonalizationState: "disabled" // type string: disabled | enabled
+
+});
+
+</pre>
+</details>
+
+
+
+
+<details>
+<summary>setPPS</summary>
+<pre>
+
+// Check documentation:  https://developers.google.com/ad-manager/mobile-ads-sdk/android/targeting
+
+```
+cordova.plugins.emiAdmobPlugin.setPPS({
+
+ppsEnabled: false, // enabled, disabled
+iabContent: "IAB_AUDIENCE_1_1",  // Type string value: IAB_AUDIENCE_1_1 or IAB_CONTENT_2_2
+ppsArrValue: [6,284],  // type arr 
+
+});
+
+```
+
+</pre>
+</details>
+
+
+<details>
+<summary>Example:</summary>
+<pre>
+
+// Check documentation:  https://developers.google.com/ad-manager/mobile-ads-sdk/android/targeting
+
+```
+function callSetPPS(){
+
+cordova.plugins.emiAdmobPlugin.setPPS({
+
+ppsEnabled: true, // enabled, disabled
+iabContent: "IAB_AUDIENCE_1_1",  // Type string value: IAB_AUDIENCE_1_1 or IAB_CONTENT_2_2
+ppsArrValue: [6,284],  // type arr 
+
+});
+
+}
+
+if (callSetPPS()){
+
+   cordova.plugins.emiAdmobPlugin.loadRewardedAd({ adUnitId: Rewarded_ID, autoShow: true });
+
+}
+
+```
+
+
+
+
+
+</pre>
+</details>
+
+
+
+
+ ## New Method (Only IOS)
+- You will see higher earnings.
+> [!NOTE]  
+> - Is forcing the consent form to be displayed against admob policy? (I DON'T KNOW)
+> 
+<details>
+<summary>Method:</summary>
+<pre> 
+
+/*
+
+Sometimes the consent form in IOS is difficult to display, 
+because ATT has been set by the user, 
+The problem is TCString null,
+causing very few admob ads to load,
+This method will force the consent form to be displayed, whatever the user's decision TCString will not be null.
+
+*/
+```
+// Use your own logic, this is just an example
+
+  let userGdpr = null; // global Variable
+  let userTCString = null; // global Variable
+
+  document.addEventListener('on.sdkInitialization', (data) => {
+  userGdpr = data.gdprApplies;
+  userTCString = data.consentTCString;
+ });
+
+
+ if (userGdpr === 1 && userTCString === null){
+ 
+  cordova.plugins.emiAdmobPlugin.forceDisplayPrivacyForm();
+
+}
+```
+ 
+</pre>
+</details>
 
 
 
