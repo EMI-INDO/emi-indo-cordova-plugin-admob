@@ -62,7 +62,9 @@ https://developers.google.com/admob/ios/quick-start
 [![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiCMj8HrgSvO8WYm8wjv5KsM1CCmcX-w472iRZ0ynW715Pj0hMrTlCDLYxhLHme3oFowVW9ap7pQZqosXBDWWQ_SMuqw2g_Beh1CX0igO7jY7KCvBCXbQCqyFekgI9bKIl92opoucOkXbqsgRhBTeB41ho5l_0tx-YVfKt9jrbONt_nv080beeaYOmoN4w7/s320/mq3%20%281%29.webp)](https://youtu.be/YYMJuf7gIsg)
 
 
+## VIDEO Test Collapsible banner autoResize with Xcode/IOS
 
+[![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhLhjgjUkLSlagAcfz_0KwNXLLfvZnkrs8YG4PAUo9y5e0kyTDwUYAHATmWzyF0ZkJ7EWCsvsJIhP-rIDPnAMrrQKkmuZxM38lW4JIzzfb0LZWTh0q9FCbEPEZBjbgkZbzsFlI23Y30uTPR-TEiVpt9w5gFUQXrep0_Tlyj_koRJUhc66zxE2UUJPsejEE/s320/mq2.webp)](https://youtu.be/sLXHKdU6DAg)
 
 
 
