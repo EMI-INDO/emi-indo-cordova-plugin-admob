@@ -1,4 +1,3 @@
-
 var exec = require('cordova/exec');
 
 exports.initialize = function (options, success, error) {
@@ -11,7 +10,7 @@ exports.showAppOpenAd = function (success, error) {
     exec(success, error, 'emiAdmobPlugin', 'showAppOpenAd', []);
 };
 exports.styleBannerAd = function (options, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'styleBannerAd', [options]); // v1.4.9
+    exec(success, error, 'emiAdmobPlugin', 'styleBannerAd', [options]); // v1.4.9 ( only Android )
 };
 exports.loadBannerAd = function (options, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'loadBannerAd', [options]);
@@ -64,9 +63,12 @@ exports.showPrivacyOptionsForm = function (success, error) {
 exports.globalSettings = function (options, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'globalSettings', [options]);
 };
+exports.forceDisplayPrivacyForm = function (success, error) {
+        exec(success, error, 'emiAdmobPlugin', 'forceDisplayPrivacyForm', []); // only IOS
+};
 
-
-// v1.4.9
+    
+// v1.4.9 ( only Android )
 // only isUsingAdManagerRequest: true
 // AdManagerAdRequest.Builder
 exports.targetingAdRequest = function (options, success, error) {
@@ -78,6 +80,7 @@ exports.setPersonalizationState = function (options, success, error) {
 exports.setPPS = function (options, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'setPPS', [options]);
 };
+
 
 
 

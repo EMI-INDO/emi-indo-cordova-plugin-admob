@@ -2,6 +2,7 @@
 #import <Cordova/CDVPlugin.h>
 #import <GoogleMobileAds/GoogleMobileAds.h>
 #import <UserMessagingPlatform/UserMessagingPlatform.h>
+#import <CommonCrypto/CommonDigest.h>
 @interface emiAdmobPlugin : CDVPlugin<GADBannerViewDelegate, GADFullScreenContentDelegate>{}
 @property(nonatomic, strong) GADAppOpenAd *appOpenAd;
 @property(nonatomic, strong) GADBannerView *bannerView;
@@ -11,10 +12,16 @@
 @property(nonatomic, readonly) BOOL isPrivacyOptionsRequired;
 @property(nonatomic, strong) CDVInvokedUrlCommand *command;
 @property(nonatomic, strong) GADResponseInfo *responseInfo;
+@property(nonatomic, readonly) BOOL canRequestAds;
+@property (nonatomic, assign) BOOL isUsingAdManagerRequest;
+@property (nonatomic, assign) CGFloat viewWidth;
+@property (nonatomic, strong) UIView *bannerViewLayout;
+
 - (void)initialize:(CDVInvokedUrlCommand *)command;
 - (void)requestIDFA:(CDVInvokedUrlCommand *)command;
 - (void)showPrivacyOptionsForm:(CDVInvokedUrlCommand *)command;
 - (void)getConsentRequest:(CDVInvokedUrlCommand *)command;
+- (void)forceDisplayPrivacyForm:(CDVInvokedUrlCommand *)command;
 - (void)consentReset:(CDVInvokedUrlCommand *)command;
 - (void)getIabTfc:(CDVInvokedUrlCommand *)command;
 - (void)loadAppOpenAd:(CDVInvokedUrlCommand *)command;
@@ -31,5 +38,3 @@
 - (void)showRewardedAd:(CDVInvokedUrlCommand *)command;
 - (void) fireEvent:(NSString *)obj event:(NSString *)eventName withData:(NSString *)jsonStr;
 @end
-
-
