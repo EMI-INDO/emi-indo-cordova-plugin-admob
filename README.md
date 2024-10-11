@@ -132,7 +132,10 @@ cordova plugin add emi-indo-cordova-plugin-admob  --save --variable APP_ID_ANDRO
 cordova plugin rm emi-indo-cordova-plugin-admob
 ```
 
-
+## Note IOS
+> [!NOTE]  
+> - To prevent some warnings or errors in xcode later, it is best after adding platforms and plugins cd/project root/command line run cordova prepare.
+> - after that just cd platform/ios command line run pod install --repo-update
 
 ## Import the Mobile Ads SDK IOS
 ### Then from the command line run:
