@@ -23,14 +23,15 @@
 > [!WARNING]
 > - emi-indo-cordova-plugin-admob@1.5.2 
 > - Minimum supported Xcode version up to 15.3 or higher
+> - minimum deployment-target: 12.2
 ## Minimum macOS | Xcode, and others
 - minimum macOS 14.4 or higher
 - Xcode min 15.3 > or higher
 - Command Line Tools 15.3 or higher
-- Dependency: pod MerchantKit
 - minimum SwiftVersion: 5.10 or higher
 - [Everything is included in plugin.xml](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/plugin.xml)
 - [SKAdNetworkIdentifier Deprecated](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v1.5.1)
+- Dependency: pod MerchantKit (not needed)
 
 
 ## IOS
@@ -132,7 +133,10 @@ cordova plugin add emi-indo-cordova-plugin-admob  --save --variable APP_ID_ANDRO
 cordova plugin rm emi-indo-cordova-plugin-admob
 ```
 
-
+## Note IOS
+> [!NOTE]  
+> - To prevent some warnings or errors in xcode later, it is best after adding platforms and plugins cd/project root/command line run cordova prepare.
+> - after that just cd platform/ios command line run pod install --repo-update
 
 ## Import the Mobile Ads SDK IOS
 ### Then from the command line run:

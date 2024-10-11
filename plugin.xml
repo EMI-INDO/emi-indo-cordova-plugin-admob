@@ -89,7 +89,8 @@
     </config-file>
 
     <config-file parent="/*" target="config.xml">
-		<preference name="deployment-target" value="12.0" />
+    <!--minimum deployment-target: 12.2  -->
+		<preference name="deployment-target" value="12.2" />
 		<preference name="SwiftVersion" value="5.10" />
 	</config-file>
 
@@ -295,9 +296,9 @@
       </config>
       <pods use-frameworks="true">
 		<!--minimum macOS 14.4 > Xcode 15.3 -->
-		<pod name="GoogleUserMessagingPlatform" spec="~> 2.6.0" />
-        <pod name="Google-Mobile-Ads-SDK" spec="~> 11.10.0" />
-		<pod name="MerchantKit" spec="~> 0.14.0" />
+		 <pod name="GoogleUserMessagingPlatform" spec="~> 2.6.0" />
+                <pod name="Google-Mobile-Ads-SDK" spec="~> 11.10.0" />
+		
       </pods>
     </podspec>
 

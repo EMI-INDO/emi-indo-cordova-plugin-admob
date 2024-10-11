@@ -20,7 +20,7 @@
 - (void)initialize:(CDVInvokedUrlCommand *)command;
 - (void)requestIDFA:(CDVInvokedUrlCommand *)command;
 - (void)showPrivacyOptionsForm:(CDVInvokedUrlCommand *)command;
-- (void)getConsentRequest:(CDVInvokedUrlCommand *)command;
+// - (void)getConsentRequest:(CDVInvokedUrlCommand *)command;
 - (void)forceDisplayPrivacyForm:(CDVInvokedUrlCommand *)command;
 - (void)consentReset:(CDVInvokedUrlCommand *)command;
 - (void)getIabTfc:(CDVInvokedUrlCommand *)command;

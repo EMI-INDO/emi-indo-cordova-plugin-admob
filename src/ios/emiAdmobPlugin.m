@@ -14,13 +14,13 @@
 @synthesize responseInfo;
 @synthesize isPrivacyOptionsRequired;
 int idfaStatus = 0;
-int fromStatus = 0; // Deprecated
+// int fromStatus = 0; // Deprecated
 int Consent_Status = 0;
 int adFormat = 0;
-int adWidth = 320; // Deprecated
+int adWidth = 320; // Default
 BOOL auto_Show = NO;
 // NSString *Npa = @"1"; // Deprecated
-NSString *Position = @"bottom";
+NSString *Position = @"bottom"; // Default
 NSString *bannerSaveAdUnitId = @""; // autoResize dependency = true
 
 BOOL enableCollapsible = NO;
@@ -236,10 +236,10 @@ BOOL isUsingAdManagerRequest = YES;
   }
   [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
-
+/*
 - (void)getConsentRequest:(CDVInvokedUrlCommand *)command {
 }
-
+*/
 - (void)startGoogleMobileAdsSDK {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
@@ -557,9 +557,9 @@ BOOL isUsingAdManagerRequest = YES;
       Consent_Status = UMPConsentStatusObtained;
     }
 
-    NSLog(@"The Consent "
+  /*  NSLog(@"The Consent "
           @"Status %i",
-          Consent_Status);
+          Consent_Status); */
     CDVPluginResult *pluginResult =
         [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                              messageAsInt:Consent_Status];
@@ -608,8 +608,7 @@ BOOL isUsingAdManagerRequest = YES;
     result[@"IABTCF_"
            @"TCString"] = TCString;
     [[NSUserDefaults standardUserDefaults] synchronize];
-    NSLog(@"%@",
-          [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
+    NSLog(@"%@",  [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                  messageAsDictionary:result];
     [self fireEvent:@""
@@ -1075,30 +1074,7 @@ BOOL isUsingAdManagerRequest = YES;
               [self fireEvent:@""
                         event:@"on.appOpenAd.failed.loaded"
                      withData:nil];
-              NSLog(@"Fa"
-                    @"il"
-                    @"ed"
-                    @" t"
-                    @"o "
-                    @"lo"
-                    @"ad"
-                    @" A"
-                    @"pp"
-                    @" O"
-                    @"pe"
-                    @"n "
-                    @"Ad"
-                    @" a"
-                    @"d "
-                    @"wi"
-                    @"th"
-                    @" e"
-                    @"rr"
-                    @"or"
-                    @": "
-                    @"%"
-                    @"@",
-                    [error localizedDescription]);
+             
               return;
             }
             self.appOpenAd = ad;
@@ -1161,30 +1137,7 @@ BOOL isUsingAdManagerRequest = YES;
                     request:request
           completionHandler:^(GADInterstitialAd *ad, NSError *error) {
             if (error) {
-              NSLog(@"Fa"
-                    @"il"
-                    @"ed"
-                    @" t"
-                    @"o "
-                    @"lo"
-                    @"ad"
-                    @" i"
-                    @"nt"
-                    @"er"
-                    @"st"
-                    @"it"
-                    @"ia"
-                    @"l "
-                    @"ad"
-                    @" w"
-                    @"it"
-                    @"h "
-                    @"er"
-                    @"ro"
-                    @"r:"
-                    @" %"
-                    @"@",
-                    [error localizedDescription]);
+              
             }
             self.interstitial = ad;
             self.interstitial.fullScreenContentDelegate = self;
@@ -1248,13 +1201,13 @@ BOOL isUsingAdManagerRequest = YES;
                     request:request
           completionHandler:^(GADRewardedInterstitialAd *ad, NSError *error) {
             if (error) {
-              NSLog(@"Rewarded ad failed to load with error: %@",
-                    [error localizedDescription]);
+             /* NSLog(@"Rewarded ad failed to load with error: %@",
+                    [error localizedDescription]); */
               return;
             }
             self.rewardedInterstitialAd = ad;
             isAdSkip = 1;
-            NSLog(@"Rewarded ad loaded.");
+          //  NSLog(@"Rewarded ad loaded.");
             self.rewardedInterstitialAd.fullScreenContentDelegate = self;
             [self fireEvent:@"" event:@"on.rewardedInt.loaded" withData:nil];
             if (auto_Show) {
@@ -1310,7 +1263,7 @@ BOOL isUsingAdManagerRequest = YES;
                    stringWithFormat:@"Reward received with "
                                     @"currency %@ , amount %ld",
                                     reward.type, [reward.amount longValue]];
-               NSLog(@"%"
+              NSLog(@"%"
                      @"@",
                      rewardMessage);
              }];
@@ -1345,12 +1298,12 @@ BOOL isUsingAdManagerRequest = YES;
                     request:request
           completionHandler:^(GADRewardedAd *ad, NSError *error) {
             if (error) {
-              NSLog(@"Rewarded ad failed to load with error: %@",
-                    [error localizedDescription]);
+            /*  NSLog(@"Rewarded ad failed to load with error: %@",
+                    [error localizedDescription]); */
               return;
             }
             self.rewardedAd = ad;
-            NSLog(@"Rewarded ad loaded.");
+          //  NSLog(@"Rewarded ad loaded.");
             isAdSkip = 0;
             self.rewardedAd.fullScreenContentDelegate = self;
             [self fireEvent:@"" event:@"on.rewarded.loaded" withData:nil];
@@ -1504,7 +1457,7 @@ BOOL isUsingAdManagerRequest = YES;
                                                        error:&error];
 
   if (!jsonData) {
-    NSLog(@"Failed to serialize event data: %@", error);
+  //  NSLog(@"Failed to serialize event data: %@", error);
   } else {
     NSString *jsonString = [[NSString alloc] initWithData:jsonData
                                                  encoding:NSUTF8StringEncoding];
@@ -1516,8 +1469,7 @@ BOOL isUsingAdManagerRequest = YES;
                   @"banner"
                   @".load"
          withData:nil];
-  NSLog(@"bannerViewDidR"
-        @"eceiveAd");
+
   if (auto_Show) {
     if (self.bannerView) {
       [self addBannerViewToView:command];
@@ -1542,11 +1494,7 @@ BOOL isUsingAdManagerRequest = YES;
                   @".faile"
                   @"d.load"
          withData:nil];
-  NSLog(@"bannerView:"
-        @"didFailToRecei"
-        @"veAdWithError:"
-        @" %@",
-        [error localizedDescription]);
+
 }
 - (void)bannerViewDidRecordImpression:(GADBannerView *)bannerView {
   [self fireEvent:@""
@@ -1555,9 +1503,7 @@ BOOL isUsingAdManagerRequest = YES;
                   @".impre"
                   @"ssion"
          withData:nil];
-  NSLog(@"bannerViewD"
-        @"idRecordImp"
-        @"ression");
+
 }
 - (void)bannerViewWillPresentScreen:(GADBannerView *)bannerView {
   [self fireEvent:@""
@@ -1565,9 +1511,7 @@ BOOL isUsingAdManagerRequest = YES;
                   @"banner"
                   @".open"
          withData:nil];
-  NSLog(@"bannerViewW"
-        @"illPresentS"
-        @"creen");
+
 }
 - (void)bannerViewWillDismissScreen:(GADBannerView *)bannerView {
   [self fireEvent:@""
@@ -1575,9 +1519,7 @@ BOOL isUsingAdManagerRequest = YES;
                   @"banner"
                   @".close"
          withData:nil];
-  NSLog(@"bannerViewW"
-        @"illDismissS"
-        @"creen");
+
 }
 - (void)bannerViewDidDismissScreen:(GADBannerView *)bannerView {
   [self fireEvent:@""
@@ -1587,8 +1529,7 @@ BOOL isUsingAdManagerRequest = YES;
                   @"dismis"
                   @"s"
          withData:nil];
-  NSLog(@"bannerViewDidD"
-        @"ismissScreen");
+ 
 }
 #pragma GADFullScreeContentDelegate implementation
 - (void)adWillPresentFullScreenContent:(id)ad {
@@ -1600,11 +1541,12 @@ BOOL isUsingAdManagerRequest = YES;
                     @"d."
                     @"show"
            withData:nil];
-    NSLog(@"Ad will "
+  /*  NSLog(@"Ad will "
           @"present "
           @"full screen "
           @"content App "
           @"Open Ad.");
+      */
   } else if (adFormat == 2) {
     [self fireEvent:@""
               event:@"on."
@@ -1619,12 +1561,12 @@ BOOL isUsingAdManagerRequest = YES;
                     @"esen"
                     @"tAd"
            withData:nil];
-    NSLog(@"Ad will "
+  /*  NSLog(@"Ad will "
           @"present "
           @"full screen "
           @"content "
           @"interstitial"
-          @".");
+          @"."); */
   } else if (adFormat == 3) {
     [self fireEvent:@""
               event:@"on."
@@ -1634,11 +1576,11 @@ BOOL isUsingAdManagerRequest = YES;
                     @"w"
            withData:nil];
     isAdSkip = 1;
-    NSLog(@"Ad will "
+   /* NSLog(@"Ad will "
           @"present "
           @"full screen "
           @"content "
-          @"rewarded.");
+          @"rewarded."); */
   } else if (adFormat == 4) {
     isAdSkip = 1;
     [self fireEvent:@""
@@ -1649,12 +1591,12 @@ BOOL isUsingAdManagerRequest = YES;
                     @"show"
                     @"ed"
            withData:nil];
-    NSLog(@"Ad will "
+   /* NSLog(@"Ad will "
           @"present "
           @"full screen "
           @"content "
           @"interstitial"
-          @" rewarded.");
+          @" rewarded."); */
   }
 }
 - (void)ad:(id)ad didFailToPresentFullScreenContentWithError:(NSError *)error {
@@ -1669,14 +1611,14 @@ BOOL isUsingAdManagerRequest = YES;
                     @"load"
                     @"ed"
            withData:nil];
-    NSLog(@"Ad failed "
+   /* NSLog(@"Ad failed "
           @"to present "
           @"full screen "
           @"content "
           @"with error "
           @"App Open Ad "
           @"%@.",
-          [error localizedDescription]);
+          [error localizedDescription]); */
   } else if (adFormat == 2) {
     [self fireEvent:@""
               event:@"on."
@@ -1687,14 +1629,14 @@ BOOL isUsingAdManagerRequest = YES;
                     @"led."
                     @"load"
            withData:nil];
-    NSLog(@"Ad failed "
+   /* NSLog(@"Ad failed "
           @"to present "
           @"full screen "
           @"content "
           @"with error "
           @"interstitial"
           @" %@.",
-          [error localizedDescription]);
+          [error localizedDescription]); */
   } else if (adFormat == 3) {
     [self fireEvent:@""
               event:@"on."
@@ -1704,14 +1646,14 @@ BOOL isUsingAdManagerRequest = YES;
                     @"led."
                     @"load"
            withData:nil];
-    NSLog(@"Ad failed "
+  /*  NSLog(@"Ad failed "
           @"to present "
           @"full screen "
           @"content "
           @"with error "
           @"rewarded "
           @"%@.",
-          [error localizedDescription]);
+          [error localizedDescription]); */
   } else if (adFormat == 4) {
     [self fireEvent:@""
               event:@"on."
@@ -1722,7 +1664,7 @@ BOOL isUsingAdManagerRequest = YES;
                     @"ed."
                     @"load"
            withData:nil];
-    NSLog(@"Ad failed "
+  /*  NSLog(@"Ad failed "
           @"to present "
           @"full screen "
           @"content "
@@ -1731,7 +1673,7 @@ BOOL isUsingAdManagerRequest = YES;
           @" "
           @"rewarded "
           @"%@.",
-          [error localizedDescription]);
+          [error localizedDescription]); */
   }
 }
 
@@ -1746,11 +1688,11 @@ BOOL isUsingAdManagerRequest = YES;
                     @"isse"
                     @"d"
            withData:nil];
-    NSLog(@"Ad did "
+   /* NSLog(@"Ad did "
           @"dismiss "
           @"full screen "
           @"content App "
-          @"Open Ad.");
+          @"Open Ad."); */
   } else if (adFormat == 2) {
     [self fireEvent:@""
               event:@"on."
@@ -1761,12 +1703,12 @@ BOOL isUsingAdManagerRequest = YES;
                     @"miss"
                     @"ed"
            withData:nil];
-    NSLog(@"Ad did "
+   /* NSLog(@"Ad did "
           @"dismiss "
           @"full screen "
           @"content "
           @"interstitial"
-          @".");
+          @"."); */
   } else if (adFormat == 3) {
     [self fireEvent:@""
               event:@"on."
@@ -1790,11 +1732,11 @@ BOOL isUsingAdManagerRequest = YES;
                       @"p"
              withData:nil];
     }
-    NSLog(@"Ad did "
+  /*  NSLog(@"Ad did "
           @"dismiss "
           @"full screen "
           @"content "
-          @"rewarded.");
+          @"rewarded."); */
   } else if (adFormat == 4) {
     if (isAdSkip != 2) {
       [self fireEvent:@""
@@ -1820,12 +1762,12 @@ BOOL isUsingAdManagerRequest = YES;
                     @"isse"
                     @"d"
            withData:nil];
-    NSLog(@"Ad did "
+   /* NSLog(@"Ad did "
           @"dismiss "
           @"full screen "
           @"content "
           @"interstitial"
-          @" rewarded.");
+          @" rewarded."); */
   }
 }
 #pragma mark Cleanup
