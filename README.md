@@ -4,10 +4,11 @@
  Cordova Plugin Admob Android and IOS
 
 ### Mobile Ads SDK (Android: 23.4.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
+### User Messaging Platform (UMP Android: 3.0.0) [Release Notes:](https://developers.google.com/admob/android/privacy/release-notes)
 
-### Mobile Ads SDK (IOS: 11.5.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
+### Mobile Ads SDK (IOS: 11.10.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
 
-### User Messaging Platform (UMP: 3.0.0) [Release Notes:](https://developers.google.com/admob/android/privacy/release-notes)
+### User Messaging Platform Android (UMP IOS: 2.6.0) [Release Notes:](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/privacy/download)
 ### IAB Europe Transparency & Consent Framework (CPM: 2.2.0)
 
 
@@ -17,14 +18,30 @@
 - cordova-android version = 12.0.0
 - cordova-ios version = 7.0.0
 
-> [!WARNING]  
+
+## IOS Ad Support IOS 18 *
+> [!WARNING]
+> - emi-indo-cordova-plugin-admob@1.5.2 
+> - Minimum supported Xcode version up to 15.3 or higher
+## Minimum macOS | Xcode, and others
+- minimum macOS 14.4 or higher
+- Xcode min 15.3 > or higher
+- Command Line Tools 15.3 or higher
+- Dependency: pod MerchantKit
+- minimum SwiftVersion: 5.10 or higher
+- [Everything is included in plugin.xml](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/plugin.xml)
+- [SKAdNetworkIdentifier Deprecated](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v1.5.1)
+
+
+## IOS
+> [!WARNING]
+> - emi-indo-cordova-plugin-admob@1.5.1
 > - Minimum supported Xcode version to 14.3
 > - Maximum supported Xcode version up to 15.2
 ## Minimum macOS | Xcode, and others
 - Monterey
 - Xcode min 14.3 > max 15.2
 - Command Line Tools 14.1 or higher
-- Target iOS 12.0
 https://developers.google.com/admob/ios/quick-start
 
 <details>
