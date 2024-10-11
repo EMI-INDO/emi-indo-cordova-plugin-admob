@@ -1,6 +1,6 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  id="emi-indo-cordova-plugin-admob" version="1.5.1">
+  id="emi-indo-cordova-plugin-admob" version="1.5.2">
 
   <name>emiAdmobPlugin</name>
   <description>Cordova Plugin Admob Android IOS</description>
@@ -80,7 +80,7 @@
 
 
   <platform name="ios">
-
+    <!--minimum macOS 14.4 > Xcode 15.3 -->
     <config-file target="config.xml" parent="/*">
       <feature name="emiAdmobPlugin">
         <param name="ios-package" value="emiAdmobPlugin" />
@@ -89,9 +89,9 @@
     </config-file>
 
     <config-file parent="/*" target="config.xml">
-			<preference name="deployment-target" value="12.0" />
-			<preference name="SwiftVersion" value="5.3" />
-		</config-file>
+		<preference name="deployment-target" value="12.0" />
+		<preference name="SwiftVersion" value="5.10" />
+	</config-file>
 
     <preference name="USAGE"
       default="This identifier will be used to deliver personalized ads to you." />
@@ -294,8 +294,10 @@
         <source url="https://cdn.cocoapods.org/" />
       </config>
       <pods use-frameworks="true">
-        <!-- Next release spec="~> 11.10.0" min xcode 15.3 -->
-        <pod name="Google-Mobile-Ads-SDK" spec="~> 11.5.0" />
+		<!--minimum macOS 14.4 > Xcode 15.3 -->
+		<pod name="GoogleUserMessagingPlatform" spec="~> 2.6.0" />
+        <pod name="Google-Mobile-Ads-SDK" spec="~> 11.10.0" />
+		<pod name="MerchantKit" spec="~> 0.14.0" />
       </pods>
     </podspec>
 
