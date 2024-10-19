@@ -1,6 +1,6 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  id="emi-indo-cordova-plugin-admob" version="1.5.2">
+  id="emi-indo-cordova-plugin-admob" version="1.5.3">
 
   <name>emiAdmobPlugin</name>
   <description>Cordova Plugin Admob Android IOS</description>
@@ -26,6 +26,7 @@
     <config-file parent="/*" target="res/xml/config.xml">
       <feature name="emiAdmobPlugin">
         <param name="android-package" value="emi.indo.cordova.plugin.admob.emiAdmobPlugin" />
+        <param name="onload" value="true" />
       </feature>
     </config-file>
 

@@ -6,13 +6,16 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.DisplayMetrics
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
+import android.view.WindowInsets
+import android.widget.FrameLayout
 import androidx.preference.PreferenceManager
 import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdError
@@ -70,21 +73,20 @@ class emiAdmobPlugin : CordovaPlugin() {
     private var isRewardedInterstitialLoad = false
     private var isRewardedLoad = false
     private var isBannerPause = 0
-    private var Position: String? = null
-    private var Size: String? = null
+    private var isPosition: String? = null
+    private var isSize: String? = null
 
     private var paddingInPx = 0
     private var marginsInPx = 0
-    var ResponseInfo: Boolean = false
+    var isResponseInfo: Boolean = false
     private var isAdSkip = 0
-    private var SetTagForChildDirectedTreatment: Boolean = false
-    private var SetTagForUnderAgeOfConsent: Boolean = false
-    private var SetMaxAdContentRating: String = "G"
+    private var isSetTagForChildDirectedTreatment: Boolean = false
+    private var isSetTagForUnderAgeOfConsent: Boolean = false
+    private var isSetMaxAdContentRating: String = "G"
     private var bannerAdUnitId: String? = null
 
     private var consentInformation: ConsentInformation? = null
-    private var bannerViewLayout: RelativeLayout? = null
-    private var bannerView: AdView? = null
+
     var isBannerLoad: Boolean = false
     var isBannerShow: Boolean = false
 
@@ -123,6 +125,8 @@ class emiAdmobPlugin : CordovaPlugin() {
     private var brandSafetyEnabled: Boolean = false
     private var brandSafetyUrls: MutableList<String>? = null
 
+    private var bannerViewLayout: FrameLayout? = null
+    private var bannerView: AdView? = null
 
     private val isMobileAdsInitializeCalled = AtomicBoolean(false)
 
@@ -138,7 +142,10 @@ class emiAdmobPlugin : CordovaPlugin() {
         }
 
         mPreferences = mContext?.let { PreferenceManager.getDefaultSharedPreferences(it) }
+
     }
+
+
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
@@ -151,25 +158,25 @@ class emiAdmobPlugin : CordovaPlugin() {
                     try {
                         if (bannerViewLayout != null && bannerView != null) {
                             val parentView = bannerViewLayout!!.parent as ViewGroup
-                            parentView?.removeView(bannerViewLayout)
-                            bannerViewLayout = RelativeLayout(mActivity)
-                            val params = RelativeLayout.LayoutParams(
-                                RelativeLayout.LayoutParams.MATCH_PARENT,
-                                RelativeLayout.LayoutParams.WRAP_CONTENT
+                            parentView.removeView(bannerViewLayout)
+                            bannerViewLayout = FrameLayout(mActivity!!)
+                            val params = FrameLayout.LayoutParams(
+                                FrameLayout.LayoutParams.MATCH_PARENT,
+                                FrameLayout.LayoutParams.WRAP_CONTENT
                             )
-                            val rootView =
-                                mActivity!!.window.decorView.findViewById<View>(R.id.content)
+                            val rootView = mActivity!!.window.decorView.findViewById<View>(View.generateViewId())
                             if (rootView is ViewGroup) {
                                 rootView.addView(bannerViewLayout, params)
                             } else {
                                 mActivity!!.addContentView(bannerViewLayout, params)
                             }
                             bannerView = AdView(mContext!!)
-                            setBannerPosition(this.Position)
-                            setBannerSiz(this.Size)
+                            setBannerPosition(this.isPosition)
+                            setBannerSiz(this.isSize)
                             bannerView!!.adUnitId = bannerAdUnitId!!
                             bannerView!!.adListener = bannerAdListener
                             bannerView!!.loadAd(buildAdRequest())
+                            adjustWebViewForBanner(this.isPosition)
                             bannerViewLayout!!.addView(bannerView)
                             bannerViewLayout!!.bringToFront()
                         }
@@ -179,15 +186,22 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
 
-            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.orientation.portrait');")
-            } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.orientation.landscape');")
-            } else if (orientation == Configuration.ORIENTATION_UNDEFINED) {
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.orientation.undefined');")
+            when (orientation) {
+                Configuration.ORIENTATION_PORTRAIT -> {
+                    cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.orientation.portrait');")
+                }
+                Configuration.ORIENTATION_LANDSCAPE -> {
+                    cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.orientation.landscape');")
+                }
+                Configuration.ORIENTATION_UNDEFINED -> {
+                    cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.orientation.undefined');")
+                }
+
+
             }
         }
     }
+
 
 
     @Throws(JSONException::class)
@@ -205,7 +219,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 val responseInfo = options.optBoolean("isResponseInfo")
                 val setDebugGeography = options.optBoolean("isConsentDebug")
                 setUsingAdManagerRequest(setAdRequest)
-                this.ResponseInfo = responseInfo
+                this.isResponseInfo = responseInfo
                 this.setDebugGeography = setDebugGeography
                 val params: ConsentRequestParameters
                 if (this.setDebugGeography) {
@@ -220,7 +234,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                         .setConsentDebugSettings(debugSettings).build()
                 } else {
                     params = ConsentRequestParameters.Builder()
-                        .setTagForUnderAgeOfConsent(this.SetTagForUnderAgeOfConsent).build()
+                        .setTagForUnderAgeOfConsent(this.isSetTagForUnderAgeOfConsent).build()
                 }
 
                 consentInformation = mContext?.let { UserMessagingPlatform.getConsentInformation(it) }
@@ -261,10 +275,10 @@ class emiAdmobPlugin : CordovaPlugin() {
                     val childDirectedTreatment = options.optBoolean("childDirectedTreatment")
                     val underAgeOfConsent = options.optBoolean("underAgeOfConsent")
                     val contentRating = options.optString("contentRating")
-                    this.SetTagForChildDirectedTreatment = childDirectedTreatment
-                    this.SetTagForUnderAgeOfConsent = underAgeOfConsent
-                    this.SetMaxAdContentRating = contentRating
-                    _Targeting(childDirectedTreatment, underAgeOfConsent, contentRating)
+                    this.isSetTagForChildDirectedTreatment = childDirectedTreatment
+                    this.isSetTagForUnderAgeOfConsent = underAgeOfConsent
+                    this.isSetMaxAdContentRating = contentRating
+                    Targeting(childDirectedTreatment, underAgeOfConsent, contentRating)
                     //  callbackContext.success();
                 } catch (e: Exception) {
                     callbackContext.error("Error: " + e.message)
@@ -342,7 +356,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 val setAppVolume = options.optInt("setAppVolume").toFloat()
                 val pubIdEnabled = options.optBoolean("pubIdEnabled")
                 try {
-                    _globalSettings(setAppMuted, setAppVolume, pubIdEnabled)
+                    globalSettings(setAppMuted, setAppVolume, pubIdEnabled)
                     // callbackContext.success();
                 } catch (e: Exception) {
                     callbackContext.error(e.toString())
@@ -359,15 +373,16 @@ class emiAdmobPlugin : CordovaPlugin() {
                     AppOpenAd.load(
                         mActivity!!, adUnitId, buildAdRequest(),
                         object : AppOpenAdLoadCallback() {
+                            @SuppressLint("DefaultLocale")
                             override fun onAdLoaded(ad: AppOpenAd) {
                                 appOpenAd = ad
                                 isAppOpenAdShow = true
 
                                 if (appOpenAutoShow) {
-                                    OpenAutoShow()
+                                    openAutoShow()
                                 }
 
-                                _appOpenAdLoadCallback(callbackContext)
+                                appOpenAdLoadCallback(callbackContext)
 
                                 appOpenAd!!.onPaidEventListener =
                                     OnPaidEventListener { adValue: AdValue ->
@@ -375,6 +390,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                         val currencyCode = adValue.currencyCode
                                         val precision = adValue.precisionType
                                         val appOpenAdAdUnitId = appOpenAd!!.adUnitId
+
                                         val result = JSONObject()
                                         try {
                                             result.put("micros", valueMicros)
@@ -382,17 +398,14 @@ class emiAdmobPlugin : CordovaPlugin() {
                                             result.put("precision", precision)
                                             result.put("adUnitId", appOpenAdAdUnitId)
                                             callbackContext.success(result)
-                                            cWebView!!.loadUrl(
-                                                "javascript:cordova.fireDocumentEvent('on.appOpenAd.revenue');"
-                                            )
+                                            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.appOpenAd.revenue')")
+
                                         } catch (e: JSONException) {
                                             callbackContext.error(e.message)
                                         }
                                     }
-                                cWebView!!.loadUrl(
-                                    "javascript:cordova.fireDocumentEvent('on.appOpenAd.loaded');"
-                                )
-                                if (ResponseInfo) {
+
+                                if (isResponseInfo) {
                                     val result = JSONObject()
                                     val responseInfo = ad.responseInfo
                                     try {
@@ -412,9 +425,14 @@ class emiAdmobPlugin : CordovaPlugin() {
                                         callbackContext.error(e.message)
                                     }
                                 }
+
+                                cWebView!!.loadUrl(
+                                    "javascript:cordova.fireDocumentEvent('on.appOpenAd.loaded');"
+                                )
+
                             }
 
-                            private fun OpenAutoShow() {
+                            private fun openAutoShow() {
                                 try {
                                     if (isAppOpenAdShow && appOpenAd != null) {
                                         mActivity!!.runOnUiThread { appOpenAd!!.show(mActivity!!) }
@@ -441,7 +459,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             try {
                 if (isAppOpenAdShow && appOpenAd != null) {
                     mActivity!!.runOnUiThread { appOpenAd!!.show(mActivity!!) }
-                    _appOpenAdLoadCallback(callbackContext)
+                    appOpenAdLoadCallback(callbackContext)
                 } else {
                     callbackContext.error("The App Open Ad wasn't ready yet")
                 }
@@ -468,12 +486,12 @@ class emiAdmobPlugin : CordovaPlugin() {
                                     isIntAutoShow
                                 }
 
-                                _interstitialAdLoadCallback(callbackContext)
+                                interstitialAdLoadCallback(callbackContext)
 
                                 cWebView!!.loadUrl(
                                     "javascript:cordova.fireDocumentEvent('on.interstitial.loaded');"
                                 )
-                                if (ResponseInfo) {
+                                if (isResponseInfo) {
                                     val result = JSONObject()
                                     val responseInfo = mInterstitialAd!!.responseInfo
                                     try {
@@ -539,7 +557,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         } else if (action == "showInterstitialAd") {
             if (isInterstitialLoad && mInterstitialAd != null) {
                 mActivity!!.runOnUiThread { mInterstitialAd!!.show(mActivity!!) }
-                _interstitialAdLoadCallback(callbackContext)
+                interstitialAdLoadCallback(callbackContext)
             } else {
                 callbackContext.error("The Interstitial ad wasn't ready yet")
             }
@@ -571,8 +589,8 @@ class emiAdmobPlugin : CordovaPlugin() {
                                     isRewardedAutoShow
                                 }
                                 cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.loaded');")
-                                _rewardedAdLoadCallback(callbackContext)
-                                if (ResponseInfo) {
+                                rewardedAdLoadCallback(callbackContext)
+                                if (isResponseInfo) {
                                     val result = JSONObject()
                                     val responseInfo = ad.responseInfo
                                     try {
@@ -661,7 +679,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                         }
                         cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.reward.userEarnedReward');")
                     }
-                    _rewardedAdLoadCallback(callbackContext)
+                    rewardedAdLoadCallback(callbackContext)
                 } else {
                     callbackContext.error("The rewarded ad wasn't ready yet")
                 }
@@ -685,7 +703,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                 if (rIntAutoShow) {
                                     isRIntAutoShow
                                 }
-                                _rewardedInterstitialAdLoadCallback(callbackContext)
+                                rewardedInterstitialAdLoadCallback(callbackContext)
                                 responseAdLoad()
                                 revenueAd()
 
@@ -719,7 +737,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                             }
 
                             private fun responseAdLoad() {
-                                if (ResponseInfo) {
+                                if (isResponseInfo) {
                                     val result = JSONObject()
                                     val responseInfo = rewardedInterstitialAd!!.responseInfo
                                     try {
@@ -799,7 +817,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                         )
                     }
 
-                    _rewardedInterstitialAdLoadCallback(callbackContext)
+                    rewardedInterstitialAdLoadCallback(callbackContext)
                 } else {
                     callbackContext.error("The rewarded ad wasn't ready yet")
                 }
@@ -821,7 +839,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                             .setConsentDebugSettings(debugSettings).build()
                     } else {
                         params = ConsentRequestParameters.Builder()
-                            .setTagForUnderAgeOfConsent(this.SetTagForUnderAgeOfConsent).build()
+                            .setTagForUnderAgeOfConsent(this.isSetTagForUnderAgeOfConsent).build()
                     }
                     consentInformation = mContext?.let {
                         UserMessagingPlatform.getConsentInformation(
@@ -912,20 +930,15 @@ class emiAdmobPlugin : CordovaPlugin() {
                 val autoResize = options.optBoolean("autoResize")
                 val autoShow = options.optBoolean("autoShow")
                 this.bannerAdUnitId = adUnitId
-                this.Position = position
-                this.Size = size
+                this.isPosition = position
+                this.isSize = size
                 this.bannerAutoShow = autoShow
                 this.isAutoResize = autoResize
                 this.collapsiblePos = collapsible
 
-
-                isCollapsible = if (collapsible.isEmpty()) {
-                    false
-                } else {
-                    true
-                }
+                isCollapsible = collapsible.isNotEmpty()
                 try {
-                    _loadBannerAd(adUnitId, position, size)
+                    loadBannerAd(adUnitId, position, size)
                 } catch (e: Exception) {
                     callbackContext.error(e.toString())
                 }
@@ -1038,29 +1051,25 @@ class emiAdmobPlugin : CordovaPlugin() {
     }
 
 
-    private fun _loadBannerAd(adUnitId: String, position: String, size: String) {
+
+
+    private fun loadBannerAd(adUnitId: String, position: String, size: String) {
         try {
             if (bannerViewLayout == null) {
-                bannerViewLayout = RelativeLayout(mActivity)
-
-                val params = RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
+                bannerViewLayout = FrameLayout(mContext!!)
+                val params = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
                 )
-
-                val rootView = mActivity!!.window.decorView.findViewById<View>(R.id.content)
-                if (rootView is ViewGroup) {
-                    rootView.addView(bannerViewLayout, params)
-                } else {
-                    mActivity!!.addContentView(bannerViewLayout, params)
-                }
-
+                val decorView = mActivity!!.window.decorView as ViewGroup
+                decorView.addView(bannerViewLayout, params)
                 bannerView = AdView(mContext!!)
                 setBannerPosition(position)
                 setBannerSiz(size)
                 bannerView!!.adUnitId = adUnitId
                 bannerView!!.adListener = bannerAdListener
                 bannerView!!.loadAd(buildAdRequest())
+                adjustWebViewForBanner(position)
             } else {
                 Log.d(TAG, "Banner view layout already exists.")
             }
@@ -1068,6 +1077,84 @@ class emiAdmobPlugin : CordovaPlugin() {
             PUBLIC_CALLBACKS!!.error("Error showing banner: " + e.message)
             Log.d(TAG, "Error showing banner: " + e.message)
         }
+    }
+
+    private fun adjustWebViewForBanner(position: String?) {
+        val rootView = bannerViewLayout
+        val webView = rootView?.findViewById<View>(View.generateViewId())
+
+        if (webView != null) {
+            when (position) {
+                "bottom-center", "bottom-right" -> {
+                    webView.setPadding(0, 0, 0, bannerView!!.height)
+                }
+                "top-center", "top-right" -> {
+                    webView.setPadding(0, bannerView!!.height, 0, 0)
+                }
+                else -> {
+                    webView.setPadding(0, 0, 0, 0)
+                }
+            }
+            webView.requestLayout()
+        }
+    }
+
+    @SuppressLint("RtlHardcoded")
+    private fun setBannerPosition(position: String?) {
+        val bannerParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.WRAP_CONTENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        when (position) {
+            "top-right" -> {
+                bannerParams.gravity = Gravity.TOP or Gravity.RIGHT
+                bannerParams.setMargins(0, marginsInPx, marginsInPx, 0)
+                bannerViewLayout!!.setPadding(0, paddingInPx, paddingInPx, 0)
+            }
+
+            "top-center" -> {
+                bannerParams.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                bannerParams.setMargins(0, marginsInPx, 0, 0)
+                bannerViewLayout!!.setPadding(0, paddingInPx, 0, 0)
+            }
+
+            "left" -> {
+                bannerParams.gravity = Gravity.LEFT or Gravity.CENTER_VERTICAL
+                bannerParams.setMargins(marginsInPx, 0, 0, 0)
+                bannerViewLayout!!.setPadding(paddingInPx, 0, 0, 0)
+            }
+
+            "center" -> {
+                bannerParams.gravity = Gravity.CENTER
+            }
+
+            "right" -> {
+                bannerParams.gravity = Gravity.RIGHT or Gravity.CENTER_VERTICAL
+                bannerParams.setMargins(0, 0, marginsInPx, 0)
+                bannerViewLayout!!.setPadding(0, 0, paddingInPx, 0)
+            }
+
+            "bottom-center" -> {
+                bannerParams.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+                bannerParams.setMargins(0, 0, 0, marginsInPx)
+                bannerViewLayout!!.setPadding(0, 0, 0, paddingInPx)
+            }
+
+            "bottom-right" -> {
+                bannerParams.gravity = Gravity.BOTTOM or Gravity.RIGHT
+                bannerParams.setMargins(0, 0, marginsInPx, marginsInPx)
+                bannerViewLayout!!.setPadding(0, 0, paddingInPx, paddingInPx)
+            }
+
+            else -> {
+                bannerParams.gravity = Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM
+                bannerParams.setMargins(marginsInPx, 0, 0, marginsInPx)
+                bannerViewLayout!!.setPadding(paddingInPx, 0, 0, paddingInPx)
+            }
+        }
+
+        bannerViewLayout!!.layoutParams = bannerParams
     }
 
 
@@ -1083,12 +1170,12 @@ class emiAdmobPlugin : CordovaPlugin() {
                 isBannerLoad = true
             } else {
                 val errorMessage = "Error showing banner: bannerView or bannerViewLayout is null."
-                Log.e("isBannerAutoShow", errorMessage)
+               // Log.e("isBannerAutoShow", errorMessage)
                 PUBLIC_CALLBACKS!!.error(errorMessage)
             }
         } catch (e: Exception) {
             val errorMessage = "Error showing banner: " + e.message
-            Log.e("isBannerAutoShow", errorMessage, e)
+           // Log.e("isBannerAutoShow", errorMessage, e)
             PUBLIC_CALLBACKS!!.error(errorMessage)
         }
     }
@@ -1169,7 +1256,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
             bannerView!!.onPaidEventListener = bannerPaidAdListener
 
-            if (ResponseInfo) {
+            if (isResponseInfo) {
                 val result = JSONObject()
                 val responseInfo = bannerView!!.responseInfo
                 try {
@@ -1257,9 +1344,21 @@ class emiAdmobPlugin : CordovaPlugin() {
 
     private val adSize: AdSize
         get() {
-            val display = mActivity!!.windowManager.defaultDisplay
             val outMetrics = DisplayMetrics()
-            display.getMetrics(outMetrics)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val windowMetrics = mActivity!!.windowManager.currentWindowMetrics
+                val insets = windowMetrics.windowInsets
+                    .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
+                val bounds = windowMetrics.bounds
+                val widthPixels = bounds.width() - insets.left - insets.right
+                outMetrics.widthPixels = widthPixels
+                outMetrics.density = mActivity!!.resources.displayMetrics.density
+            } else {
+                @Suppress("DEPRECATION")
+                mActivity!!.windowManager.defaultDisplay.getMetrics(outMetrics)
+            }
+
             val density = outMetrics.density
             val adWidthPixels =
                 if (bannerViewLayout != null && bannerViewLayout!!.width > 0) bannerViewLayout!!.width else outMetrics.widthPixels
@@ -1267,11 +1366,24 @@ class emiAdmobPlugin : CordovaPlugin() {
             return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(mContext!!, adWidth)
         }
 
+
     private val adWidth: Int
         get() {
-            val display = mActivity!!.windowManager.defaultDisplay
             val outMetrics = DisplayMetrics()
-            display.getMetrics(outMetrics)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val windowMetrics = mActivity!!.windowManager.currentWindowMetrics
+                val insets = windowMetrics.windowInsets
+                    .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
+                val bounds = windowMetrics.bounds
+                val widthPixels = bounds.width() - insets.left - insets.right
+                outMetrics.widthPixels = widthPixels
+                outMetrics.density = mActivity!!.resources.displayMetrics.density
+            } else {
+                @Suppress("DEPRECATION")
+                mActivity!!.windowManager.defaultDisplay.getMetrics(outMetrics)
+            }
+
             val density = outMetrics.density
             val adWidthPixels =
                 (if (bannerViewLayout != null && bannerViewLayout!!.width > 0) bannerViewLayout!!.width else outMetrics.widthPixels).toFloat()
@@ -1279,71 +1391,9 @@ class emiAdmobPlugin : CordovaPlugin() {
         }
 
 
-    private fun setBannerPosition(position: String?) {
-        val bannerParams = RelativeLayout.LayoutParams(
-            RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT
-        )
-
-        when (position) {
-            "top-right" -> {
-                bannerParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
-                bannerParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-                bannerParams.setMargins(0, marginsInPx, marginsInPx, 0)
-                bannerViewLayout!!.setPadding(0, paddingInPx, paddingInPx, 0)
-            }
-
-            "top-center" -> {
-                bannerParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
-                bannerParams.addRule(RelativeLayout.CENTER_HORIZONTAL)
-                bannerParams.setMargins(0, marginsInPx, 0, 0)
-                bannerViewLayout!!.setPadding(0, paddingInPx, 0, 0)
-            }
-
-            "left" -> {
-                bannerParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-                bannerParams.addRule(RelativeLayout.CENTER_VERTICAL)
-                bannerParams.setMargins(marginsInPx, 0, 0, 0)
-                bannerViewLayout!!.setPadding(paddingInPx, 0, 0, 0)
-            }
-
-            "center" -> {
-                bannerParams.addRule(RelativeLayout.CENTER_HORIZONTAL)
-                bannerParams.addRule(RelativeLayout.CENTER_VERTICAL)
-            }
-
-            "right" -> {
-                bannerParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-                bannerParams.addRule(RelativeLayout.CENTER_VERTICAL)
-                bannerParams.setMargins(0, 0, marginsInPx, 0)
-                bannerViewLayout!!.setPadding(0, 0, paddingInPx, 0)
-            }
-
-            "bottom-center" -> {
-                bannerParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-                bannerParams.addRule(RelativeLayout.CENTER_HORIZONTAL)
-                bannerParams.setMargins(0, 0, 0, marginsInPx)
-                bannerViewLayout!!.setPadding(0, 0, 0, paddingInPx)
-            }
-
-            "bottom-right" -> {
-                bannerParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-                bannerParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-                bannerParams.setMargins(0, 0, marginsInPx, marginsInPx)
-                bannerViewLayout!!.setPadding(0, 0, paddingInPx, paddingInPx)
-            }
-
-            else -> {
-                bannerParams.addRule(RelativeLayout.CENTER_HORIZONTAL)
-                bannerParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-                bannerParams.setMargins(marginsInPx, 0, 0, marginsInPx)
-                bannerViewLayout!!.setPadding(paddingInPx, 0, 0, paddingInPx)
-            }
-        }
-        bannerView!!.layoutParams = bannerParams
-    }
 
 
-    fun setUsingAdManagerRequest(isUsingAdManagerRequest: Boolean) {
+   private fun setUsingAdManagerRequest(isUsingAdManagerRequest: Boolean) {
         this.isUsingAdManagerRequest = isUsingAdManagerRequest
     }
 
@@ -1508,9 +1558,9 @@ class emiAdmobPlugin : CordovaPlugin() {
             if (isCollapsible) {
                 bundleExtra.putString("collapsible", this.collapsiblePos)
             }
-            bundleExtra.putBoolean("is_designed_for_families", this.SetTagForChildDirectedTreatment)
-            bundleExtra.putBoolean("under_age_of_consent", this.SetTagForUnderAgeOfConsent)
-            bundleExtra.putString("max_ad_content_rating", this.SetMaxAdContentRating)
+            bundleExtra.putBoolean("is_designed_for_families", this.isSetTagForChildDirectedTreatment)
+            bundleExtra.putBoolean("under_age_of_consent", this.isSetTagForUnderAgeOfConsent)
+            bundleExtra.putString("max_ad_content_rating", this.isSetMaxAdContentRating)
             builder.addNetworkExtrasBundle(AdMobAdapter::class.java, bundleExtra)
 
             if (this.ppsEnabled) {
@@ -1536,9 +1586,9 @@ class emiAdmobPlugin : CordovaPlugin() {
             if (isCollapsible) {
                 bundleExtra.putString("collapsible", this.collapsiblePos)
             }
-            bundleExtra.putBoolean("is_designed_for_families", this.SetTagForChildDirectedTreatment)
-            bundleExtra.putBoolean("under_age_of_consent", this.SetTagForUnderAgeOfConsent)
-            bundleExtra.putString("max_ad_content_rating", this.SetMaxAdContentRating)
+            bundleExtra.putBoolean("is_designed_for_families", this.isSetTagForChildDirectedTreatment)
+            bundleExtra.putBoolean("under_age_of_consent", this.isSetTagForUnderAgeOfConsent)
+            bundleExtra.putString("max_ad_content_rating", this.isSetMaxAdContentRating)
             builder.addNetworkExtrasBundle(AdMobAdapter::class.java, bundleExtra)
             mBundleExtra = bundleExtra
 
@@ -1547,7 +1597,7 @@ class emiAdmobPlugin : CordovaPlugin() {
     }
 
 
-    val deviceId: String?
+   private val deviceId: String?
         get() {
             var algorithm = "SHA-256"
             try {
@@ -1592,7 +1642,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         }
 
 
-    fun getString(key: String) {
+    private fun getString(key: String) {
         val lastAccessTime = mPreferences!!.getLong(key + LAST_ACCESS_SUFFIX, 0)
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastAccessTime > EXPIRATION_TIME) {
@@ -1617,16 +1667,12 @@ class emiAdmobPlugin : CordovaPlugin() {
 
 
 
-    private fun _appOpenAdLoadCallback(callbackContext: CallbackContext) {
+    private fun appOpenAdLoadCallback(callbackContext: CallbackContext) {
         appOpenAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
                 cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.appOpenAd.dismissed');")
-
-                // Akses langsung ke properti view tanpa menggunakan 'this'
                 val mainView: View? = view
-                if (mainView != null) {
-                    mainView.requestFocus()
-                }
+                mainView?.requestFocus()
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
@@ -1642,7 +1688,7 @@ class emiAdmobPlugin : CordovaPlugin() {
     }
 
 
-    private fun _interstitialAdLoadCallback(callbackContext: CallbackContext) {
+    private fun interstitialAdLoadCallback(callbackContext: CallbackContext) {
         mInterstitialAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdClicked() {
                 cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.interstitial.click');")
@@ -1673,7 +1719,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         }
     }
 
-    private fun _rewardedAdLoadCallback(callbackContext: CallbackContext) {
+    private fun rewardedAdLoadCallback(callbackContext: CallbackContext) {
         rewardedAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdClicked() {
                 cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.click');")
@@ -1710,7 +1756,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         }
     }
 
-    private fun _rewardedInterstitialAdLoadCallback(callbackContext: CallbackContext) {
+    private fun rewardedInterstitialAdLoadCallback(callbackContext: CallbackContext) {
         rewardedInterstitialAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdClicked() {
                 cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.click');")
@@ -1748,13 +1794,13 @@ class emiAdmobPlugin : CordovaPlugin() {
         }
     }
 
-    fun _globalSettings(setAppMuted: Boolean, setAppVolume: Float, pubIdEnabled: Boolean) {
+    private fun globalSettings(setAppMuted: Boolean, setAppVolume: Float, pubIdEnabled: Boolean) {
         MobileAds.setAppMuted(setAppMuted)
         MobileAds.setAppVolume(setAppVolume)
         MobileAds.putPublisherFirstPartyIdEnabled(pubIdEnabled)
     }
 
-    fun _Targeting(
+    private fun Targeting(
         childDirectedTreatment: Boolean,
         underAgeOfConsent: Boolean,
         contentRating: String?
@@ -1772,7 +1818,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         MobileAds.setRequestConfiguration(requestConfiguration.build())
     }
 
-    val isPrivacyOptionsRequired: ConsentInformation.PrivacyOptionsRequirementStatus
+    private val isPrivacyOptionsRequired: ConsentInformation.PrivacyOptionsRequirementStatus
         get() = consentInformation
             ?.getPrivacyOptionsRequirementStatus() ?: ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED
 
@@ -1811,7 +1857,7 @@ class emiAdmobPlugin : CordovaPlugin() {
     override fun onResume(multitasking: Boolean) {
         super.onResume(multitasking)
         if (bannerView != null) {
-            bannerView!!.resume() // ini berfungsi
+            bannerView!!.resume()
         }
     }
 
@@ -1826,11 +1872,12 @@ class emiAdmobPlugin : CordovaPlugin() {
         }
         if (bannerViewLayout != null) {
             val parentView = bannerViewLayout!!.parent as ViewGroup
-            parentView?.removeView(bannerViewLayout)
+            parentView.removeView(bannerViewLayout)
             bannerViewLayout = null
         }
         super.onDestroy()
     }
+
 
     companion object {
         private const val TAG = "emiAdmobPlugin"
