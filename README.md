@@ -380,8 +380,8 @@ autoShow: false
  cordova.plugins.emiAdmobPlugin.loadAppOpenAd({config});
  cordova.plugins.emiAdmobPlugin.showAppOpenAd(); // default
 
-//  Advanced Show (Optional)
-    cordova.plugins.emiAdmobPlugin.showAppOpenAd(
+//  Advanced load (Optional)
+    cordova.plugins.emiAdmobPlugin.loadAppOpenAd(config,
 
     (data) => {
 
@@ -472,7 +472,7 @@ const bannerConfig = [
 */
 
 // NEW
-
+```
 const bannerConfig = {
 
    adUnitId: "ca-app-pub-3940256099942544/9214589741", //Banner_ID,
@@ -484,14 +484,10 @@ const bannerConfig = {
 
 }
 
-cordova.plugins.emiAdmobPlugin.loadBannerAd(bannerConfig);
-
-
-    //  Advanced Show (Optional)
-    cordova.plugins.emiAdmobPlugin.showBannerAd(
-
-    (data) => {
-
+cordova.plugins.emiAdmobPlugin.loadBannerAd(bannerConfig,
+//  Advanced load (Optional)
+(data) => {
+    // this data will be displayed after showBannerAd() applies to all ad types
     console.log("Micros: " + data.micros);
     console.log("Currency: " + data.currency);
     console.log("Precision: " + data.precision);
@@ -502,7 +498,11 @@ cordova.plugins.emiAdmobPlugin.loadBannerAd(bannerConfig);
 
      console.error("Error: " + error);
 
-    });
+    }
+
+);
+```
+
 
 </pre>
 </details>
@@ -593,8 +593,8 @@ console.log("Collapsible Status: " + event.collapsible);
 cordova.plugins.emiAdmobPlugin.loadInterstitialAd({config});
 cordova.plugins.emiAdmobPlugin.showInterstitialAd(); // default
 
- //  Advanced Show (Optional)
-    cordova.plugins.emiAdmobPlugin.showInterstitialAd(
+ //  Advanced load (Optional)
+    cordova.plugins.emiAdmobPlugin.loadInterstitialAd(config,
 
     (data) => {
 
@@ -688,8 +688,8 @@ cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd(); // default
 
  cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd({ adUnitId: Rewarded_Interstitial_ID, autoShow: true });
 
-    //  Advanced Show (Optional)
-    cordova.plugins.emiAdmobPlugin.showRewardedInterstitialAd(
+    //  Advanced load (Optional)
+    cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd(config,
 
     (data) => {
 
@@ -769,8 +769,8 @@ cordova.plugins.emiAdmobPlugin.showRewardedAd(); // default
 
  cordova.plugins.emiAdmobPlugin.loadRewardedAd({ adUnitId: Rewarded_ID, autoShow: true });
 
-//  Advanced Show (Optional)
-    cordova.plugins.emiAdmobPlugin.showRewardedAd(
+//  Advanced load (Optional)
+    cordova.plugins.emiAdmobPlugin.loadRewardedAd(config,
 
     (data) => {
 
