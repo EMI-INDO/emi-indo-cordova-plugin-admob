@@ -1322,7 +1322,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
             "full_width_adaptive" -> bannerView!!.setAdSize(
                 AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-                    mContext!!, AdSize.FULL_WIDTH
+                    mContext!!, adWidth
                 )
             )
 
