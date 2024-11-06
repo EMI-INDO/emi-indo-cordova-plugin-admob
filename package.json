@@ -6,7 +6,7 @@
     "id": "emi-indo-cordova-plugin-admob",
     "platforms": [
       "android",
-	  "ios"
+	    "ios"
     ]
   },
   "keywords": [

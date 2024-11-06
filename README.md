@@ -207,13 +207,14 @@ document.addEventListener('on.sdkInitialization', (data) => {
 // JSON.stringify(data)
    const sdkVersion = data.version;
 // const adAdapter = data.adapters;
-// const conStatus = data.consentStatus;
+   const conStatus = data.consentStatus;
 // const gdprApplie = data.gdprApplies;
 // const purposeConsent = data.purposeConsents;
 // const vendorConsents = data.vendorConsents;
 // const conTCString = data.consentTCString;
 // const additionalConsent = data.additionalConsent;
 console.log("On Sdk Initialization version: " + data.consentStatus);
+console.log("On Consent Status: " + conStatus);
 
 });
 
@@ -294,6 +295,14 @@ var Banner_ID;
 var Interstitial_ID;
 var Rewarded_ID;
 var Rewarded_Interstitial_ID;
+
+/* https://support.google.com/admob/answer/9493252?hl=en
+Best practice when using ad original ID unit, 
+the app must be uploaded to the play store or app store, 
+and you must upload it from there, 
+otherwise you may be subject to ad serving restrictions, 
+if it happens often, it is possible that your admob account will be permanently disabled.
+*/
 
 if (window.cordova.platformId === 'ios') {
    
@@ -408,7 +417,7 @@ example
 ```
 previous example 
 [ adUnitId = App_Open_ID, autoShow = true ] // Deprecated
-now
+New
 { adUnitId: App_Open_ID, autoShow: true }
 
  cordova.plugins.emiAdmobPlugin.loadAppOpenAd({ adUnitId: App_Open_ID, autoShow: true }); 
@@ -448,7 +457,7 @@ document.addEventListener('on.appOpenAd.loaded', () => {
 <details>
 <summary>Methods:</summary>
 <pre> 
-cordova.plugins.emiAdmobPlugin.styleBannerAd({ padding: 50, margins: 50 });  // (Optional)
+cordova.plugins.emiAdmobPlugin.styleBannerAd({ padding: 50, margins: 50 });  // (Optional only android)
 cordova.plugins.emiAdmobPlugin.loadBannerAd({config});
 cordova.plugins.emiAdmobPlugin.showBannerAd(); // default
 cordova.plugins.emiAdmobPlugin.hideBannerAd(); // default

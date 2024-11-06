@@ -46,13 +46,11 @@ BOOL isUsingAdManagerRequest = YES;
 - (void)isDebugGeography:(BOOL)value {
   isDebugGeography = value;
 }
-
 - (void)initialize:(CDVInvokedUrlCommand *)command {
 
   NSDictionary *options = [command.arguments objectAtIndex:0];
 
-  BOOL setAdRequest =
-      [[options valueForKey:@"isUsingAdManagerRequest"] boolValue];
+  BOOL setAdRequest = [[options valueForKey:@"isUsingAdManagerRequest"] boolValue];
   BOOL responseInfo = [[options valueForKey:@"isResponseInfo"] boolValue];
   BOOL setDebugGeography = [[options valueForKey:@"isConsentDebug"] boolValue];
 
@@ -65,136 +63,66 @@ BOOL isUsingAdManagerRequest = YES;
   NSString *deviceId = [self __getAdMobDeviceId];
   UMPRequestParameters *parameters = [[UMPRequestParameters alloc] init];
 
-  if (isDebugGeography) {
+  if (setDebugGeography) {
     UMPDebugSettings *debugSettings = [[UMPDebugSettings alloc] init];
     parameters.debugSettings = debugSettings;
     debugSettings.geography = UMPDebugGeographyEEA;
     debugSettings.testDeviceIdentifiers = @[ deviceId ];
   }
-
   parameters.tagForUnderAgeOfConsent = UnderAgeOfConsent;
 
+  if (UMPConsentInformation.sharedInstance.canRequestAds) {
+    [self startGoogleMobileAdsSDK];
+  }
+
+
   dispatch_async(dispatch_get_main_queue(), ^{
-    // Request consent info update
-    [UMPConsentInformation.sharedInstance
-        requestConsentInfoUpdateWithParameters:parameters
-                             completionHandler:^(
-                                 NSError *_Nullable requestConsentError) {
-                               if (requestConsentError) {
-                                 // NSLog(@"Request consent error: %@",
-                                 // requestConsentError.localizedDescription);
-                                 pluginResult = [CDVPluginResult
-                                     resultWithStatus:CDVCommandStatus_ERROR
-                                      messageAsString:requestConsentError
-                                                          .description];
-                                 [self.commandDelegate
-                                     sendPluginResult:pluginResult
-                                           callbackId:callbackId];
-                                 return;
-                               }
+    [UMPConsentInformation.sharedInstance requestConsentInfoUpdateWithParameters:parameters completionHandler:^(NSError *_Nullable requestConsentError) {
+      if (requestConsentError) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:requestConsentError.description];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+        return;
+      }
 
-                               // Check the consent status after update
-                               UMPConsentStatus status =
-                                   UMPConsentInformation.sharedInstance
-                                       .consentStatus;
-                               //  NSLog(@"Consent status: %ld", (long)status);
+      UMPConsentStatus status = UMPConsentInformation.sharedInstance.consentStatus;
 
-                               // Handle consent status
-                               if (status == UMPConsentStatusRequired) {
-                                 // If consent is required, load and display
-                                 // consent form
-                                 [UMPConsentForm loadWithCompletionHandler:^(
-                                                     UMPConsentForm *form,
-                                                     NSError *loadError) {
-                                   if (loadError) {
-                                     //  NSLog(@"Load consent form error: %@",
-                                     //  loadError.localizedDescription);
-                                     pluginResult = [CDVPluginResult
-                                         resultWithStatus:CDVCommandStatus_ERROR
-                                          messageAsString:loadError
-                                                              .description];
-                                     [self.commandDelegate
-                                         sendPluginResult:pluginResult
-                                               callbackId:callbackId];
-                                   } else {
-                                     // Present the consent form to the user
-                                     [form
-                                         presentFromViewController:
-                                             [UIApplication sharedApplication]
-                                                 .delegate.window
-                                                 .rootViewController
-                                                 completionHandler:^(
-                                                     NSError
-                                                         *_Nullable dismissError) {
-                                                   if (dismissError) {
-                                                     // NSLog(@"Dismiss consent
-                                                     // form error: %@",
-                                                     // dismissError.localizedDescription);
-                                                     pluginResult = [CDVPluginResult
-                                                         resultWithStatus:
-                                                             CDVCommandStatus_ERROR
-                                                          messageAsString:
-                                                              dismissError
-                                                                  .description];
-                                                   } else {
-                                                     //  NSLog(@"Consent form
-                                                     //  successfully
-                                                     //  presented.");
-                                                     pluginResult = [CDVPluginResult
-                                                         resultWithStatus:
-                                                             CDVCommandStatus_OK
-                                                          messageAsString:
-                                                              @"Consent form "
-                                                              @"displayed "
-                                                              @"successfully."];
-                                                   }
-                                                   [self.commandDelegate
-                                                       sendPluginResult:
-                                                           pluginResult
-                                                             callbackId:
-                                                                 callbackId];
-                                                 }];
-                                   }
+      if (status == UMPConsentStatusRequired) {
+        [UMPConsentForm loadWithCompletionHandler:^(UMPConsentForm *form, NSError *loadError) {
+          if (loadError) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:loadError.description];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+          } else {
+            [form presentFromViewController:[UIApplication sharedApplication].delegate.window.rootViewController completionHandler:^(NSError *_Nullable dismissError) {
+              if (dismissError) {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:dismissError.description];
+              } else {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"Consent form displayed successfully."];
+              }
+              [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+            }];
+          }
 
-                                   if (UMPConsentInformation.sharedInstance
-                                           .canRequestAds) {
-                                     [self startGoogleMobileAdsSDK];
-                                   }
-                                 }];
-                               } else if (status ==
-                                              UMPConsentStatusNotRequired ||
-                                          status == UMPConsentStatusObtained) {
-                                 // If consent is not required or already
-                                 // obtained, start the ads SDK
-                                 if (UMPConsentInformation.sharedInstance
-                                         .canRequestAds) {
-                                   [self startGoogleMobileAdsSDK];
-                                   pluginResult = [CDVPluginResult
-                                       resultWithStatus:CDVCommandStatus_OK
-                                        messageAsString:@"Ads SDK started."];
-                                 } else {
-                                   pluginResult = [CDVPluginResult
-                                       resultWithStatus:CDVCommandStatus_ERROR
-                                        messageAsString:
-                                            @"Cannot request ads, consent is "
-                                            @"required."];
-                                 }
-                                 [self.commandDelegate
-                                     sendPluginResult:pluginResult
-                                           callbackId:callbackId];
-                               } else {
-                                 // NSLog(@"Consent status unknown or error.");
-                                 pluginResult = [CDVPluginResult
-                                     resultWithStatus:CDVCommandStatus_ERROR
-                                      messageAsString:
-                                          @"Consent status unknown."];
-                                 [self.commandDelegate
-                                     sendPluginResult:pluginResult
-                                           callbackId:callbackId];
-                               }
-                             }];
+  
+          if (UMPConsentInformation.sharedInstance.canRequestAds) {
+            [self startGoogleMobileAdsSDK];
+          }
+        }];
+      } else if (status == UMPConsentStatusNotRequired || status == UMPConsentStatusObtained) {
+        if (UMPConsentInformation.sharedInstance.canRequestAds) {
+          [self startGoogleMobileAdsSDK];
+          pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"Ads SDK started."];
+        } else {
+          pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Cannot request ads, consent is required."];
+        }
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+      } else {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Consent status unknown."];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+      }
+    }];
   });
 }
+
 
 - (void)requestIDFA:(CDVInvokedUrlCommand *)command {
   CDVPluginResult *pluginResult;
@@ -308,227 +236,94 @@ BOOL isUsingAdManagerRequest = YES;
 }
 
 - (void)forceDisplayPrivacyForm:(CDVInvokedUrlCommand *)command {
-  NSString *deviceId = [self __getAdMobDeviceId];
-  UMPRequestParameters *parameters = [[UMPRequestParameters alloc] init];
+    NSString *deviceId = [self __getAdMobDeviceId];
+    UMPRequestParameters *parameters = [[UMPRequestParameters alloc] init];
 
-  if (isDebugGeography) {
-    UMPDebugSettings *debugSettings = [[UMPDebugSettings alloc] init];
-    debugSettings.geography = UMPDebugGeographyEEA;
-    debugSettings.testDeviceIdentifiers = @[ deviceId ];
-    parameters.debugSettings = debugSettings;
-  }
+    if (isDebugGeography) {
+        UMPDebugSettings *debugSettings = [[UMPDebugSettings alloc] init];
+        debugSettings.geography = UMPDebugGeographyEEA;
+        debugSettings.testDeviceIdentifiers = @[ deviceId ];
+        parameters.debugSettings = debugSettings;
+    }
 
-  parameters.tagForUnderAgeOfConsent = UnderAgeOfConsent;
+    parameters.tagForUnderAgeOfConsent = UnderAgeOfConsent;
 
-  // [UMPConsentInformation.sharedInstance reset];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UMPConsentInformation.sharedInstance requestConsentInfoUpdateWithParameters:parameters completionHandler:^(NSError *_Nullable requestConsentError) {
+            if (requestConsentError) {
+                CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:requestConsentError.description];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                return;
+            }
 
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [UMPConsentInformation.sharedInstance requestConsentInfoUpdateWithParameters:
-                                              parameters
-                                                               completionHandler:^(
-                                                                   NSError
-                                                                       *_Nullable requestConsentError) {
-                                                                 if (requestConsentError !=
-                                                                     nil) {
-                                                                   //  NSLog(@"Errors
-                                                                   //  in
-                                                                   //  updating
-                                                                   //  consent
-                                                                   //  information:
-                                                                   //  %@",
-                                                                   //  requestConsentError);
-                                                                   CDVPluginResult
-                                                                       *pluginResult = [CDVPluginResult
-                                                                           resultWithStatus:
-                                                                               CDVCommandStatus_ERROR
-                                                                            messageAsString:
-                                                                                requestConsentError
-                                                                                    .description];
-                                                                   [self.commandDelegate
-                                                                       sendPluginResult:
-                                                                           pluginResult
-                                                                             callbackId:
-                                                                                 command
-                                                                                     .callbackId];
-                                                                   return;
-                                                                 }
-
-                                                                 //  NSLog(@"Successful
-                                                                 //  update of
-                                                                 //  consent
-                                                                 //  info.
-                                                                 //  Continue to
-                                                                 //  load and
-                                                                 //  present
-                                                                 //  consent
-                                                                 //  form.");
-
-                                                                 [UMPConsentForm loadAndPresentIfRequiredFromViewController:
-                                                                                     self.viewController
-                                                                                                          completionHandler:
-                                                                                                              ^(NSError
-                                                                                                                    *loadAndPresentError) {
-                                                                                                                if (loadAndPresentError !=
-                                                                                                                    nil) {
-                                                                                                                  // NSLog(@"Error loading and presenting consent form: %@", loadAndPresentError);
-                                                                                                                  CDVPluginResult
-                                                                                                                      *pluginResult = [CDVPluginResult
-                                                                                                                          resultWithStatus:
-                                                                                                                              CDVCommandStatus_ERROR
-                                                                                                                           messageAsString:
-                                                                                                                               loadAndPresentError
-                                                                                                                                   .description];
-                                                                                                                  [self.commandDelegate
-                                                                                                                      sendPluginResult:
-                                                                                                                          pluginResult
-                                                                                                                            callbackId:
-                                                                                                                                command
-                                                                                                                                    .callbackId];
-                                                                                                                } else {
-                                                                                                                  // NSLog(@"Consent form successfully loaded");
-                                                                                                                  [UMPConsentForm
-                                                                                                                      presentPrivacyOptionsFormFromViewController:
-                                                                                                                          self.viewController
-                                                                                                                                                completionHandler:^(
-                                                                                                                                                    NSError
-                                                                                                                                                        *_Nullable formError) {
-                                                                                                                                                  if (formError) {
-                                                                                                                                                    //  NSLog(@"Error when displaying the form: %@", formError);
-                                                                                                                                                  } else {
-                                                                                                                                                    // NSLog(@"The privacy options form is successfully displayed.");
-                                                                                                                                                  }
-                                                                                                                                                }];
-                                                                                                                }
-                                                                                                              }];
-                                                               }];
-  });
+            [UMPConsentForm loadAndPresentIfRequiredFromViewController:self.viewController completionHandler:^(NSError *loadAndPresentError) {
+                if (loadAndPresentError) {
+                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:loadAndPresentError.description];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                } else {
+                    [UMPConsentForm presentPrivacyOptionsFormFromViewController:self.viewController completionHandler:^(NSError *_Nullable formError) {
+                        if (formError) {
+                            // NSLog(@"Error when displaying the form: %@", formError);
+                        }
+                    }];
+                }
+            }];
+        }];
+    });
 }
 
 - (void)showPrivacyOptionsForm:(CDVInvokedUrlCommand *)command {
-  NSString *deviceId = [self __getAdMobDeviceId];
-  UMPRequestParameters *parameters = [[UMPRequestParameters alloc] init];
+    NSString *deviceId = [self __getAdMobDeviceId];
+    UMPRequestParameters *parameters = [[UMPRequestParameters alloc] init];
 
-  if (isDebugGeography) {
-    UMPDebugSettings *debugSettings = [[UMPDebugSettings alloc] init];
-    parameters.debugSettings = debugSettings;
-    debugSettings.geography = UMPDebugGeographyEEA;
-    debugSettings.testDeviceIdentifiers = @[ deviceId ];
+    if (isDebugGeography) {
+        UMPDebugSettings *debugSettings = [[UMPDebugSettings alloc] init];
+        parameters.debugSettings = debugSettings;
+        debugSettings.geography = UMPDebugGeographyEEA;
+        debugSettings.testDeviceIdentifiers = @[ deviceId ];
+    }
 
-    // NSLog(@"[showPrivacyOptionsForm] Using EEA debug geography for
-    // consent.");
-  }
+    parameters.tagForUnderAgeOfConsent = UnderAgeOfConsent;
 
-  parameters.tagForUnderAgeOfConsent = UnderAgeOfConsent;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UMPConsentInformation.sharedInstance requestConsentInfoUpdateWithParameters:parameters completionHandler:^(NSError *_Nullable requestConsentError) {
+            if (requestConsentError) {
+                CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:requestConsentError.description];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                return;
+            }
 
-  dispatch_async(dispatch_get_main_queue(),
-                 ^{
-                   [UMPConsentInformation.sharedInstance requestConsentInfoUpdateWithParameters:
-                                                             parameters
-                                                                              completionHandler:^(
-                                                                                  NSError
-                                                                                      *_Nullable requestConsentError) {
-                                                                                if (requestConsentError !=
-                                                                                    nil) {
-                                                                                  // NSLog(@"[showPrivacyOptionsForm] Error in updating consent info: %@", requestConsentError);
-                                                                                  CDVPluginResult
-                                                                                      *pluginResult = [CDVPluginResult
-                                                                                          resultWithStatus:
-                                                                                              CDVCommandStatus_ERROR
-                                                                                           messageAsString:
-                                                                                               requestConsentError
-                                                                                                   .description];
-                                                                                  [self.commandDelegate
-                                                                                      sendPluginResult:
-                                                                                          pluginResult
-                                                                                            callbackId:
-                                                                                                command
-                                                                                                    .callbackId];
-                                                                                  return;
-                                                                                }
+            [UMPConsentForm loadAndPresentIfRequiredFromViewController:self.viewController completionHandler:^(NSError *loadAndPresentError) {
+                if (loadAndPresentError) {
+                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:loadAndPresentError.description];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }
+            }];
 
-                                                                                // NSLog(@"[showPrivacyOptionsForm] Successful update of consent info. Continue to load and present consent form.");
-
-                                                                                [UMPConsentForm
-                                                                                    loadAndPresentIfRequiredFromViewController:
-                                                                                        self.viewController
-                                                                                                             completionHandler:^(
-                                                                                                                 NSError
-                                                                                                                     *loadAndPresentError) {
-                                                                                                               if (loadAndPresentError) {
-                                                                                                                 // NSLog(@"[showPrivacyOptionsForm] Error loading and presenting consent form: %@", loadAndPresentError);
-                                                                                                                 CDVPluginResult
-                                                                                                                     *pluginResult = [CDVPluginResult
-                                                                                                                         resultWithStatus:
-                                                                                                                             CDVCommandStatus_ERROR
-                                                                                                                          messageAsString:
-                                                                                                                              loadAndPresentError
-                                                                                                                                  .description];
-                                                                                                                 [self.commandDelegate
-                                                                                                                     sendPluginResult:
-                                                                                                                         pluginResult
-                                                                                                                           callbackId:
-                                                                                                                               command
-                                                                                                                                   .callbackId];
-                                                                                                               } else {
-                                                                                                                 /// NSLog(@"[showPrivacyOptionsForm] Consent form successfully displayed.");
-                                                                                                               }
-                                                                                                             }];
-
-                                                                                if ([self
-                                                                                        isPrivacyOptionsRequired]) {
-                                                                                  // NSLog(@"[isPrivacyOptionsRequired] Privacy options required.");
-                                                                                  [self
-                                                                                      privacyOptionsFormShow:
-                                                                                          command];
-                                                                                } else {
-                                                                                  // NSLog(@"[isPrivacyOptionsRequired] Privacy option form not required.");
-                                                                                  CDVPluginResult
-                                                                                      *pluginResult = [CDVPluginResult
-                                                                                          resultWithStatus:
-                                                                                              CDVCommandStatus_OK
-                                                                                           messageAsString:
-                                                                                               @"The privacy option form is not required."];
-                                                                                  [self.commandDelegate
-                                                                                      sendPluginResult:
-                                                                                          pluginResult
-                                                                                            callbackId:
-                                                                                                command
-                                                                                                    .callbackId];
-                                                                                }
-                                                                              }];
-                 });
+            if ([self isPrivacyOptionsRequired]) {
+                [self privacyOptionsFormShow:command];
+            } else {
+                CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"The privacy option form is not required."];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            }
+        }];
+    });
 }
+
 
 - (void)privacyOptionsFormShow:(CDVInvokedUrlCommand *)command {
-  [self.commandDelegate runInBackground:^{
-    dispatch_async(dispatch_get_main_queue(), ^{
-      [UMPConsentForm
-          presentPrivacyOptionsFormFromViewController:self.viewController
-                                    completionHandler:^(
-                                        NSError *_Nullable formError) {
-                                      if (formError) {
-                                        //  NSLog(@"[privacyOptionsFormShow]
-                                        //  Error displaying the privacy options
-                                        //  form: %@", formError);
-                                        CDVPluginResult *pluginResult =
-                                            [CDVPluginResult
-                                                resultWithStatus:
-                                                    CDVCommandStatus_ERROR
-                                                 messageAsString:
-                                                     formError.description];
-                                        [self.commandDelegate
-                                            sendPluginResult:pluginResult
-                                                  callbackId:command
-                                                                 .callbackId];
-                                      } else {
-                                        //  NSLog(@"[privacyOptionsFormShow] The
-                                        //  privacy options form is successfully
-                                        //  displayed.");
-                                      }
-                                    }];
-    });
-  }];
+    [self.commandDelegate runInBackground:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [UMPConsentForm presentPrivacyOptionsFormFromViewController:self.viewController completionHandler:^(NSError *_Nullable formError) {
+                if (formError) {
+                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:formError.description];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }
+            }];
+        });
+    }];
 }
+
 
 // Cek apakah opsi privasi diperlukan
 - (BOOL)isPrivacyOptionsRequired {
@@ -569,59 +364,36 @@ BOOL isUsingAdManagerRequest = YES;
 }
 
 - (void)getIabTfc:(CDVInvokedUrlCommand *)command {
-  CDVPluginResult *pluginResult;
-  NSString *callbackId = command.callbackId;
-  if (isIAB == 1) {
-    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSNumber *CmpSdkID = [prefs valueForKey:@"IABT"
-                                            @"CF_"
-                                            @"CmpS"
-                                            @"dkI"
-                                            @"D"];
-    NSString *gdprApplies = [prefs stringForKey:@"IABT"
-                                                @"CF_"
-                                                @"gdpr"
-                                                @"Appl"
-                                                @"ie"
-                                                @"s"];
-    NSString *PurposeConsents = [prefs stringForKey:@"IABT"
-                                                    @"CF_"
-                                                    @"Purp"
-                                                    @"oseC"
-                                                    @"onse"
-                                                    @"nt"
-                                                    @"s"];
-    NSString *TCString = [prefs stringForKey:@"IABT"
-                                             @"CF_"
-                                             @"TCSt"
-                                             @"rin"
-                                             @"g"];
-    result[@"IABTCF_"
-           @"CmpSdkID"] = CmpSdkID;
-    result[@"IABTCF_"
-           @"gdprAppli"
-           @"es"] = gdprApplies;
-    result[@"IABTCF_"
-           @"PurposeCo"
-           @"nsents"] = PurposeConsents;
-    result[@"IABTCF_"
-           @"TCString"] = TCString;
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    NSLog(@"%@",  [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                 messageAsDictionary:result];
-    [self fireEvent:@""
-              event:@"on."
-                    @"getI"
-                    @"abTf"
-                    @"c"
-           withData:nil];
-  } else {
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-  }
-  [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+    CDVPluginResult *pluginResult;
+    NSString *callbackId = command.callbackId;
+    
+    if (isIAB == 1) {
+        NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        
+        NSNumber *CmpSdkID = [prefs valueForKey:@"IABTCF_CmpSdkID"];
+        NSString *gdprApplies = [prefs stringForKey:@"IABTCF_gdprApplies"];
+        NSString *PurposeConsents = [prefs stringForKey:@"IABTCF_PurposeConsents"];
+        NSString *TCString = [prefs stringForKey:@"IABTCF_TCString"];
+        
+        result[@"IABTCF_CmpSdkID"] = CmpSdkID;
+        result[@"IABTCF_gdprApplies"] = gdprApplies;
+        result[@"IABTCF_PurposeConsents"] = PurposeConsents;
+        result[@"IABTCF_TCString"] = TCString;
+        
+        [prefs synchronize];
+        
+        NSLog(@"%@", [prefs dictionaryRepresentation]);
+        
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
+        [self fireEvent:@"" event:@"onGetIabTfc" withData:nil];
+    } else {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+    }
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
+
 - (void)consentReset:(CDVInvokedUrlCommand *)command {
   CDVPluginResult *pluginResult;
   NSString *callbackId = command.callbackId;
@@ -1052,53 +824,60 @@ BOOL isUsingAdManagerRequest = YES;
   [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 - (void)loadAppOpenAd:(CDVInvokedUrlCommand *)command {
-  CDVPluginResult *pluginResult;
-  NSString *callbackId = command.callbackId;
-  NSDictionary *options = [command.arguments objectAtIndex:0];
-  NSString *adUnitId = [options valueForKey:@"adUnitId"];
-  BOOL autoShow = [[options valueForKey:@"autoShow"] boolValue];
-  auto_Show = autoShow;
-  adFormat = 1;
-  self.appOpenAd = nil;
-  if (adFormat == 1) {
-    dispatch_async(dispatch_get_main_queue(), ^{
-      GADRequest *request = [GADRequest request];
-      GADExtras *extras = [[GADExtras alloc] init];
-      //   extras.additionalParameters = @{@"npa" : Npa}; // Deprecated
-      [request registerAdNetworkExtras:extras];
-      [GADAppOpenAd
-           loadWithAdUnitID:adUnitId
-                    request:request
-          completionHandler:^(GADAppOpenAd *ad, NSError *error) {
-            if (error) {
-              [self fireEvent:@""
-                        event:@"on.appOpenAd.failed.loaded"
-                     withData:nil];
-             
-              return;
-            }
-            self.appOpenAd = ad;
-            self.appOpenAd.fullScreenContentDelegate = self;
-            [self fireEvent:@"" event:@"on.appOpenAd.loaded" withData:nil];
-            if (auto_Show) {
-              if (self.appOpenAd &&
-                  [self.appOpenAd
-                      canPresentFromRootViewController:self.viewController
-                                                 error:nil]) {
-                [self.appOpenAd
-                    presentFromRootViewController:self.viewController];
-              } else {
-                [self fireEvent:@""
-                          event:@"on.appOpenAd.failed.show"
-                       withData:nil];
-              }
-            }
-          }];
-    });
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-  }
-  [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+    CDVPluginResult *pluginResult;
+    NSString *callbackId = command.callbackId;
+    
+    NSDictionary *options = [command.arguments objectAtIndex:0];
+    NSString *adUnitId = [options valueForKey:@"adUnitId"];
+    BOOL autoShow = [[options valueForKey:@"autoShow"] boolValue];
+    
+    auto_Show = autoShow;
+    adFormat = 1;
+    self.appOpenAd = nil;
+    
+    if (adFormat == 1) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            GADRequest *request = [GADRequest request];
+            GADExtras *extras = [[GADExtras alloc] init];
+            [request registerAdNetworkExtras:extras];
+            
+            [GADAppOpenAd loadWithAdUnitID:adUnitId request:request completionHandler:^(GADAppOpenAd *ad, NSError *error) {
+                if (error) {
+                    // Send load error to event
+                    NSDictionary *errorData = @{@"error": error.localizedDescription ?: @"Unknown error"};
+                    NSData *errorJsonData = [NSJSONSerialization dataWithJSONObject:errorData options:0 error:nil];
+                    NSString *errorJsonString = [[NSString alloc] initWithData:errorJsonData encoding:NSUTF8StringEncoding];
+                    
+                    [self fireEvent:@"" event:@"on.appOpenAd.failed.loaded" withData:errorJsonString];
+                    return;
+                }
+                
+                self.appOpenAd = ad;
+                self.appOpenAd.fullScreenContentDelegate = self;
+                [self fireEvent:@"" event:@"on.appOpenAd.loaded" withData:nil];
+                
+                if (auto_Show) {
+                    NSError *presentError = nil;
+                    if ([self.appOpenAd canPresentFromRootViewController:self.viewController error:&presentError]) {
+                        [self.appOpenAd presentFromRootViewController:self.viewController];
+                    } else {
+                        // Send show error to event
+                        NSDictionary *errorData = @{@"error": presentError.localizedDescription ?: @"Unknown error"};
+                        NSData *errorJsonData = [NSJSONSerialization dataWithJSONObject:errorData options:0 error:nil];
+                        NSString *errorJsonString = [[NSString alloc] initWithData:errorJsonData encoding:NSUTF8StringEncoding];
+                        
+                        [self fireEvent:@"" event:@"on.appOpenAd.failed.show" withData:errorJsonString];
+                    }
+                }
+            }];
+        });
+        
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    }
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
+
 - (void)showAppOpenAd:(CDVInvokedUrlCommand *)command {
   CDVPluginResult *pluginResult;
   NSString *callbackId = command.callbackId;
@@ -1122,259 +901,293 @@ BOOL isUsingAdManagerRequest = YES;
   [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 - (void)loadInterstitialAd:(CDVInvokedUrlCommand *)command {
-  CDVPluginResult *pluginResult;
-  NSString *callbackId = command.callbackId;
-  NSDictionary *options = [command.arguments objectAtIndex:0];
-  NSString *adUnitId = [options valueForKey:@"adUnitId"];
-  BOOL autoShow = [[options valueForKey:@"autoShow"] boolValue];
-  auto_Show = autoShow;
-  adFormat = 2;
-  if (adFormat == 2) {
-    dispatch_async(dispatch_get_main_queue(), ^{
-      GADRequest *request = [GADRequest request];
-      [GADInterstitialAd
-           loadWithAdUnitID:adUnitId
-                    request:request
-          completionHandler:^(GADInterstitialAd *ad, NSError *error) {
-            if (error) {
-              
-            }
-            self.interstitial = ad;
-            self.interstitial.fullScreenContentDelegate = self;
-            [self fireEvent:@"" event:@"on.interstitial.loaded" withData:nil];
-            if (auto_Show) {
-              if (self.interstitial &&
-                  [self.interstitial
-                      canPresentFromRootViewController:self.viewController
-                                                 error:nil]) {
-                [self.interstitial
-                    presentFromRootViewController:self.viewController];
-              } else {
-                [self fireEvent:@""
-                          event:@"on.interstitial.failed.show"
-                       withData:nil];
-              }
-            }
-          }];
-    });
-  }
-  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-  [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+    CDVPluginResult *pluginResult;
+    NSString *callbackId = command.callbackId;
+    
+    NSDictionary *options = [command.arguments objectAtIndex:0];
+    NSString *adUnitId = [options valueForKey:@"adUnitId"];
+    BOOL autoShow = [[options valueForKey:@"autoShow"] boolValue];
+    
+    auto_Show = autoShow;
+    adFormat = 2;
+    
+    if (adFormat == 2) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            GADRequest *request = [GADRequest request];
+            [GADInterstitialAd loadWithAdUnitID:adUnitId request:request completionHandler:^(GADInterstitialAd *ad, NSError *error) {
+                if (error) {
+                    // Send load error to event
+                    NSDictionary *errorData = @{@"error": error.localizedDescription ?: @"Unknown error"};
+                    NSData *errorJsonData = [NSJSONSerialization dataWithJSONObject:errorData options:0 error:nil];
+                    NSString *errorJsonString = [[NSString alloc] initWithData:errorJsonData encoding:NSUTF8StringEncoding];
+                    
+                    [self fireEvent:@"" event:@"on.interstitial.failed.load" withData:errorJsonString];
+                    return;
+                }
+                
+                self.interstitial = ad;
+                self.interstitial.fullScreenContentDelegate = self;
+                [self fireEvent:@"" event:@"on.interstitial.loaded" withData:nil];
+                
+                if (auto_Show) {
+                    NSError *presentError = nil;
+                    if ([self.interstitial canPresentFromRootViewController:self.viewController error:&presentError]) {
+                        [self.interstitial presentFromRootViewController:self.viewController];
+                    } else {
+                        // Send present error to event
+                        NSDictionary *errorData = @{@"error": presentError.localizedDescription ?: @"Unknown error"};
+                        NSData *errorJsonData = [NSJSONSerialization dataWithJSONObject:errorData options:0 error:nil];
+                        NSString *errorJsonString = [[NSString alloc] initWithData:errorJsonData encoding:NSUTF8StringEncoding];
+                        
+                        [self fireEvent:@"" event:@"on.interstitial.failed.show" withData:errorJsonString];
+                    }
+                }
+            }];
+        });
+    }
+    
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
+
 - (void)showInterstitialAd:(CDVInvokedUrlCommand *)command {
-  CDVPluginResult *pluginResult;
-  NSString *callbackId = command.callbackId;
-  if (self.interstitial &&
-      [self.interstitial canPresentFromRootViewController:self.viewController
-                                                    error:nil]) {
-    [self.interstitial presentFromRootViewController:self.viewController];
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-  } else {
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-    [self fireEvent:@""
-              event:@"on."
-                    @"inte"
-                    @"rsti"
-                    @"tial"
-                    @".fai"
-                    @"led."
-                    @"show"
-           withData:nil];
-  }
-  [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+    CDVPluginResult *pluginResult;
+    NSString *callbackId = command.callbackId;
+    
+    NSError *presentError = nil;
+    if (self.interstitial && [self.interstitial canPresentFromRootViewController:self.viewController error:&presentError]) {
+        [self.interstitial presentFromRootViewController:self.viewController];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    } else {
+        // Send show error to event
+        NSDictionary *errorData = @{@"error": presentError.localizedDescription ?: @"Unknown error"};
+        NSData *errorJsonData = [NSJSONSerialization dataWithJSONObject:errorData options:0 error:nil];
+        NSString *errorJsonString = [[NSString alloc] initWithData:errorJsonData encoding:NSUTF8StringEncoding];
+        
+        [self fireEvent:@"" event:@"on.interstitial.failed.show" withData:errorJsonString];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+    }
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
+
 - (void)loadRewardedInterstitialAd:(CDVInvokedUrlCommand *)command {
-  CDVPluginResult *pluginResult;
-  NSString *callbackId = command.callbackId;
-
-  NSDictionary *options = [command.arguments objectAtIndex:0];
-  NSString *adUnitId = [options valueForKey:@"adUnitId"];
-  BOOL autoShow = [[options valueForKey:@"autoShow"] boolValue];
-
-  auto_Show = autoShow;
-  adFormat = 4;
-  if (adFormat == 4) {
-    dispatch_async(dispatch_get_main_queue(), ^{
-      GADRequest *request = [GADRequest request];
-      [GADRewardedInterstitialAd
-           loadWithAdUnitID:adUnitId
-                    request:request
-          completionHandler:^(GADRewardedInterstitialAd *ad, NSError *error) {
-            if (error) {
-             /* NSLog(@"Rewarded ad failed to load with error: %@",
-                    [error localizedDescription]); */
-              return;
-            }
-            self.rewardedInterstitialAd = ad;
-            isAdSkip = 1;
-          //  NSLog(@"Rewarded ad loaded.");
-            self.rewardedInterstitialAd.fullScreenContentDelegate = self;
-            [self fireEvent:@"" event:@"on.rewardedInt.loaded" withData:nil];
-            if (auto_Show) {
-              if (self.rewardedInterstitialAd &&
-                  [self.rewardedInterstitialAd
-                      canPresentFromRootViewController:self.viewController
-                                                 error:nil]) {
-                [self.rewardedInterstitialAd
-                    presentFromRootViewController:self.viewController
-                         userDidEarnRewardHandler:^{
-                           GADAdReward *reward =
-                               self.rewardedInterstitialAd.adReward;
-                           [self fireEvent:@""
-                                     event:@"on.rewardedInt."
-                                           @"userEarnedReward"
-                                  withData:nil];
-                           isAdSkip = 2;
-                           NSString *rewardMessage = [NSString
-                               stringWithFormat:@"Reward received with "
-                                                @"currency %@ , amount %ld",
-                                                reward.type,
-                                                [reward.amount longValue]];
-                           NSLog(@"%@", rewardMessage);
-                         }];
-              } else {
-                [self fireEvent:@""
-                          event:@"on.rewardedInt.failed.show"
-                       withData:nil];
-              }
-            }
-          }];
-    });
-  }
-  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-  [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+    CDVPluginResult *pluginResult;
+    NSString *callbackId = command.callbackId;
+    
+    NSDictionary *options = [command.arguments objectAtIndex:0];
+    NSString *adUnitId = [options valueForKey:@"adUnitId"];
+    BOOL autoShow = [[options valueForKey:@"autoShow"] boolValue];
+    
+    auto_Show = autoShow;
+    adFormat = 4;
+    
+    if (adFormat == 4) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            GADRequest *request = [GADRequest request];
+            [GADRewardedInterstitialAd loadWithAdUnitID:adUnitId request:request completionHandler:^(GADRewardedInterstitialAd *ad, NSError *error) {
+                if (error) {
+                    // Send error data to event
+                    NSDictionary *errorData = @{@"error": error.localizedDescription ?: @"Unknown error"};
+                    NSData *errorJsonData = [NSJSONSerialization dataWithJSONObject:errorData options:0 error:nil];
+                    NSString *errorJsonString = [[NSString alloc] initWithData:errorJsonData encoding:NSUTF8StringEncoding];
+                    
+                    [self fireEvent:@"" event:@"on.rewardedInt.failed.load" withData:errorJsonString];
+                    return;
+                }
+                
+                self.rewardedInterstitialAd = ad;
+                isAdSkip = 1;
+                self.rewardedInterstitialAd.fullScreenContentDelegate = self;
+                [self fireEvent:@"" event:@"on.rewardedInt.loaded" withData:nil];
+                
+                if (auto_Show) {
+                    NSError *presentError = nil;
+                    if ([self.rewardedInterstitialAd canPresentFromRootViewController:self.viewController error:&presentError]) {
+                        [self.rewardedInterstitialAd presentFromRootViewController:self.viewController userDidEarnRewardHandler:^{
+                            GADAdReward *reward = self.rewardedInterstitialAd.adReward;
+                            
+                            // Prepare reward data as JSON
+                            NSDictionary *rewardData = @{
+                                @"currency": reward.type,
+                                @"amount": [reward.amount stringValue]
+                            };
+                            NSData *rewardJsonData = [NSJSONSerialization dataWithJSONObject:rewardData options:0 error:nil];
+                            NSString *rewardJsonString = [[NSString alloc] initWithData:rewardJsonData encoding:NSUTF8StringEncoding];
+                            
+                            [self fireEvent:@"" event:@"on.rewardedInt.userEarnedReward" withData:rewardJsonString];
+                            isAdSkip = 2;
+                            NSLog(@"Reward received with currency %@, amount %ld", reward.type, [reward.amount longValue]);
+                        }];
+                    } else {
+                        // Send present error to event
+                        NSDictionary *errorData = @{@"error": presentError.localizedDescription ?: @"Unknown error"};
+                        NSData *errorJsonData = [NSJSONSerialization dataWithJSONObject:errorData options:0 error:nil];
+                        NSString *errorJsonString = [[NSString alloc] initWithData:errorJsonData encoding:NSUTF8StringEncoding];
+                        
+                        [self fireEvent:@"" event:@"on.rewardedInt.failed.show" withData:errorJsonString];
+                    }
+                }
+            }];
+        });
+    }
+    
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
+
 - (void)showRewardedInterstitialAd:(CDVInvokedUrlCommand *)command {
-  CDVPluginResult *pluginResult;
-  NSString *callbackId = command.callbackId;
-  if (self.rewardedInterstitialAd &&
-      [self.rewardedInterstitialAd
-          canPresentFromRootViewController:self.viewController
-                                     error:nil]) {
-    [self.rewardedInterstitialAd
-        presentFromRootViewController:self.viewController
-             userDidEarnRewardHandler:^{
-               GADAdReward *reward = self.rewardedInterstitialAd.adReward;
-               [self fireEvent:@""
-                         event:@"on.rewardedInt.userEarnedReward"
-                      withData:nil];
-               isAdSkip = 2;
-               NSString *rewardMessage = [NSString
-                   stringWithFormat:@"Reward received with "
-                                    @"currency %@ , amount %ld",
-                                    reward.type, [reward.amount longValue]];
-              NSLog(@"%"
-                     @"@",
-                     rewardMessage);
-             }];
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-  } else {
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-    [self fireEvent:@""
-              event:@"on."
-                    @"rewa"
-                    @"rded"
-                    @"Int."
-                    @"fail"
-                    @"ed."
-                    @"show"
-           withData:nil];
-  }
-  [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+    CDVPluginResult *pluginResult;
+    NSString *callbackId = command.callbackId;
+    
+    NSError *presentError = nil;
+    if (self.rewardedInterstitialAd &&
+        [self.rewardedInterstitialAd canPresentFromRootViewController:self.viewController error:&presentError]) {
+        
+        [self.rewardedInterstitialAd presentFromRootViewController:self.viewController userDidEarnRewardHandler:^{
+            GADAdReward *reward = self.rewardedInterstitialAd.adReward;
+            
+            // Prepare reward data as JSON
+            NSDictionary *rewardData = @{
+                @"currency": reward.type,
+                @"amount": [reward.amount stringValue]
+            };
+            NSData *rewardJsonData = [NSJSONSerialization dataWithJSONObject:rewardData options:0 error:nil];
+            NSString *rewardJsonString = [[NSString alloc] initWithData:rewardJsonData encoding:NSUTF8StringEncoding];
+            
+            [self fireEvent:@"" event:@"on.rewardedInt.userEarnedReward" withData:rewardJsonString];
+            isAdSkip = 2;
+            NSLog(@"Reward received with currency %@, amount %ld", reward.type, [reward.amount longValue]);
+        }];
+        
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    } else {
+        // Prepare error data as JSON
+        NSDictionary *errorData = @{@"error": presentError.localizedDescription ?: @"Unknown error"};
+        NSData *errorJsonData = [NSJSONSerialization dataWithJSONObject:errorData options:0 error:nil];
+        NSString *errorJsonString = [[NSString alloc] initWithData:errorJsonData encoding:NSUTF8StringEncoding];
+        
+        [self fireEvent:@"" event:@"on.rewardedInt.failed.show" withData:errorJsonString];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+    }
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
+
 - (void)loadRewardedAd:(CDVInvokedUrlCommand *)command {
-  CDVPluginResult *pluginResult;
-  NSString *callbackId = command.callbackId;
-  NSDictionary *options = [command.arguments objectAtIndex:0];
-  NSString *adUnitId = [options valueForKey:@"adUnitId"];
-  BOOL autoShow = [[options valueForKey:@"autoShow"] boolValue];
-  auto_Show = autoShow;
-  adFormat = 3;
-  if (adFormat == 3) {
-    dispatch_async(dispatch_get_main_queue(), ^{
-      GADRequest *request = [GADRequest request];
-      [GADRewardedAd
-           loadWithAdUnitID:adUnitId
-                    request:request
-          completionHandler:^(GADRewardedAd *ad, NSError *error) {
-            if (error) {
-            /*  NSLog(@"Rewarded ad failed to load with error: %@",
-                    [error localizedDescription]); */
-              return;
-            }
-            self.rewardedAd = ad;
-          //  NSLog(@"Rewarded ad loaded.");
-            isAdSkip = 0;
-            self.rewardedAd.fullScreenContentDelegate = self;
-            [self fireEvent:@"" event:@"on.rewarded.loaded" withData:nil];
-            if (auto_Show) {
-              if (self.rewardedAd &&
-                  [self.rewardedAd
-                      canPresentFromRootViewController:self.viewController
-                                                 error:nil]) {
-                [self.rewardedAd
-                    presentFromRootViewController:self.viewController
-                         userDidEarnRewardHandler:^{
-                           GADAdReward *reward = self.rewardedAd.adReward;
-                           [self fireEvent:@""
-                                     event:@"on.reward.userEarnedReward"
-                                  withData:nil];
-                           isAdSkip = 2;
-                           NSString *rewardMessage = [NSString
-                               stringWithFormat:
-                                   @"Reward received with currency "
-                                   @"%@ , amount %lf",
-                                   reward.type, [reward.amount doubleValue]];
-                           NSLog(@"%@", rewardMessage);
-                         }];
-              } else {
-                [self fireEvent:@""
-                          event:@"on.rewarded.failed.show"
-                       withData:nil];
-              }
-            }
-          }];
-    });
-  }
-  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-  [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-}
-- (void)showRewardedAd:(CDVInvokedUrlCommand *)command {
-  CDVPluginResult *pluginResult;
-  NSString *callbackId = command.callbackId;
-  if (self.rewardedAd &&
-      [self.rewardedAd canPresentFromRootViewController:self.viewController
-                                                  error:nil]) {
-    [self.rewardedAd
-        presentFromRootViewController:self.viewController
-             userDidEarnRewardHandler:^{
-               GADAdReward *reward = self.rewardedAd.adReward;
-               [self fireEvent:@""
-                         event:@"on.reward.userEarnedReward"
-                      withData:nil];
-               isAdSkip = 2;
-               NSString *rewardMessage = [NSString
-                   stringWithFormat:
-                       @"Reward received with currency %@ , amount %lf",
-                       reward.type, [reward.amount doubleValue]];
-               NSLog(@"%"
-                     @"@",
-                     rewardMessage);
-             }];
+    CDVPluginResult *pluginResult;
+    NSString *callbackId = command.callbackId;
+    NSDictionary *options = [command.arguments objectAtIndex:0];
+    NSString *adUnitId = [options valueForKey:@"adUnitId"];
+    BOOL autoShow = [[options valueForKey:@"autoShow"] boolValue];
+    auto_Show = autoShow;
+    adFormat = 3;
+    
+    if (adFormat == 3) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            GADRequest *request = [GADRequest request];
+            
+            [GADRewardedAd loadWithAdUnitID:adUnitId request:request completionHandler:^(GADRewardedAd *ad, NSError *error) {
+                if (error) {
+                    NSDictionary *errorData = @{@"error": error.localizedDescription ?: @"Unknown error"};
+                    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:errorData options:0 error:nil];
+                    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                    [self fireEvent:@"" event:@"on.rewarded.failed.load" withData:jsonString];
+                    return;
+                }
+
+                self.rewardedAd = ad;
+                isAdSkip = 0;
+                self.rewardedAd.fullScreenContentDelegate = self;
+                [self fireEvent:@"" event:@"on.rewarded.loaded" withData:nil];
+
+                if (auto_Show) {
+                    NSError *presentError = nil;
+                    if ([self.rewardedAd canPresentFromRootViewController:self.viewController error:&presentError]) {
+                        [self.rewardedAd presentFromRootViewController:self.viewController userDidEarnRewardHandler:^{
+                            GADAdReward *reward = self.rewardedAd.adReward;
+
+                            // Prepare reward data as JSON
+                            NSDictionary *rewardData = @{
+                                @"currency": reward.type,
+                                @"amount": [reward.amount stringValue]
+                            };
+                            NSData *rewardJsonData = [NSJSONSerialization dataWithJSONObject:rewardData options:0 error:nil];
+                            NSString *rewardJsonString = [[NSString alloc] initWithData:rewardJsonData encoding:NSUTF8StringEncoding];
+                            
+                            [self fireEvent:@"" event:@"on.reward.userEarnedReward" withData:rewardJsonString];
+                            isAdSkip = 2;
+                            NSLog(@"Reward received with currency %@, amount %lf", reward.type, [reward.amount doubleValue]);
+                        }];
+                    } else {
+                        NSDictionary *errorData = @{@"error": presentError.localizedDescription ?: @"Unknown error"};
+                        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:errorData options:0 error:nil];
+                        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                        [self fireEvent:@"" event:@"on.rewarded.failed.show" withData:jsonString];
+                    }
+                }
+            }];
+        });
+    }
+
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-  } else {
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-    [self fireEvent:@""
-              event:@"on."
-                    @"rewa"
-                    @"rded"
-                    @".fai"
-                    @"led."
-                    @"show"
-           withData:nil];
-  }
-  [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
+
+- (void)showRewardedAd:(CDVInvokedUrlCommand *)command {
+    CDVPluginResult *pluginResult;
+    NSString *callbackId = command.callbackId;
+
+    if (self.rewardedAd) {
+        NSError *presentError = nil;
+        if ([self.rewardedAd canPresentFromRootViewController:self.viewController error:&presentError]) {
+            [self.rewardedAd presentFromRootViewController:self.viewController
+                                  userDidEarnRewardHandler:^{
+                GADAdReward *reward = self.rewardedAd.adReward;
+                
+                NSDictionary *rewardData = @{
+                    @"currency": reward.type,
+                    @"amount": [reward.amount stringValue]
+                };
+                NSError *jsonError;
+                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:rewardData options:0 error:&jsonError];
+                
+                if (jsonData) {
+                    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                    [self fireEvent:@"" event:@"on.reward.userEarnedReward" withData:jsonString];
+                } else {
+                    [self fireEvent:@"" event:@"on.reward.userEarnedReward" withData:nil];
+                }
+
+                isAdSkip = 2;
+                
+           
+                NSLog(@"Reward received with currency %@, amount %lf", reward.type, [reward.amount doubleValue]);
+            }];
+            
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        } else {
+            
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+            NSDictionary *errorData = @{@"error": presentError.localizedDescription ?: @"Unknown error"};
+            NSError *jsonError;
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:errorData options:0 error:&jsonError];
+
+            if (jsonData && !jsonError) {
+                NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                [self fireEvent:@"" event:@"on.rewarded.failed.show" withData:jsonString];
+            } else {
+                [self fireEvent:@"" event:@"on.rewarded.failed.show" withData:nil];
+            }
+        }
+    } else {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+        [self fireEvent:@"" event:@"on.rewarded.failed.show" withData:nil];
+    }
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+}
+
 - (void)fireEvent:(NSString *)obj
             event:(NSString *)eventName
          withData:(NSString *)jsonStr {
@@ -1446,330 +1259,120 @@ BOOL isUsingAdManagerRequest = YES;
 }
 
 #pragma mark GADBannerViewDelegate implementation
+
 - (void)bannerViewDidReceiveAd:(GADBannerView *)bannerView {
+    NSString *collapsibleStatus = bannerView.isCollapsible ? @"collapsible" : @"not collapsible";
+    NSDictionary *eventData = @{@"collapsible" : collapsibleStatus};
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:eventData options:0 error:&error];
 
-  NSString *collapsibleStatus =
-      bannerView.isCollapsible ? @"collapsible" : @"not collapsible";
-  NSDictionary *eventData = @{@"collapsible" : collapsibleStatus};
-  NSError *error;
-  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:eventData
-                                                     options:0
-                                                       error:&error];
-
-  if (!jsonData) {
-  //  NSLog(@"Failed to serialize event data: %@", error);
-  } else {
-    NSString *jsonString = [[NSString alloc] initWithData:jsonData
-                                                 encoding:NSUTF8StringEncoding];
-    [self fireEvent:@"" event:@"on.is.collapsible" withData:jsonString];
-  }
-
-  [self fireEvent:@""
-            event:@"on."
-                  @"banner"
-                  @".load"
-         withData:nil];
-
-  if (auto_Show) {
-    if (self.bannerView) {
-      [self addBannerViewToView:command];
-      self.bannerView.hidden = NO;
+    if (jsonData) {
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        [self fireEvent:@"" event:@"on.is.collapsible" withData:jsonString];
     }
-  } else {
-    [self fireEvent:@""
-              event:@"on."
-                    @"bann"
-                    @"er."
-                    @"fail"
-                    @"ed."
-                    @"show"
-           withData:nil];
-  }
-}
-- (void)bannerView:(GADBannerView *)bannerView
-    didFailToReceiveAdWithError:(NSError *)error {
-  [self fireEvent:@""
-            event:@"on."
-                  @"banner"
-                  @".faile"
-                  @"d.load"
-         withData:nil];
 
+    [self fireEvent:@"" event:@"on.banner.load" withData:nil];
+
+    if (auto_Show && self.bannerView) {
+        [self addBannerViewToView:command];
+        self.bannerView.hidden = NO;
+    } else {
+        [self fireEvent:@"" event:@"on.banner.failed.show" withData:nil];
+    }
 }
+
+- (void)bannerView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(NSError *)error {
+    NSDictionary *errorData = @{
+        @"code": @(error.code),
+        @"message": error.localizedDescription
+    };
+
+    NSError *jsonError;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:errorData options:0 error:&jsonError];
+
+    if (jsonData) {
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        [self fireEvent:@"" event:@"on.banner.failed.load" withData:jsonString];
+    } else {
+        // Fallback in case of JSON serialization failure
+        [self fireEvent:@"" event:@"on.banner.failed.load" withData:error.localizedDescription];
+    }
+}
+
+
 - (void)bannerViewDidRecordImpression:(GADBannerView *)bannerView {
-  [self fireEvent:@""
-            event:@"on."
-                  @"banner"
-                  @".impre"
-                  @"ssion"
-         withData:nil];
-
+    [self fireEvent:@"" event:@"on.banner.impression" withData:nil];
 }
+
 - (void)bannerViewWillPresentScreen:(GADBannerView *)bannerView {
-  [self fireEvent:@""
-            event:@"on."
-                  @"banner"
-                  @".open"
-         withData:nil];
-
+    [self fireEvent:@"" event:@"on.banner.open" withData:nil];
 }
+
 - (void)bannerViewWillDismissScreen:(GADBannerView *)bannerView {
-  [self fireEvent:@""
-            event:@"on."
-                  @"banner"
-                  @".close"
-         withData:nil];
+    [self fireEvent:@"" event:@"on.banner.close" withData:nil];
+}
 
-}
 - (void)bannerViewDidDismissScreen:(GADBannerView *)bannerView {
-  [self fireEvent:@""
-            event:@"on."
-                  @"banner"
-                  @".did."
-                  @"dismis"
-                  @"s"
-         withData:nil];
- 
+    [self fireEvent:@"" event:@"on.banner.did.dismiss" withData:nil];
 }
+
 #pragma GADFullScreeContentDelegate implementation
+
 - (void)adWillPresentFullScreenContent:(id)ad {
-  if (adFormat == 1) {
-    [self fireEvent:@""
-              event:@"on."
-                    @"appO"
-                    @"penA"
-                    @"d."
-                    @"show"
-           withData:nil];
-  /*  NSLog(@"Ad will "
-          @"present "
-          @"full screen "
-          @"content App "
-          @"Open Ad.");
-      */
-  } else if (adFormat == 2) {
-    [self fireEvent:@""
-              event:@"on."
-                    @"inte"
-                    @"rsti"
-                    @"tial"
-                    @".sho"
-                    @"w"
-           withData:nil];
-    [self fireEvent:@""
-              event:@"onPr"
-                    @"esen"
-                    @"tAd"
-           withData:nil];
-  /*  NSLog(@"Ad will "
-          @"present "
-          @"full screen "
-          @"content "
-          @"interstitial"
-          @"."); */
-  } else if (adFormat == 3) {
-    [self fireEvent:@""
-              event:@"on."
-                    @"rewa"
-                    @"rded"
-                    @".sho"
-                    @"w"
-           withData:nil];
-    isAdSkip = 1;
-   /* NSLog(@"Ad will "
-          @"present "
-          @"full screen "
-          @"content "
-          @"rewarded."); */
-  } else if (adFormat == 4) {
-    isAdSkip = 1;
-    [self fireEvent:@""
-              event:@"on."
-                    @"rewa"
-                    @"rded"
-                    @"Int."
-                    @"show"
-                    @"ed"
-           withData:nil];
-   /* NSLog(@"Ad will "
-          @"present "
-          @"full screen "
-          @"content "
-          @"interstitial"
-          @" rewarded."); */
-  }
+    if (adFormat == 1) {
+        [self fireEvent:@"" event:@"on.appOpenAd.show" withData:nil];
+    } else if (adFormat == 2) {
+        [self fireEvent:@"" event:@"on.interstitial.show" withData:nil];
+        [self fireEvent:@"" event:@"onPresentAd" withData:nil];
+    } else if (adFormat == 3) {
+        [self fireEvent:@"" event:@"on.rewarded.show" withData:nil];
+        isAdSkip = 1;
+    } else if (adFormat == 4) {
+        isAdSkip = 1;
+        [self fireEvent:@"" event:@"on.rewardedInt.showed" withData:nil];
+    }
 }
+
 - (void)ad:(id)ad didFailToPresentFullScreenContentWithError:(NSError *)error {
-  if (adFormat == 1) {
-    [self fireEvent:@""
-              event:@"on."
-                    @"appO"
-                    @"penA"
-                    @"d."
-                    @"fail"
-                    @"ed."
-                    @"load"
-                    @"ed"
-           withData:nil];
-   /* NSLog(@"Ad failed "
-          @"to present "
-          @"full screen "
-          @"content "
-          @"with error "
-          @"App Open Ad "
-          @"%@.",
-          [error localizedDescription]); */
-  } else if (adFormat == 2) {
-    [self fireEvent:@""
-              event:@"on."
-                    @"inte"
-                    @"rsti"
-                    @"tial"
-                    @".fai"
-                    @"led."
-                    @"load"
-           withData:nil];
-   /* NSLog(@"Ad failed "
-          @"to present "
-          @"full screen "
-          @"content "
-          @"with error "
-          @"interstitial"
-          @" %@.",
-          [error localizedDescription]); */
-  } else if (adFormat == 3) {
-    [self fireEvent:@""
-              event:@"on."
-                    @"rewa"
-                    @"rded"
-                    @".fai"
-                    @"led."
-                    @"load"
-           withData:nil];
-  /*  NSLog(@"Ad failed "
-          @"to present "
-          @"full screen "
-          @"content "
-          @"with error "
-          @"rewarded "
-          @"%@.",
-          [error localizedDescription]); */
-  } else if (adFormat == 4) {
-    [self fireEvent:@""
-              event:@"on."
-                    @"rewa"
-                    @"rded"
-                    @"Int."
-                    @"fail"
-                    @"ed."
-                    @"load"
-           withData:nil];
-  /*  NSLog(@"Ad failed "
-          @"to present "
-          @"full screen "
-          @"content "
-          @"with error "
-          @"interstitial"
-          @" "
-          @"rewarded "
-          @"%@.",
-          [error localizedDescription]); */
-  }
+    NSDictionary *errorData = @{
+        @"code": @(error.code),
+        @"message": error.localizedDescription
+    };
+    
+    NSError *jsonError;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:errorData options:0 error:&jsonError];
+    NSString *jsonString = jsonData ? [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] : error.localizedDescription;
+
+    if (adFormat == 1) {
+        [self fireEvent:@"" event:@"on.appOpenAd.failed.loaded" withData:jsonString];
+    } else if (adFormat == 2) {
+        [self fireEvent:@"" event:@"on.interstitial.failed.load" withData:jsonString];
+    } else if (adFormat == 3) {
+        [self fireEvent:@"" event:@"on.rewarded.failed.load" withData:jsonString];
+    } else if (adFormat == 4) {
+        [self fireEvent:@"" event:@"on.rewardedInt.failed.load" withData:jsonString];
+    }
 }
+
 
 - (void)adDidDismissFullScreenContent:(id)ad {
-  if (adFormat == 1) {
-    [self fireEvent:@""
-              event:@"on."
-                    @"appO"
-                    @"penA"
-                    @"d."
-                    @"dism"
-                    @"isse"
-                    @"d"
-           withData:nil];
-   /* NSLog(@"Ad did "
-          @"dismiss "
-          @"full screen "
-          @"content App "
-          @"Open Ad."); */
-  } else if (adFormat == 2) {
-    [self fireEvent:@""
-              event:@"on."
-                    @"inte"
-                    @"rsti"
-                    @"tial"
-                    @".dis"
-                    @"miss"
-                    @"ed"
-           withData:nil];
-   /* NSLog(@"Ad did "
-          @"dismiss "
-          @"full screen "
-          @"content "
-          @"interstitial"
-          @"."); */
-  } else if (adFormat == 3) {
-    [self fireEvent:@""
-              event:@"on."
-                    @"rewa"
-                    @"rded"
-                    @".dis"
-                    @"miss"
-                    @"ed"
-           withData:nil];
-    if (isAdSkip != 2) {
-      [self fireEvent:@""
-                event:@"on"
-                      @".r"
-                      @"ew"
-                      @"ar"
-                      @"de"
-                      @"d."
-                      @"ad"
-                      @".s"
-                      @"ki"
-                      @"p"
-             withData:nil];
+    if (adFormat == 1) {
+        [self fireEvent:@"" event:@"on.appOpenAd.dismissed" withData:nil];
+    } else if (adFormat == 2) {
+        [self fireEvent:@"" event:@"on.interstitial.dismissed" withData:nil];
+    } else if (adFormat == 3) {
+        [self fireEvent:@"" event:@"on.rewarded.dismissed" withData:nil];
+        if (isAdSkip != 2) {
+            [self fireEvent:@"" event:@"on.rewarded.ad.skip" withData:nil];
+        }
+    } else if (adFormat == 4) {
+        if (isAdSkip != 2) {
+            [self fireEvent:@"" event:@"on.rewardedInt.ad.skip" withData:nil];
+        }
+        [self fireEvent:@"" event:@"on.rewardedInt.dismissed" withData:nil];
     }
-  /*  NSLog(@"Ad did "
-          @"dismiss "
-          @"full screen "
-          @"content "
-          @"rewarded."); */
-  } else if (adFormat == 4) {
-    if (isAdSkip != 2) {
-      [self fireEvent:@""
-                event:@"on"
-                      @".r"
-                      @"ew"
-                      @"ar"
-                      @"de"
-                      @"dI"
-                      @"nt"
-                      @".a"
-                      @"d."
-                      @"sk"
-                      @"ip"
-             withData:nil];
-    }
-    [self fireEvent:@""
-              event:@"on."
-                    @"rewa"
-                    @"rded"
-                    @"Int."
-                    @"dism"
-                    @"isse"
-                    @"d"
-           withData:nil];
-   /* NSLog(@"Ad did "
-          @"dismiss "
-          @"full screen "
-          @"content "
-          @"interstitial"
-          @" rewarded."); */
-  }
 }
+
 #pragma mark Cleanup
 - (void)dealloc {
   self.appOpenAd = nil;
