@@ -15,8 +15,8 @@ function loadBanner() {
             position: "bottom-center",
             size: "responsive_adaptive", // autoResize: true (only responsive_adaptive)
             collapsible: "bottom", // position: top | bottom (disable, empty string)
-            autoResize: true, // on.screen.rotated === orientation.portrait || on.screen.rotated === orientation.landscape
-            autoShow: true, // boolean
+            autoResize: true, // default false
+            autoShow: true, // default false
 
         });
     }
@@ -24,7 +24,11 @@ function loadBanner() {
 }
 
 
-/* bannerAd position 
+
+
+
+
+/* ///////<<<<  bannerAd position  >>>>>>\\\\\\\
 
 (ANDROID)
 
@@ -43,7 +47,7 @@ top-center
 
 */
 
-/* bannerAd size
+/* ///////<<<<  bannerAd size  >>>>>>\\\\\\\
 
 (ANDROID)
 
@@ -71,26 +75,38 @@ leaderboard
 
 */
 
-/* banner event
+
+
+
+/* ///////<<<<  bannerAd event  >>>>>>\\\\\\\
+
 on.banner.load
 on.banner.failed.load
 on.banner.click
 on.banner.close
 on.banner.impression
 on.banner.open
+
  // new
+
 on.banner.revenue
 on.banner.remove
 on.banner.hide
+
  // new
+
  on.is.collapsible
+
+ // New event plugin v1.5.5
+ 
+ on.bannerAd.responseInfo
 
  */
 
 
 
 
-// EVENT
+// EVENT For example
 
 document.addEventListener('on.banner.load', () => {
     console.log("on banner load");
@@ -106,4 +122,40 @@ document.addEventListener('on.is.collapsible', function (event) {
 
 document.addEventListener('on.banner.failed.load', (error) => {
     console.log("on.banner.failed.load" + JSON.stringify(error));
+});
+
+
+
+
+// DEBUG
+// isResponseInfo: true, // debug Default false
+document.addEventListener('on.bannerAd.responseInfo', (data) => {
+    console.log("on.bannerAd.responseInfo" + JSON.stringify(data));
+    if (window.log) window.log.value += ("\n on.bannerAd.responseInfo" + JSON.stringify(data));
+});
+
+
+
+
+
+
+/*
+https://support.google.com/admob/answer/11322405
+
+Turn on the setting for impression-level ad revenue in your AdMob account:
+Sign in to your AdMob account at https://apps.admob.com.
+Click Settings in the sidebar.
+Click the Account tab.
+In the Account controls section, click the Impression-level ad revenue toggle to turn on this setting.
+*/
+
+document.addEventListener('on.banner.revenue', (data) => {
+    
+    console.log(data.value)
+    console.log(data.currencyCode)
+    console.log(data.precision)
+    console.log(data.adUnitId)
+    
+    //console.log("on.banner.revenue" + JSON.stringify(data));
+    if (window.log) window.log.value += ("\n on.banner.revenue" + JSON.stringify(data));
 });

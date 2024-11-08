@@ -32,15 +32,24 @@ on.reward.userEarnedReward
  // new
 on.rewarded.revenue
 on.rewarded.ad.skip
+
+// New event plugin v1.5.5
+
+on.rewardedAd.responseInfo
+
 */
 
 
+
+
+// EVENT For example
 
 document.addEventListener('on.rewarded.loaded', () => {
     isRewardedLoad = true;
     console.log("on rewarded Ad loaded");
     window.log.value += ("\n on rewarded Ad loaded");
 });
+
 
 document.addEventListener('on.rewarded.failed.load', (error) => {
     isRewardedLoad = false;
@@ -49,12 +58,14 @@ document.addEventListener('on.rewarded.failed.load', (error) => {
     window.log.value += ("\n on.rewarded.failed.load" + JSON.stringify(error));
 });
 
+
 document.addEventListener('on.rewarded.failed.show', (error) => {
     isRewardedLoad = false;
     console.log("on.rewarded.failed.show" + JSON.stringify(error));
 
     window.log.value += ("\n on.rewarded.failed.show" + JSON.stringify(error));
 });
+
 
 document.addEventListener('on.reward.userEarnedReward', (rewarded) => {
     // Give gifts to users here
@@ -70,6 +81,7 @@ document.addEventListener('on.rewarded.dismissed', () => {
     isRewardedLoad = false;
     console.log("on interstitial Ad dismissed");
     console.log("you can load ads automatically after the ads are closed by users");
+
     loadRewarded();
 
     window.log.value += ("\n you can load ads automatically after the ads are closed by users");
@@ -78,3 +90,41 @@ document.addEventListener('on.rewarded.dismissed', () => {
 
 
 
+
+// DEBUG
+// isResponseInfo: true, // debug Default false
+document.addEventListener('on.rewardedAd.responseInfo', (data) => {
+
+    console.log("on.rewardedAd.responseInfo" + JSON.stringify(data));
+    if (window.log) window.log.value += ("\n on.rewardedAd.responseInfo" + JSON.stringify(data));
+});
+
+
+
+
+
+
+
+
+
+/*
+https://support.google.com/admob/answer/11322405
+
+Turn on the setting for impression-level ad revenue in your AdMob account:
+Sign in to your AdMob account at https://apps.admob.com.
+Click Settings in the sidebar.
+Click the Account tab.
+In the Account controls section, click the Impression-level ad revenue toggle to turn on this setting.
+*/
+
+document.addEventListener('on.rewarded.revenue', (data) => {
+    isInterstitialLoad = false;
+
+    console.log(data.value)
+    console.log(data.currencyCode)
+    console.log(data.precision)
+    console.log(data.adUnitId)
+
+   // console.log("on.rewarded.revenue" + JSON.stringify(data));
+    if (window.log) window.log.value += ("\n on.rewarded.revenue" + JSON.stringify(data));
+});

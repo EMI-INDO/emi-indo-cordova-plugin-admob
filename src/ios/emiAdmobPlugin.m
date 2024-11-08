@@ -325,10 +325,9 @@ BOOL isUsingAdManagerRequest = YES;
 }
 
 
-// Cek apakah opsi privasi diperlukan
+
 - (BOOL)isPrivacyOptionsRequired {
-  UMPPrivacyOptionsRequirementStatus status =
-      UMPConsentInformation.sharedInstance.privacyOptionsRequirementStatus;
+  UMPPrivacyOptionsRequirementStatus status = UMPConsentInformation.sharedInstance.privacyOptionsRequirementStatus;
   // NSLog(@"[isPrivacyOptionsRequired] Privacy option status: %ld",
   // (long)status);
   return status == UMPPrivacyOptionsRequirementStatusRequired;
@@ -856,6 +855,35 @@ BOOL isUsingAdManagerRequest = YES;
                 self.appOpenAd.fullScreenContentDelegate = self;
                 [self fireEvent:@"" event:@"on.appOpenAd.loaded" withData:nil];
                 
+                
+                
+                __weak __typeof(self) weakSelf = self;
+                self.appOpenAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+                    __strong __typeof(weakSelf) strongSelf = weakSelf;
+                    if (!strongSelf) return;
+                    
+                    NSDecimalNumber *adValue = value.value;
+                    NSString *currencyCode = value.currencyCode;
+                    GADAdValuePrecision precision = value.precision;
+
+                    NSString *adUnitId = strongSelf.appOpenAd.adUnitID;
+
+                    NSDictionary *data = @{
+                        @"value": adValue,
+                        @"currencyCode": currencyCode,
+                        @"precision": @(precision),
+                        @"adUnitId": adUnitId
+                    };
+                    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:nil];
+                    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+                    [strongSelf fireEvent:@"" event:@"on.appOpenAd.revenue" withData:jsonString];
+                };
+                
+                
+              
+                
+                
                 if (auto_Show) {
                     NSError *presentError = nil;
                     if ([self.appOpenAd canPresentFromRootViewController:self.viewController error:&presentError]) {
@@ -869,6 +897,43 @@ BOOL isUsingAdManagerRequest = YES;
                         [self fireEvent:@"" event:@"on.appOpenAd.failed.show" withData:errorJsonString];
                     }
                 }
+                
+                
+                if (ResponseInfo) {
+                    GADResponseInfo *responseInfo = ad.responseInfo;
+                    NSMutableArray *adNetworkInfoArray = [NSMutableArray array];
+
+                    for (GADAdNetworkResponseInfo *adNetworkResponseInfo in responseInfo.adNetworkInfoArray) {
+                        NSDictionary *adNetworkInfo = @{
+                            @"adSourceId": adNetworkResponseInfo.adSourceID ?: @"",
+                            @"adSourceInstanceId": adNetworkResponseInfo.adSourceInstanceID ?: @"",
+                            @"adSourceInstanceName": adNetworkResponseInfo.adSourceInstanceName ?: @"",
+                            @"adSourceName": adNetworkResponseInfo.adSourceName ?: @"",
+                            @"adNetworkClassName": adNetworkResponseInfo.adNetworkClassName ?: @"",
+                            @"adUnitMapping": adNetworkResponseInfo.adUnitMapping ?: @{},
+                            @"latency": @(adNetworkResponseInfo.latency)
+                        };
+                        [adNetworkInfoArray addObject:adNetworkInfo];
+                    }
+
+                    NSDictionary *responseInfoData = @{
+                        @"responseIdentifier": responseInfo.responseIdentifier ?: @"",
+                        @"adNetworkInfoArray": adNetworkInfoArray
+                    };
+
+                    
+                    NSError *jsonError = nil;
+                    NSData *jsonResponseData = [NSJSONSerialization dataWithJSONObject:responseInfoData options:0 error:&jsonError];
+                    if (!jsonError) {
+                        NSString *jsonResponseString = [[NSString alloc] initWithData:jsonResponseData encoding:NSUTF8StringEncoding];
+                        [self fireEvent:@"" event:@"on.appOpenAd.responseInfo" withData:jsonResponseString];
+                    } else {
+                        NSLog(@"Error converting response info to JSON: %@", jsonError.localizedDescription);
+                    }
+                }
+                
+                
+                
             }];
         });
         
@@ -929,6 +994,31 @@ BOOL isUsingAdManagerRequest = YES;
                 self.interstitial.fullScreenContentDelegate = self;
                 [self fireEvent:@"" event:@"on.interstitial.loaded" withData:nil];
                 
+                
+                __weak __typeof(self) weakSelf = self;
+                self.interstitial.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+                    __strong __typeof(weakSelf) strongSelf = weakSelf;
+                    if (!strongSelf) return;
+                    
+                    NSDecimalNumber *adValue = value.value;
+                    NSString *currencyCode = value.currencyCode;
+                    GADAdValuePrecision precision = value.precision;
+
+                    NSString *adUnitId = strongSelf.interstitial.adUnitID;
+
+                    NSDictionary *data = @{
+                        @"value": adValue,
+                        @"currencyCode": currencyCode,
+                        @"precision": @(precision),
+                        @"adUnitId": adUnitId
+                    };
+                    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:nil];
+                    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+                    [strongSelf fireEvent:@"" event:@"on.interstitial.revenue" withData:jsonString];
+                };
+                
+                
                 if (auto_Show) {
                     NSError *presentError = nil;
                     if ([self.interstitial canPresentFromRootViewController:self.viewController error:&presentError]) {
@@ -942,6 +1032,44 @@ BOOL isUsingAdManagerRequest = YES;
                         [self fireEvent:@"" event:@"on.interstitial.failed.show" withData:errorJsonString];
                     }
                 }
+                
+                
+                
+                if (ResponseInfo) {
+                    GADResponseInfo *responseInfo = ad.responseInfo;
+                    NSMutableArray *adNetworkInfoArray = [NSMutableArray array];
+
+                    for (GADAdNetworkResponseInfo *adNetworkResponseInfo in responseInfo.adNetworkInfoArray) {
+                        NSDictionary *adNetworkInfo = @{
+                            @"adSourceId": adNetworkResponseInfo.adSourceID ?: @"",
+                            @"adSourceInstanceId": adNetworkResponseInfo.adSourceInstanceID ?: @"",
+                            @"adSourceInstanceName": adNetworkResponseInfo.adSourceInstanceName ?: @"",
+                            @"adSourceName": adNetworkResponseInfo.adSourceName ?: @"",
+                            @"adNetworkClassName": adNetworkResponseInfo.adNetworkClassName ?: @"",
+                            @"adUnitMapping": adNetworkResponseInfo.adUnitMapping ?: @{},
+                            @"latency": @(adNetworkResponseInfo.latency)
+                        };
+                        [adNetworkInfoArray addObject:adNetworkInfo];
+                    }
+
+                    NSDictionary *responseInfoData = @{
+                        @"responseIdentifier": responseInfo.responseIdentifier ?: @"",
+                        @"adNetworkInfoArray": adNetworkInfoArray
+                    };
+
+                   
+                    NSError *jsonError = nil;
+                    NSData *jsonResponseData = [NSJSONSerialization dataWithJSONObject:responseInfoData options:0 error:&jsonError];
+                    if (!jsonError) {
+                        NSString *jsonResponseString = [[NSString alloc] initWithData:jsonResponseData encoding:NSUTF8StringEncoding];
+                        [self fireEvent:@"" event:@"on.interstitialAd.responseInfo" withData:jsonResponseString];
+                    } else {
+                        NSLog(@"Error converting response info to JSON: %@", jsonError.localizedDescription);
+                    }
+                }
+                
+                
+                
             }];
         });
     }
@@ -1001,6 +1129,32 @@ BOOL isUsingAdManagerRequest = YES;
                 self.rewardedInterstitialAd.fullScreenContentDelegate = self;
                 [self fireEvent:@"" event:@"on.rewardedInt.loaded" withData:nil];
                 
+                
+                
+                __weak __typeof(self) weakSelf = self;
+                self.rewardedInterstitialAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+                    __strong __typeof(weakSelf) strongSelf = weakSelf;
+                    if (!strongSelf) return;
+                    
+                    NSDecimalNumber *adValue = value.value;
+                    NSString *currencyCode = value.currencyCode;
+                    GADAdValuePrecision precision = value.precision;
+
+                    NSString *adUnitId = strongSelf.rewardedInterstitialAd.adUnitID;
+
+                    NSDictionary *data = @{
+                        @"value": adValue,
+                        @"currencyCode": currencyCode,
+                        @"precision": @(precision),
+                        @"adUnitId": adUnitId
+                    };
+                    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:nil];
+                    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+                    [strongSelf fireEvent:@"" event:@"on.rewardedInt.revenue" withData:jsonString];
+                };
+                
+                
                 if (auto_Show) {
                     NSError *presentError = nil;
                     if ([self.rewardedInterstitialAd canPresentFromRootViewController:self.viewController error:&presentError]) {
@@ -1027,6 +1181,44 @@ BOOL isUsingAdManagerRequest = YES;
                         
                         [self fireEvent:@"" event:@"on.rewardedInt.failed.show" withData:errorJsonString];
                     }
+                    
+                    
+                    if (ResponseInfo) {
+                        GADResponseInfo *responseInfo = ad.responseInfo;
+                        NSMutableArray *adNetworkInfoArray = [NSMutableArray array];
+
+                        for (GADAdNetworkResponseInfo *adNetworkResponseInfo in responseInfo.adNetworkInfoArray) {
+                            NSDictionary *adNetworkInfo = @{
+                                @"adSourceId": adNetworkResponseInfo.adSourceID ?: @"",
+                                @"adSourceInstanceId": adNetworkResponseInfo.adSourceInstanceID ?: @"",
+                                @"adSourceInstanceName": adNetworkResponseInfo.adSourceInstanceName ?: @"",
+                                @"adSourceName": adNetworkResponseInfo.adSourceName ?: @"",
+                                @"adNetworkClassName": adNetworkResponseInfo.adNetworkClassName ?: @"",
+                                @"adUnitMapping": adNetworkResponseInfo.adUnitMapping ?: @{},
+                                @"latency": @(adNetworkResponseInfo.latency)
+                            };
+                            [adNetworkInfoArray addObject:adNetworkInfo];
+                        }
+
+                        NSDictionary *responseInfoData = @{
+                            @"responseIdentifier": responseInfo.responseIdentifier ?: @"",
+                            @"adNetworkInfoArray": adNetworkInfoArray
+                        };
+
+                       
+                        NSError *jsonError = nil;
+                        NSData *jsonResponseData = [NSJSONSerialization dataWithJSONObject:responseInfoData options:0 error:&jsonError];
+                        if (!jsonError) {
+                            NSString *jsonResponseString = [[NSString alloc] initWithData:jsonResponseData encoding:NSUTF8StringEncoding];
+                            [self fireEvent:@"" event:@"on.rewardedIntAd.responseInfo" withData:jsonResponseString];
+                        } else {
+                            NSLog(@"Error converting response info to JSON: %@", jsonError.localizedDescription);
+                        }
+                    }
+                    
+                    
+                    
+                    
                 }
             }];
         });
@@ -1097,9 +1289,38 @@ BOOL isUsingAdManagerRequest = YES;
                 }
 
                 self.rewardedAd = ad;
+                
                 isAdSkip = 0;
                 self.rewardedAd.fullScreenContentDelegate = self;
                 [self fireEvent:@"" event:@"on.rewarded.loaded" withData:nil];
+                
+                __weak __typeof(self) weakSelf = self;
+                self.rewardedAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+                    __strong __typeof(weakSelf) strongSelf = weakSelf;
+                    if (!strongSelf) return; // Pastikan strongSelf tidak null
+                    
+                    // Mengambil data ad revenue
+                    NSDecimalNumber *adValue = value.value;
+                    NSString *currencyCode = value.currencyCode;
+                    GADAdValuePrecision precision = value.precision;
+
+                    // Mendapatkan ID unit iklan
+                    NSString *adUnitId = strongSelf.rewardedAd.adUnitID;
+
+                    // Mengirim data dalam format JSON
+                    NSDictionary *data = @{
+                        @"value": adValue,
+                        @"currencyCode": currencyCode,
+                        @"precision": @(precision),
+                        @"adUnitId": adUnitId
+                    };
+                    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:nil];
+                    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+                    [strongSelf fireEvent:@"" event:@"on.rewarded.revenue" withData:jsonString];
+                };
+                
+                
 
                 if (auto_Show) {
                     NSError *presentError = nil;
@@ -1107,7 +1328,6 @@ BOOL isUsingAdManagerRequest = YES;
                         [self.rewardedAd presentFromRootViewController:self.viewController userDidEarnRewardHandler:^{
                             GADAdReward *reward = self.rewardedAd.adReward;
 
-                            // Prepare reward data as JSON
                             NSDictionary *rewardData = @{
                                 @"currency": reward.type,
                                 @"amount": [reward.amount stringValue]
@@ -1117,7 +1337,7 @@ BOOL isUsingAdManagerRequest = YES;
                             
                             [self fireEvent:@"" event:@"on.reward.userEarnedReward" withData:rewardJsonString];
                             isAdSkip = 2;
-                            NSLog(@"Reward received with currency %@, amount %lf", reward.type, [reward.amount doubleValue]);
+                          //  NSLog(@"Reward diterima dengan currency %@, amount %lf", reward.type, [reward.amount doubleValue]);
                         }];
                     } else {
                         NSDictionary *errorData = @{@"error": presentError.localizedDescription ?: @"Unknown error"};
@@ -1125,6 +1345,42 @@ BOOL isUsingAdManagerRequest = YES;
                         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
                         [self fireEvent:@"" event:@"on.rewarded.failed.show" withData:jsonString];
                     }
+                    
+                    
+                    if (ResponseInfo) {
+                        GADResponseInfo *responseInfo = ad.responseInfo;
+                        NSMutableArray *adNetworkInfoArray = [NSMutableArray array];
+
+                        for (GADAdNetworkResponseInfo *adNetworkResponseInfo in responseInfo.adNetworkInfoArray) {
+                            NSDictionary *adNetworkInfo = @{
+                                @"adSourceId": adNetworkResponseInfo.adSourceID ?: @"",
+                                @"adSourceInstanceId": adNetworkResponseInfo.adSourceInstanceID ?: @"",
+                                @"adSourceInstanceName": adNetworkResponseInfo.adSourceInstanceName ?: @"",
+                                @"adSourceName": adNetworkResponseInfo.adSourceName ?: @"",
+                                @"adNetworkClassName": adNetworkResponseInfo.adNetworkClassName ?: @"",
+                                @"adUnitMapping": adNetworkResponseInfo.adUnitMapping ?: @{},
+                                @"latency": @(adNetworkResponseInfo.latency)
+                            };
+                            [adNetworkInfoArray addObject:adNetworkInfo];
+                        }
+
+                        NSDictionary *responseInfoData = @{
+                            @"responseIdentifier": responseInfo.responseIdentifier ?: @"",
+                            @"adNetworkInfoArray": adNetworkInfoArray
+                        };
+
+                       
+                        NSError *jsonError = nil;
+                        NSData *jsonResponseData = [NSJSONSerialization dataWithJSONObject:responseInfoData options:0 error:&jsonError];
+                        if (!jsonError) {
+                            NSString *jsonResponseString = [[NSString alloc] initWithData:jsonResponseData encoding:NSUTF8StringEncoding];
+                            [self fireEvent:@"" event:@"on.rewardedAd.responseInfo" withData:jsonResponseString];
+                        } else {
+                            NSLog(@"Error converting response info to JSON: %@", jsonError.localizedDescription);
+                        }
+                    }
+                    
+                    
                 }
             }];
         });
@@ -1272,13 +1528,78 @@ BOOL isUsingAdManagerRequest = YES;
     }
 
     [self fireEvent:@"" event:@"on.banner.load" withData:nil];
-
+    
+    
     if (auto_Show && self.bannerView) {
         [self addBannerViewToView:command];
         self.bannerView.hidden = NO;
     } else {
         [self fireEvent:@"" event:@"on.banner.failed.show" withData:nil];
     }
+    
+    
+    __weak __typeof(self) weakSelf = self;
+    self.bannerView.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) return;
+        
+        NSDecimalNumber *adValue = value.value;
+        NSString *currencyCode = value.currencyCode;
+        GADAdValuePrecision precision = value.precision;
+
+        NSString *adUnitId = strongSelf.bannerView.adUnitID;
+
+        NSDictionary *data = @{
+            @"value": adValue,
+            @"currencyCode": currencyCode,
+            @"precision": @(precision),
+            @"adUnitId": adUnitId
+        };
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:nil];
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+        [strongSelf fireEvent:@"" event:@"on.banner.revenue" withData:jsonString];
+    };
+    
+
+    
+    
+    
+    
+    if (ResponseInfo) {
+        GADResponseInfo *responseInfo = self.bannerView.responseInfo;
+        NSMutableArray *adNetworkInfoArray = [NSMutableArray array];
+
+        for (GADAdNetworkResponseInfo *adNetworkResponseInfo in responseInfo.adNetworkInfoArray) {
+            NSDictionary *adNetworkInfo = @{
+                @"adSourceId": adNetworkResponseInfo.adSourceID ?: @"",
+                @"adSourceInstanceId": adNetworkResponseInfo.adSourceInstanceID ?: @"",
+                @"adSourceInstanceName": adNetworkResponseInfo.adSourceInstanceName ?: @"",
+                @"adSourceName": adNetworkResponseInfo.adSourceName ?: @"",
+                @"adNetworkClassName": adNetworkResponseInfo.adNetworkClassName ?: @"",
+                @"adUnitMapping": adNetworkResponseInfo.adUnitMapping ?: @{},
+                @"latency": @(adNetworkResponseInfo.latency)
+            };
+            [adNetworkInfoArray addObject:adNetworkInfo];
+        }
+
+        NSDictionary *responseInfoData = @{
+            @"responseIdentifier": responseInfo.responseIdentifier ?: @"",
+            @"adNetworkInfoArray": adNetworkInfoArray
+        };
+
+       
+        NSError *jsonError = nil;
+        NSData *jsonResponseData = [NSJSONSerialization dataWithJSONObject:responseInfoData options:0 error:&jsonError];
+        if (!jsonError) {
+            NSString *jsonResponseString = [[NSString alloc] initWithData:jsonResponseData encoding:NSUTF8StringEncoding];
+            [self fireEvent:@"" event:@"on.bannerAd.responseInfo" withData:jsonResponseString];
+        } else {
+            NSLog(@"Error converting response info to JSON: %@", jsonError.localizedDescription);
+        }
+    }
+    
+    
 }
 
 - (void)bannerView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(NSError *)error {

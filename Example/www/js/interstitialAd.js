@@ -32,11 +32,19 @@ on.interstitial.dismissed
 on.interstitial.failed.show
 on.interstitial.impression
 on.interstitial.show
+
  // new
  on.interstitial.revenue
 
+// New event plugin v1.5.5
+
+on.interstitialAd.responseInfo
+
 */
 
+
+
+// EVENT For example
 
 document.addEventListener('on.interstitial.loaded', () => {
     isInterstitialLoad = true;
@@ -54,10 +62,10 @@ document.addEventListener('on.interstitial.dismissed', () => {
     
     loadInterstitial();
     
-    
     window.log.value += ("\n you can load ads automatically after the ads are closed by users");
 
 });
+
 
 document.addEventListener('on.interstitial.failed.load', (error) => {
     isInterstitialLoad = false;
@@ -66,9 +74,53 @@ document.addEventListener('on.interstitial.failed.load', (error) => {
     window.log.value += ("\n on.interstitial.failed.load" + JSON.stringify(error));
 });
 
+
 document.addEventListener('on.interstitial.failed.show', (error) => {
     isInterstitialLoad = false;
     console.log("on.interstitial.failed.show" + JSON.stringify(error));
     
     window.log.value += ("\n on.interstitial.failed.show" + JSON.stringify(error));
 });
+
+
+
+// DEBUG
+// isResponseInfo: true, // debug Default false
+document.addEventListener('on.interstitialAd.responseInfo', (data) => {
+
+    console.log("on.interstitialAd.responseInfo" + JSON.stringify(data));
+    if (window.log) window.log.value += ("\n on.interstitialAd.responseInfo" + JSON.stringify(data));
+});
+
+
+
+
+
+
+
+
+
+/*
+https://support.google.com/admob/answer/11322405
+
+Turn on the setting for impression-level ad revenue in your AdMob account:
+Sign in to your AdMob account at https://apps.admob.com.
+Click Settings in the sidebar.
+Click the Account tab.
+In the Account controls section, click the Impression-level ad revenue toggle to turn on this setting.
+*/
+
+document.addEventListener('on.interstitial.revenue', (data) => {
+    isInterstitialLoad = false;
+
+    console.log(data.value)
+    console.log(data.currencyCode)
+    console.log(data.precision)
+    console.log(data.adUnitId)
+
+   // console.log("on.interstitial.revenue" + JSON.stringify(data));
+    if (window.log) window.log.value += ("\n on.interstitial.revenue" + JSON.stringify(data));
+});
+
+
+
