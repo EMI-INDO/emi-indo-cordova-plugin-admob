@@ -29,20 +29,16 @@ on.rewarded.failed.show
 on.rewarded.impression
 on.rewarded.show
 on.reward.userEarnedReward
- // new
-on.rewarded.revenue
 on.rewarded.ad.skip
 
-// New event plugin v1.5.5
+// New event plugin v1.5.5 or higher
 
+on.rewarded.revenue
 on.rewardedAd.responseInfo
 
 */
 
 
-
-
-// EVENT For example
 
 document.addEventListener('on.rewarded.loaded', () => {
     isRewardedLoad = true;
@@ -76,12 +72,12 @@ document.addEventListener('on.reward.userEarnedReward', (rewarded) => {
     window.log.value += ("\n Give gifts to users here" + JSON.stringify(rewarded));
 });
 
+
 // all events that contain the keyword dismissed there is a block to load the ad after it is closed by the user.
 document.addEventListener('on.rewarded.dismissed', () => {
     isRewardedLoad = false;
     console.log("on interstitial Ad dismissed");
     console.log("you can load ads automatically after the ads are closed by users");
-
     loadRewarded();
 
     window.log.value += ("\n you can load ads automatically after the ads are closed by users");
@@ -91,6 +87,8 @@ document.addEventListener('on.rewarded.dismissed', () => {
 
 
 
+
+/*
 // DEBUG
 // isResponseInfo: true, // debug Default false
 document.addEventListener('on.rewardedAd.responseInfo', (data) => {
@@ -99,9 +97,7 @@ document.addEventListener('on.rewardedAd.responseInfo', (data) => {
     if (window.log) window.log.value += ("\n on.rewardedAd.responseInfo" + JSON.stringify(data));
 });
 
-
-
-
+*/
 
 
 
@@ -118,7 +114,6 @@ In the Account controls section, click the Impression-level ad revenue toggle to
 */
 
 document.addEventListener('on.rewarded.revenue', (data) => {
-    isInterstitialLoad = false;
 
     console.log(data.value)
     console.log(data.currencyCode)

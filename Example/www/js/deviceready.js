@@ -40,6 +40,15 @@ if (window.cordova.platformId === 'ios') {
 
 
 
+
+function cleanText(){
+
+    window.log.value = "";
+
+    }
+
+
+
 //////////////////////
 // cordova deviceready
 /////////////////////
@@ -64,7 +73,7 @@ document.addEventListener("deviceready", function () {
 
 
 
-
+    
 
     // AdMob Sdk initialize
     
@@ -92,7 +101,7 @@ document.addEventListener("deviceready", function () {
         log.value += ("\n On Sdk Initialization version: " + sdkVersion);
         log.value += ("\n On Consent Status: " + conStatus);
 
-        loadBanner();
+        loadBanner(); // auto show
 
     });
 

@@ -1,5 +1,4 @@
 package emi.indo.cordova.plugin.admob
-import android.R
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -154,34 +153,37 @@ class emiAdmobPlugin : CordovaPlugin() {
             cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.screen.rotated');")
             isOrientation = orientation
             if (this.isAutoResize) {
-                mActivity!!.runOnUiThread {
-                    try {
-                        if (bannerViewLayout != null && bannerView != null) {
-                            val parentView = bannerViewLayout!!.parent as ViewGroup
-                            parentView.removeView(bannerViewLayout)
-                            bannerViewLayout = FrameLayout(mActivity!!)
-                            val params = FrameLayout.LayoutParams(
-                                FrameLayout.LayoutParams.MATCH_PARENT,
-                                FrameLayout.LayoutParams.WRAP_CONTENT
-                            )
-                            val rootView = mActivity!!.window.decorView.findViewById<View>(View.generateViewId())
-                            if (rootView is ViewGroup) {
-                                rootView.addView(bannerViewLayout, params)
-                            } else {
-                                mActivity!!.addContentView(bannerViewLayout, params)
+                if(mActivity != null) {
+                    mActivity!!.runOnUiThread {
+                        try {
+                            if (bannerViewLayout != null && bannerView != null) {
+                                val parentView = bannerViewLayout!!.parent as ViewGroup
+                                parentView.removeView(bannerViewLayout)
+                                bannerViewLayout = FrameLayout(mActivity!!)
+                                val params = FrameLayout.LayoutParams(
+                                    FrameLayout.LayoutParams.MATCH_PARENT,
+                                    FrameLayout.LayoutParams.WRAP_CONTENT
+                                )
+                                val rootView =
+                                    mActivity!!.window.decorView.findViewById<View>(View.generateViewId())
+                                if (rootView is ViewGroup) {
+                                    rootView.addView(bannerViewLayout, params)
+                                } else {
+                                    mActivity!!.addContentView(bannerViewLayout, params)
+                                }
+                                bannerView = AdView(mContext!!)
+                                setBannerPosition(this.isPosition)
+                                setBannerSiz(this.isSize)
+                                bannerView!!.adUnitId = bannerAdUnitId!!
+                                bannerView!!.adListener = bannerAdListener
+                                bannerView!!.loadAd(buildAdRequest())
+                                adjustWebViewForBanner(this.isPosition)
+                                bannerViewLayout!!.addView(bannerView)
+                                bannerViewLayout!!.bringToFront()
                             }
-                            bannerView = AdView(mContext!!)
-                            setBannerPosition(this.isPosition)
-                            setBannerSiz(this.isSize)
-                            bannerView!!.adUnitId = bannerAdUnitId!!
-                            bannerView!!.adListener = bannerAdListener
-                            bannerView!!.loadAd(buildAdRequest())
-                            adjustWebViewForBanner(this.isPosition)
-                            bannerViewLayout!!.addView(bannerView)
-                            bannerViewLayout!!.bringToFront()
+                        } catch (e: Exception) {
+                            PUBLIC_CALLBACKS!!.error("Error adjusting banner size: " + e.message)
                         }
-                    } catch (e: Exception) {
-                        PUBLIC_CALLBACKS!!.error("Error adjusting banner size: " + e.message)
                     }
                 }
             }
@@ -214,625 +216,21 @@ class emiAdmobPlugin : CordovaPlugin() {
 
         if (action == "initialize") {
             val options = args.getJSONObject(0)
-            mActivity!!.runOnUiThread {
-                val setAdRequest = options.optBoolean("isUsingAdManagerRequest")
-                val responseInfo = options.optBoolean("isResponseInfo")
-                val setDebugGeography = options.optBoolean("isConsentDebug")
-                setUsingAdManagerRequest(setAdRequest)
-                this.isResponseInfo = responseInfo
-                this.setDebugGeography = setDebugGeography
-                val params: ConsentRequestParameters
-                if (this.setDebugGeography) {
-                    val debugSettings = mActivity?.let {
-                        deviceId?.let { it1 ->
-                            ConsentDebugSettings.Builder(it)
-                                .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
-                                .addTestDeviceHashedId(it1).build()
-                        }
-                    }
-                    params = ConsentRequestParameters.Builder()
-                        .setConsentDebugSettings(debugSettings).build()
-                } else {
-                    params = ConsentRequestParameters.Builder()
-                        .setTagForUnderAgeOfConsent(this.isSetTagForUnderAgeOfConsent).build()
-                }
-
-                consentInformation = mContext?.let { UserMessagingPlatform.getConsentInformation(it) }
-                mActivity?.let {
-                    consentInformation?.requestConsentInfoUpdate(
-                        it,
-                        params,
-                        {
-                            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.info.update');")
-                            when (consentInformation!!.getConsentStatus()) {
-                                ConsentInformation.ConsentStatus.NOT_REQUIRED -> cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.status.not_required');")
-                                ConsentInformation.ConsentStatus.OBTAINED -> cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.status.obtained');")
-                                ConsentInformation.ConsentStatus.REQUIRED -> {
-                                    handleConsentForm()
-                                    cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.status.required');")
-                                }
-
-                                ConsentInformation.ConsentStatus.UNKNOWN -> cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.status.unknown');")
-                            }
-                        },
-                        { formError: FormError ->
-                            if (consentInformation!!.canRequestAds()) {
-                                initializeMobileAdsSdk()
-                            }
-                            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.info.update.failed', { message: '" + formError.message + "' });")
-                        })
-                }
-                if (consentInformation?.canRequestAds()!!) {
-                    initializeMobileAdsSdk()
-                }
-            }
-
-            return true
-        } else if (action == "targeting") {
-            val options = args.getJSONObject(0)
-            mActivity!!.runOnUiThread {
-                try {
-                    val childDirectedTreatment = options.optBoolean("childDirectedTreatment")
-                    val underAgeOfConsent = options.optBoolean("underAgeOfConsent")
-                    val contentRating = options.optString("contentRating")
-                    this.isSetTagForChildDirectedTreatment = childDirectedTreatment
-                    this.isSetTagForUnderAgeOfConsent = underAgeOfConsent
-                    this.isSetMaxAdContentRating = contentRating
-                    Targeting(childDirectedTreatment, underAgeOfConsent, contentRating)
-                    //  callbackContext.success();
-                } catch (e: Exception) {
-                    callbackContext.error("Error: " + e.message)
-                }
-            }
-            return true
-        } else if (action == "targetingAdRequest") {
-            val options = args.getJSONObject(0)
-            mActivity!!.runOnUiThread {
-                val customTargetingEnabled = options.optBoolean("customTargetingEnabled")
-                val categoryExclusionsEnabled = options.optBoolean("categoryExclusionsEnabled")
-                val ppIdEnabled = options.optBoolean("ppIdEnabled")
-                val contentURLEnabled = options.optBoolean("contentURLEnabled")
-                val brandSafetyEnabled = options.optBoolean("brandSafetyEnabled")
-
-                val customTargeting = options.optJSONArray("customTargetingValue")
-                val categoryExclusions = options.optString("categoryExclusionsValue")
-                val ppId = options.optString("ppIdValue")
-                val ctURL = options.optString("contentURLValue")
-                val brandSafetyArr = options.optJSONArray("brandSafetyArr")
-                try {
-                    this.customTargetingEnabled = customTargetingEnabled
-                    this.categoryExclusionsEnabled = categoryExclusionsEnabled
-                    this.ppIdEnabled = ppIdEnabled
-                    this.contentURLEnabled = contentURLEnabled
-                    this.brandSafetyEnabled = brandSafetyEnabled
-                    this.cExclusionsValue = categoryExclusions
-                    this.ppIdVl = ppId
-                    this.cURLVl = ctURL
-                    targetingAdRequest(
-                        customTargeting,
-                        categoryExclusions,
-                        ppId,
-                        ctURL,
-                        brandSafetyArr
-                    )
-                    callbackContext.success()
-                } catch (e: Exception) {
-                    callbackContext.error(e.toString())
-                }
-            }
-            return true
-        } else if (action == "setPersonalizationState") {
-            val options = args.getJSONObject(0)
-            mActivity!!.runOnUiThread {
-                val setPPT = options.optString("setPersonalizationState")
-                try {
-                    setPersonalizationState(setPPT)
-                    callbackContext.success()
-                } catch (e: Exception) {
-                    callbackContext.error(e.toString())
-                }
-            }
-            return true
-        } else if (action == "setPPS") {
-            val options = args.getJSONObject(0)
-            mActivity!!.runOnUiThread {
-                val ppsEnabled = options.optBoolean("ppsEnabled")
-                val iabContent = options.optString("iabContent")
-                val ppsArrValue = options.optJSONArray("ppsArrValue")
-                try {
-                    this.ppsEnabled = ppsEnabled
-                    this.ppsVl = iabContent
-                    setPublisherProvidedSignals(ppsArrValue)
-                    callbackContext.success()
-                } catch (e: Exception) {
-                    callbackContext.error(e.toString())
-                }
-            }
-            return true
-        } else if (action == "globalSettings") {
-            val options = args.getJSONObject(0)
-            mActivity!!.runOnUiThread {
-                val setAppMuted = options.optBoolean("setAppMuted")
-                val setAppVolume = options.optInt("setAppVolume").toFloat()
-                val pubIdEnabled = options.optBoolean("pubIdEnabled")
-                try {
-                    globalSettings(setAppMuted, setAppVolume, pubIdEnabled)
-                    // callbackContext.success();
-                } catch (e: Exception) {
-                    callbackContext.error(e.toString())
-                }
-            }
-            return true
-        } else if (action == "loadAppOpenAd") {
-            val options = args.getJSONObject(0)
-            mActivity!!.runOnUiThread {
-                val adUnitId = options.optString("adUnitId")
-                val autoShow = options.optBoolean("autoShow")
-                try {
-                    this.appOpenAutoShow = autoShow
-                    AppOpenAd.load(
-                        mActivity!!, adUnitId, buildAdRequest(),
-                        object : AppOpenAdLoadCallback() {
-                            @SuppressLint("DefaultLocale")
-                            override fun onAdLoaded(ad: AppOpenAd) {
-                                appOpenAd = ad
-                                isAppOpenAdShow = true
-
-                                if (appOpenAutoShow) {
-                                    openAutoShow()
-                                }
-
-                                appOpenAdLoadCallback(callbackContext)
-
-                                appOpenAd!!.onPaidEventListener =
-                                    OnPaidEventListener { adValue: AdValue ->
-                                        val valueMicros = adValue.valueMicros
-                                        val currencyCode = adValue.currencyCode
-                                        val precision = adValue.precisionType
-                                        val appOpenAdAdUnitId = appOpenAd!!.adUnitId
-
-                                        val result = JSONObject()
-                                        try {
-                                            result.put("micros", valueMicros)
-                                            result.put("currency", currencyCode)
-                                            result.put("precision", precision)
-                                            result.put("adUnitId", appOpenAdAdUnitId)
-                                            callbackContext.success(result)
-                                            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.appOpenAd.revenue')")
-
-                                        } catch (e: JSONException) {
-                                            callbackContext.error(e.message)
-                                        }
-                                    }
-
-                                if (isResponseInfo) {
-                                    val result = JSONObject()
-                                    val responseInfo = ad.responseInfo
-                                    try {
-                                        result.put("getResponseId", responseInfo.responseId)
-                                        result.put(
-                                            "getAdapterResponses",
-                                            responseInfo.adapterResponses
-                                        )
-                                        result.put("getResponseExtras", responseInfo.responseExtras)
-                                        result.put(
-                                            "getMediationAdapterClassName",
-                                            responseInfo.mediationAdapterClassName
-                                        )
-                                        result.put("getBundleExtra", mBundleExtra.toString())
-                                        callbackContext.success(result)
-                                    } catch (e: JSONException) {
-                                        callbackContext.error(e.message)
-                                    }
-                                }
-
-                                cWebView!!.loadUrl(
-                                    "javascript:cordova.fireDocumentEvent('on.appOpenAd.loaded');"
-                                )
-
-                            }
-
-                            private fun openAutoShow() {
-                                try {
-                                    if (isAppOpenAdShow && appOpenAd != null) {
-                                        mActivity!!.runOnUiThread { appOpenAd!!.show(mActivity!!) }
-                                    }
-                                } catch (e: Exception) {
-                                    PUBLIC_CALLBACKS!!.error(e.toString())
-                                }
-                            }
-
-                            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                                isAppOpenAdShow = false
-                                callbackContext.error(loadAdError.toString())
-                                cWebView!!.loadUrl(
-                                    "javascript:cordova.fireDocumentEvent('on.appOpenAd.failed.loaded');"
-                                )
-                            }
-                        })
-                } catch (e: Exception) {
-                    callbackContext.error(e.toString())
-                }
-            }
-            return true
-        } else if (action == "showAppOpenAd") {
-            try {
-                if (isAppOpenAdShow && appOpenAd != null) {
-                    mActivity!!.runOnUiThread { appOpenAd!!.show(mActivity!!) }
-                    appOpenAdLoadCallback(callbackContext)
-                } else {
-                    callbackContext.error("The App Open Ad wasn't ready yet")
-                }
-            } catch (e: Exception) {
-                PUBLIC_CALLBACKS!!.error(e.toString())
-            }
-
-            return true
-        } else if (action == "loadInterstitialAd") {
-            val options = args.getJSONObject(0)
-            mActivity!!.runOnUiThread {
-                val adUnitId = options.optString("adUnitId")
-                val autoShow = options.optBoolean("autoShow")
-                try {
-                    this.intAutoShow = autoShow
-                    InterstitialAd.load(
-                        mActivity!!, adUnitId, buildAdRequest(),
-                        object : InterstitialAdLoadCallback() {
-                            override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                                isInterstitialLoad = true
-                                mInterstitialAd = interstitialAd
-
-                                if (intAutoShow) {
-                                    isIntAutoShow
-                                }
-
-                                interstitialAdLoadCallback(callbackContext)
-
-                                cWebView!!.loadUrl(
-                                    "javascript:cordova.fireDocumentEvent('on.interstitial.loaded');"
-                                )
-                                if (isResponseInfo) {
-                                    val result = JSONObject()
-                                    val responseInfo = mInterstitialAd!!.responseInfo
-                                    try {
-                                        result.put("getResponseId", responseInfo.responseId)
-                                        result.put(
-                                            "getAdapterResponses",
-                                            responseInfo.adapterResponses
-                                        )
-                                        result.put("getResponseExtras", responseInfo.responseExtras)
-                                        result.put(
-                                            "getMediationAdapterClassName",
-                                            responseInfo.mediationAdapterClassName
-                                        )
-                                        result.put("getBundleExtra", mBundleExtra.toString())
-                                        callbackContext.success(result)
-                                    } catch (e: JSONException) {
-                                        callbackContext.error(e.message)
-                                    }
-                                }
-                                mInterstitialAd!!.onPaidEventListener =
-                                    OnPaidEventListener { adValue: AdValue ->
-                                        val valueMicros = adValue.valueMicros
-                                        val currencyCode = adValue.currencyCode
-                                        val precision = adValue.precisionType
-                                        val interstitialAdUnitId = mInterstitialAd!!.adUnitId
-                                        val result = JSONObject()
-                                        try {
-                                            result.put("micros", valueMicros)
-                                            result.put("currency", currencyCode)
-                                            result.put("precision", precision)
-                                            result.put("adUnitId", interstitialAdUnitId)
-                                            callbackContext.success(result)
-                                        } catch (e: JSONException) {
-                                            callbackContext.error(e.message)
-                                        }
-                                        cWebView!!.loadUrl(
-                                            "javascript:cordova.fireDocumentEvent('on.interstitial.revenue');"
-                                        )
-                                    }
-                            }
-
-                            private val isIntAutoShow: Unit
-                                get() {
-                                    if (isInterstitialLoad && mInterstitialAd != null) {
-                                        mActivity!!.runOnUiThread { mInterstitialAd!!.show(mActivity!!) }
-                                    }
-                                }
-
-                            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                                mInterstitialAd = null
-                                isInterstitialLoad = false
-                                cWebView!!.loadUrl(
-                                    "javascript:cordova.fireDocumentEvent('on.interstitial.failed.load');"
-                                )
-                                callbackContext.error(loadAdError.toString())
-                            }
-                        })
-                } catch (e: Exception) {
-                    callbackContext.error(e.toString())
-                }
-            }
-            return true
-        } else if (action == "showInterstitialAd") {
-            if (isInterstitialLoad && mInterstitialAd != null) {
-                mActivity!!.runOnUiThread { mInterstitialAd!!.show(mActivity!!) }
-                interstitialAdLoadCallback(callbackContext)
-            } else {
-                callbackContext.error("The Interstitial ad wasn't ready yet")
-            }
-            return true
-        } else if (action == "loadRewardedAd") {
-            val options = args.getJSONObject(0)
-            mActivity!!.runOnUiThread {
-                val adUnitId = options.optString("adUnitId")
-                val autoShow = options.optBoolean("autoShow")
-                try {
-                    this.rewardedAutoShow = autoShow
-                    RewardedAd.load(
-                        mActivity!!, adUnitId, buildAdRequest(),
-                        object : RewardedAdLoadCallback() {
-                            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                                rewardedAd = null
-                                isRewardedLoad = false
-                                cWebView!!.loadUrl(
-                                    "javascript:cordova.fireDocumentEvent('on.rewarded.failed.load');"
-                                )
-                                callbackContext.error(loadAdError.toString())
-                            }
-
-                            override fun onAdLoaded(ad: RewardedAd) {
-                                rewardedAd = ad
-                                isRewardedLoad = true
-                                isAdSkip = 0
-                                if (rewardedAutoShow) {
-                                    isRewardedAutoShow
-                                }
-                                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.loaded');")
-                                rewardedAdLoadCallback(callbackContext)
-                                if (isResponseInfo) {
-                                    val result = JSONObject()
-                                    val responseInfo = ad.responseInfo
-                                    try {
-                                        result.put("getResponseId", responseInfo.responseId)
-                                        result.put(
-                                            "getAdapterResponses",
-                                            responseInfo.adapterResponses
-                                        )
-                                        result.put("getResponseExtras", responseInfo.responseExtras)
-                                        result.put(
-                                            "getMediationAdapterClassName",
-                                            responseInfo.mediationAdapterClassName
-                                        )
-                                        result.put("getBundleExtra", mBundleExtra.toString())
-                                        callbackContext.success(result)
-                                    } catch (e: JSONException) {
-                                        callbackContext.error(e.message)
-                                    }
-                                }
-
-                                rewardedAd!!.onPaidEventListener =
-                                    OnPaidEventListener { adValue: AdValue ->
-                                        val valueMicros = adValue.valueMicros
-                                        val currencyCode = adValue.currencyCode
-                                        val precision = adValue.precisionType
-                                        val rewardedAdAdUnitId = rewardedAd!!.adUnitId
-                                        val result = JSONObject()
-                                        try {
-                                            result.put("micros", valueMicros)
-                                            result.put("currency", currencyCode)
-                                            result.put("precision", precision)
-                                            result.put("adUnitId", rewardedAdAdUnitId)
-                                            callbackContext.success(result)
-                                        } catch (e: JSONException) {
-                                            callbackContext.error(e.message)
-                                        }
-                                        cWebView!!.loadUrl(
-                                            "javascript:cordova.fireDocumentEvent('on.rewarded.revenue');"
-                                        )
-                                    }
-                            }
-
-                            private val isRewardedAutoShow: Unit
-                                get() {
-                                    if (isRewardedLoad && rewardedAd != null) {
-                                        isAdSkip = 1
-                                        rewardedAd!!.show(mActivity!!) { rewardItem: RewardItem ->
-                                            isAdSkip = 2
-                                            val rewardAmount = rewardItem.amount
-                                            val rewardType = rewardItem.type
-                                            val result = JSONObject()
-                                            try {
-                                                result.put("rewardAmount", rewardAmount)
-                                                result.put("rewardType", rewardType)
-                                                callbackContext.success(result)
-                                            } catch (e: JSONException) {
-                                                callbackContext.error(e.message)
-                                            }
-                                            cWebView!!.loadUrl(
-                                                "javascript:cordova.fireDocumentEvent('on.reward.userEarnedReward');"
-                                            )
-                                        }
-                                    }
-                                }
-                        })
-                } catch (e: Exception) {
-                    callbackContext.error(e.toString())
-                }
-            }
-            return true
-        } else if (action == "showRewardedAd") {
-            mActivity!!.runOnUiThread {
-                if (isRewardedLoad && rewardedAd != null) {
-                    isAdSkip = 1
-                    rewardedAd!!.show(mActivity!!) { rewardItem: RewardItem ->
-                        isAdSkip = 2
-                        val rewardAmount = rewardItem.amount
-                        val rewardType = rewardItem.type
-                        val result = JSONObject()
-                        try {
-                            result.put("rewardAmount", rewardAmount)
-                            result.put("rewardType", rewardType)
-                            callbackContext.success(result)
-                        } catch (e: JSONException) {
-                            callbackContext.error(e.message)
-                        }
-                        cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.reward.userEarnedReward');")
-                    }
-                    rewardedAdLoadCallback(callbackContext)
-                } else {
-                    callbackContext.error("The rewarded ad wasn't ready yet")
-                }
-            }
-            return true
-        } else if (action == "loadRewardedInterstitialAd") {
-            val options = args.getJSONObject(0)
-            mActivity!!.runOnUiThread {
-                val adUnitId = options.optString("adUnitId")
-                val autoShow = options.optBoolean("autoShow")
-                try {
-                    this.rIntAutoShow = autoShow
-                    RewardedInterstitialAd.load(
-                        mActivity!!, adUnitId, buildAdRequest(),
-                        object : RewardedInterstitialAdLoadCallback() {
-                            override fun onAdLoaded(ad: RewardedInterstitialAd) {
-                                rewardedInterstitialAd = ad
-                                isRewardedInterstitialLoad = true
-                                isAdSkip = 0
-
-                                if (rIntAutoShow) {
-                                    isRIntAutoShow
-                                }
-                                rewardedInterstitialAdLoadCallback(callbackContext)
-                                responseAdLoad()
-                                revenueAd()
-
-
-                                cWebView!!.loadUrl(
-                                    "javascript:cordova.fireDocumentEvent('on.rewardedInt.loaded');"
-                                )
-                            }
-
-                            private fun revenueAd() {
-                                rewardedInterstitialAd!!.onPaidEventListener =
-                                    OnPaidEventListener { adValue: AdValue ->
-                                        val valueMicros = adValue.valueMicros
-                                        val currencyCode = adValue.currencyCode
-                                        val precision = adValue.precisionType
-                                        val rewardedIntAdUnitId = rewardedInterstitialAd!!.adUnitId
-                                        val result = JSONObject()
-                                        try {
-                                            result.put("micros", valueMicros)
-                                            result.put("currency", currencyCode)
-                                            result.put("precision", precision)
-                                            result.put("adUnitId", rewardedIntAdUnitId)
-                                            callbackContext.success(result)
-                                        } catch (e: JSONException) {
-                                            callbackContext.error(e.message)
-                                        }
-                                        cWebView!!.loadUrl(
-                                            "javascript:cordova.fireDocumentEvent('on.rewardedInt.revenue');"
-                                        )
-                                    }
-                            }
-
-                            private fun responseAdLoad() {
-                                if (isResponseInfo) {
-                                    val result = JSONObject()
-                                    val responseInfo = rewardedInterstitialAd!!.responseInfo
-                                    try {
-                                        result.put("getResponseId", responseInfo.responseId)
-                                        result.put(
-                                            "getAdapterResponses",
-                                            responseInfo.adapterResponses
-                                        )
-                                        result.put("getResponseExtras", responseInfo.responseExtras)
-                                        result.put(
-                                            "getMediationAdapterClassName",
-                                            responseInfo.mediationAdapterClassName
-                                        )
-                                        result.put("getBundleExtra", mBundleExtra.toString())
-                                        callbackContext.success(result)
-                                    } catch (e: JSONException) {
-                                        callbackContext.error(e.message)
-                                    }
-                                }
-                            }
-
-                            private val isRIntAutoShow: Unit
-                                get() {
-                                    if (isRewardedInterstitialLoad && rewardedInterstitialAd != null) {
-                                        isAdSkip = 1
-                                        rewardedInterstitialAd!!.show(mActivity!!) { rewardItem: RewardItem ->
-                                            isAdSkip = 2
-                                            val rewardAmount = rewardItem.amount
-                                            val rewardType = rewardItem.type
-                                            val result = JSONObject()
-                                            try {
-                                                result.put("rewardAmount", rewardAmount)
-                                                result.put("rewardType", rewardType)
-                                                callbackContext.success(result)
-                                            } catch (e: JSONException) {
-                                                callbackContext.error(e.message)
-                                            }
-                                            cWebView!!.loadUrl(
-                                                "javascript:cordova.fireDocumentEvent('on.rewardedInt.userEarnedReward');"
-                                            )
-                                        }
-                                    }
-                                }
-
-                            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                                rewardedInterstitialAd = null
-                                isRewardedInterstitialLoad = false
-                                cWebView!!.loadUrl(
-                                    "javascript:cordova.fireDocumentEvent('on.rewardedInt.failed.load');"
-                                )
-                                callbackContext.error(loadAdError.toString())
-                            }
-                        })
-                } catch (e: Exception) {
-                    callbackContext.error(e.toString())
-                }
-            }
-            return true
-        } else if (action == "showRewardedInterstitialAd") {
-            mActivity!!.runOnUiThread {
-                if (isRewardedInterstitialLoad && rewardedInterstitialAd != null) {
-                    isAdSkip = 1
-                    rewardedInterstitialAd!!.show(mActivity!!) { rewardItem: RewardItem ->
-                        isAdSkip = 2
-                        val rewardAmount = rewardItem.amount
-                        val rewardType = rewardItem.type
-                        val result = JSONObject()
-                        try {
-                            result.put("rewardAmount", rewardAmount)
-                            result.put("rewardType", rewardType)
-                            callbackContext.success(result)
-                        } catch (e: JSONException) {
-                            callbackContext.error(e.message)
-                        }
-                        cWebView!!.loadUrl(
-                            "javascript:cordova.fireDocumentEvent('on.rewardedInt.userEarnedReward');"
-                        )
-                    }
-
-                    rewardedInterstitialAdLoadCallback(callbackContext)
-                } else {
-                    callbackContext.error("The rewarded ad wasn't ready yet")
-                }
-            }
-            return true
-        } else if (action == "showPrivacyOptionsForm") {
-            mActivity!!.runOnUiThread {
-                try {
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    val setAdRequest = options.optBoolean("isUsingAdManagerRequest")
+                    val responseInfo = options.optBoolean("isResponseInfo")
+                    val setDebugGeography = options.optBoolean("isConsentDebug")
+                    setUsingAdManagerRequest(setAdRequest)
+                    this.isResponseInfo = responseInfo
+                    this.setDebugGeography = setDebugGeography
                     val params: ConsentRequestParameters
                     if (this.setDebugGeography) {
-                        val debugSettings = deviceId?.let {
-                            mActivity?.let { it1 ->
-                                ConsentDebugSettings.Builder(it1)
+                        val debugSettings = mActivity?.let {
+                            deviceId?.let { it1 ->
+                                ConsentDebugSettings.Builder(it)
                                     .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
-                                    .addTestDeviceHashedId(it).build()
+                                    .addTestDeviceHashedId(it1).build()
                             }
                         }
                         params = ConsentRequestParameters.Builder()
@@ -841,184 +239,907 @@ class emiAdmobPlugin : CordovaPlugin() {
                         params = ConsentRequestParameters.Builder()
                             .setTagForUnderAgeOfConsent(this.isSetTagForUnderAgeOfConsent).build()
                     }
-                    consentInformation = mContext?.let {
-                        UserMessagingPlatform.getConsentInformation(
-                            it
-                        )
-                    }
+
+                    consentInformation =
+                        mContext?.let { UserMessagingPlatform.getConsentInformation(it) }
                     mActivity?.let {
                         consentInformation?.requestConsentInfoUpdate(
                             it,
                             params,
                             {
-                                mActivity?.let { it1 ->
-                                    UserMessagingPlatform.loadAndShowConsentFormIfRequired(
-                                        it1
-                                    ) { loadAndShowError: FormError? ->
-                                        if (loadAndShowError != null) {
-                                            cordova.activity.runOnUiThread {
-                                                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.failed.show', { message: '" + loadAndShowError.message + "' });")
+                                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.info.update');")
+                                when (consentInformation!!.getConsentStatus()) {
+                                    ConsentInformation.ConsentStatus.NOT_REQUIRED -> cWebView!!.loadUrl(
+                                        "javascript:cordova.fireDocumentEvent('on.consent.status.not_required');"
+                                    )
+
+                                    ConsentInformation.ConsentStatus.OBTAINED -> cWebView!!.loadUrl(
+                                        "javascript:cordova.fireDocumentEvent('on.consent.status.obtained');"
+                                    )
+
+                                    ConsentInformation.ConsentStatus.REQUIRED -> {
+                                        handleConsentForm()
+                                        cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.status.required');")
+                                    }
+
+                                    ConsentInformation.ConsentStatus.UNKNOWN -> cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.status.unknown');")
+                                }
+                            },
+                            { formError: FormError ->
+                                if (consentInformation!!.canRequestAds()) {
+                                    initializeMobileAdsSdk()
+                                }
+                                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.info.update.failed', { message: '" + formError.message + "' });")
+                            })
+                    }
+                    if (consentInformation?.canRequestAds()!!) {
+                        initializeMobileAdsSdk()
+                    }
+                }
+            }
+
+            return true
+        } else if (action == "targeting") {
+            val options = args.getJSONObject(0)
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    try {
+                        val childDirectedTreatment = options.optBoolean("childDirectedTreatment")
+                        val underAgeOfConsent = options.optBoolean("underAgeOfConsent")
+                        val contentRating = options.optString("contentRating")
+                        this.isSetTagForChildDirectedTreatment = childDirectedTreatment
+                        this.isSetTagForUnderAgeOfConsent = underAgeOfConsent
+                        this.isSetMaxAdContentRating = contentRating
+                        targeting(childDirectedTreatment, underAgeOfConsent, contentRating)
+                        callbackContext.success();
+                    } catch (e: Exception) {
+                        callbackContext.error("Error: " + e.message)
+                    }
+                }
+            }
+            return true
+        } else if (action == "targetingAdRequest") {
+            val options = args.getJSONObject(0)
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    val customTargetingEnabled = options.optBoolean("customTargetingEnabled")
+                    val categoryExclusionsEnabled = options.optBoolean("categoryExclusionsEnabled")
+                    val ppIdEnabled = options.optBoolean("ppIdEnabled")
+                    val contentURLEnabled = options.optBoolean("contentURLEnabled")
+                    val brandSafetyEnabled = options.optBoolean("brandSafetyEnabled")
+
+                    val customTargeting = options.optJSONArray("customTargetingValue")
+                    val categoryExclusions = options.optString("categoryExclusionsValue")
+                    val ppId = options.optString("ppIdValue")
+                    val ctURL = options.optString("contentURLValue")
+                    val brandSafetyArr = options.optJSONArray("brandSafetyArr")
+                    try {
+                        this.customTargetingEnabled = customTargetingEnabled
+                        this.categoryExclusionsEnabled = categoryExclusionsEnabled
+                        this.ppIdEnabled = ppIdEnabled
+                        this.contentURLEnabled = contentURLEnabled
+                        this.brandSafetyEnabled = brandSafetyEnabled
+                        this.cExclusionsValue = categoryExclusions
+                        this.ppIdVl = ppId
+                        this.cURLVl = ctURL
+                        targetingAdRequest(
+                            customTargeting,
+                            categoryExclusions,
+                            ppId,
+                            ctURL,
+                            brandSafetyArr
+                        )
+                        callbackContext.success()
+                    } catch (e: Exception) {
+                        callbackContext.error(e.toString())
+                    }
+                }
+            }
+            return true
+        } else if (action == "setPersonalizationState") {
+            val options = args.getJSONObject(0)
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    val setPPT = options.optString("setPersonalizationState")
+                    try {
+                        setPersonalizationState(setPPT)
+                        callbackContext.success()
+                    } catch (e: Exception) {
+                        callbackContext.error(e.toString())
+                    }
+                }
+            }
+            return true
+        } else if (action == "setPPS") {
+            val options = args.getJSONObject(0)
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    val ppsEnabled = options.optBoolean("ppsEnabled")
+                    val iabContent = options.optString("iabContent")
+                    val ppsArrValue = options.optJSONArray("ppsArrValue")
+                    try {
+                        this.ppsEnabled = ppsEnabled
+                        this.ppsVl = iabContent
+                        setPublisherProvidedSignals(ppsArrValue)
+                        callbackContext.success()
+                    } catch (e: Exception) {
+                        callbackContext.error(e.toString())
+                    }
+                }
+            }
+            return true
+        } else if (action == "globalSettings") {
+            val options = args.getJSONObject(0)
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    val setAppMuted = options.optBoolean("setAppMuted")
+                    val setAppVolume = options.optInt("setAppVolume").toFloat()
+                    val pubIdEnabled = options.optBoolean("pubIdEnabled")
+                    try {
+                        globalSettings(setAppMuted, setAppVolume, pubIdEnabled)
+                    } catch (e: Exception) {
+                        callbackContext.error(e.toString())
+                    }
+                }
+            }
+            return true
+        } else if (action == "loadAppOpenAd") {
+            val options = args.getJSONObject(0)
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    val adUnitId = options.optString("adUnitId")
+                    val autoShow = options.optBoolean("autoShow")
+                    try {
+                        this.appOpenAutoShow = autoShow
+                        AppOpenAd.load(
+                            mActivity!!, adUnitId, buildAdRequest(),
+                            object : AppOpenAdLoadCallback() {
+                                @SuppressLint("DefaultLocale")
+                                override fun onAdLoaded(ad: AppOpenAd) {
+                                    appOpenAd = ad
+                                    isAppOpenAdShow = true
+
+                                    if (appOpenAutoShow) {
+                                        openAutoShow()
+                                    }
+
+                                    cWebView!!.loadUrl(
+                                        "javascript:cordova.fireDocumentEvent('on.appOpenAd.loaded');"
+                                    )
+
+                                    appOpenAdLoadCallback()
+
+                                    appOpenAd!!.onPaidEventListener =
+                                        OnPaidEventListener { adValue: AdValue ->
+                                            val valueMicros = adValue.valueMicros
+                                            val currencyCode = adValue.currencyCode
+                                            val precision = adValue.precisionType
+                                            val appOpenAdAdUnitId = appOpenAd!!.adUnitId
+
+                                            val result = JSONObject()
+                                            try {
+                                                result.put("micros", valueMicros)
+                                                result.put("currency", currencyCode)
+                                                result.put("precision", precision)
+                                                result.put("adUnitId", appOpenAdAdUnitId)
+
+                                                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.appOpenAd.revenue', ${result})")
+
+                                            } catch (e: JSONException) {
+                                                callbackContext.error(e.message)
                                             }
                                         }
-                                        if (isPrivacyOptionsRequired == ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED) {
-                                            mActivity?.let { it2 ->
-                                                UserMessagingPlatform.showPrivacyOptionsForm(
-                                                    it2
-                                                ) { formError: FormError? ->
-                                                    if (formError != null) {
-                                                        cordova.activity.runOnUiThread {
-                                                            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.failed.show.options', { message: '" + formError.message + "' });")
+
+                                    if (isResponseInfo) {
+                                        val result = JSONObject()
+                                        val responseInfo = ad.responseInfo
+                                        try {
+                                            result.put("getResponseId", responseInfo.responseId)
+                                            result.put(
+                                                "getAdapterResponses",
+                                                responseInfo.adapterResponses
+                                            )
+                                            result.put(
+                                                "getResponseExtras",
+                                                responseInfo.responseExtras
+                                            )
+                                            result.put(
+                                                "getMediationAdapterClassName",
+                                                responseInfo.mediationAdapterClassName
+                                            )
+                                            result.put("getBundleExtra", mBundleExtra.toString())
+                                            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.appOpenAd.responseInfo', ${result})")
+                                        } catch (e: JSONException) {
+                                            callbackContext.error(e.message)
+                                        }
+                                    }
+
+
+
+                                }
+
+                                private fun openAutoShow() {
+                                        try {
+                                            if (mActivity != null && isAppOpenAdShow && appOpenAd != null) {
+                                                mActivity!!.runOnUiThread {
+                                                    appOpenAd!!.show(
+                                                        mActivity!!
+                                                    )
+                                                }
+                                            }
+                                        } catch (e: Exception) {
+                                            PUBLIC_CALLBACKS!!.error(e.toString())
+                                        }
+                                }
+
+                                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                                    isAppOpenAdShow = false
+                                    val errorData = JSONObject().apply {
+                                        put("responseInfo", loadAdError.responseInfo)
+                                        put("code", loadAdError.code)
+                                        put("message", loadAdError.message)
+                                        put("domain", loadAdError.domain)
+                                        put("cause", loadAdError.cause?.toString() ?: "null")
+                                    }
+                                    cWebView!!.loadUrl(
+                                        "javascript:cordova.fireDocumentEvent('on.appOpenAd.failed.loaded, ${errorData}');"
+                                    )
+                                }
+                            })
+                    } catch (e: Exception) {
+                        callbackContext.error(e.toString())
+                    }
+                }
+            }
+            return true
+        } else if (action == "showAppOpenAd") {
+
+                try {
+                    if (mActivity != null && isAppOpenAdShow && appOpenAd != null) {
+                        mActivity!!.runOnUiThread { appOpenAd!!.show(mActivity!!) }
+                        appOpenAdLoadCallback()
+                    } else {
+                        callbackContext.error("The App Open Ad wasn't ready yet")
+                    }
+                } catch (e: Exception) {
+                    PUBLIC_CALLBACKS!!.error(e.toString())
+                }
+
+            return true
+        } else if (action == "loadInterstitialAd") {
+            val options = args.getJSONObject(0)
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    val adUnitId = options.optString("adUnitId")
+                    val autoShow = options.optBoolean("autoShow")
+                    try {
+                        this.intAutoShow = autoShow
+                        InterstitialAd.load(
+                            mActivity!!, adUnitId, buildAdRequest(),
+                            object : InterstitialAdLoadCallback() {
+                                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                                    isInterstitialLoad = true
+                                    mInterstitialAd = interstitialAd
+
+                                    if (intAutoShow) {
+                                        isIntAutoShow
+                                    }
+
+                                    cWebView!!.loadUrl(
+                                        "javascript:cordova.fireDocumentEvent('on.interstitial.loaded');"
+                                    )
+
+                                    interstitialAdLoadCallback()
+
+                                    if (isResponseInfo) {
+                                        val result = JSONObject()
+                                        val responseInfo = mInterstitialAd!!.responseInfo
+                                        try {
+                                            result.put("getResponseId", responseInfo.responseId)
+                                            result.put(
+                                                "getAdapterResponses",
+                                                responseInfo.adapterResponses
+                                            )
+                                            result.put("getResponseExtras", responseInfo.responseExtras)
+                                            result.put(
+                                                "getMediationAdapterClassName",
+                                                responseInfo.mediationAdapterClassName
+                                            )
+                                            result.put("getBundleExtra", mBundleExtra.toString())
+                                            cWebView!!.loadUrl(
+                                                "javascript:cordova.fireDocumentEvent('on.interstitialAd.responseInfo', ${result});"
+                                            )
+
+                                        } catch (e: JSONException) {
+                                            callbackContext.error(e.message)
+                                        }
+                                    }
+                                    mInterstitialAd!!.onPaidEventListener =
+                                        OnPaidEventListener { adValue: AdValue ->
+                                            val valueMicros = adValue.valueMicros
+                                            val currencyCode = adValue.currencyCode
+                                            val precision = adValue.precisionType
+                                            val interstitialAdUnitId = mInterstitialAd!!.adUnitId
+                                            val result = JSONObject()
+                                            try {
+                                                result.put("micros", valueMicros)
+                                                result.put("currency", currencyCode)
+                                                result.put("precision", precision)
+                                                result.put("adUnitId", interstitialAdUnitId)
+                                                cWebView!!.loadUrl(
+                                                    "javascript:cordova.fireDocumentEvent('on.interstitial.revenue', ${result});"
+                                                )
+
+                                            } catch (e: JSONException) {
+                                                callbackContext.error(e.message)
+                                            }
+
+                                        }
+                                }
+
+                                private val isIntAutoShow: Unit
+                                    get() {
+                                        if (mActivity != null && isInterstitialLoad && mInterstitialAd != null) {
+                                            mActivity!!.runOnUiThread { mInterstitialAd!!.show(mActivity!!) }
+                                        }
+                                    }
+
+                                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                                    mInterstitialAd = null
+                                    isInterstitialLoad = false
+                                    val errorData = JSONObject().apply {
+                                        put("responseInfo", loadAdError.responseInfo)
+                                        put("code", loadAdError.code)
+                                        put("message", loadAdError.message)
+                                        put("domain", loadAdError.domain)
+                                        put("cause", loadAdError.cause?.toString() ?: "null")
+                                    }
+                                    cWebView!!.loadUrl(
+                                        "javascript:cordova.fireDocumentEvent('on.interstitial.failed.load', ${errorData});"
+                                    )
+
+                                }
+                            })
+                    } catch (e: Exception) {
+                        callbackContext.error(e.toString())
+                    }
+                }
+            }
+            return true
+        } else if (action == "showInterstitialAd") {
+
+                if (mActivity != null && isInterstitialLoad && mInterstitialAd != null) {
+                    mActivity!!.runOnUiThread { mInterstitialAd!!.show(mActivity!!) }
+                    interstitialAdLoadCallback()
+                } else {
+                    callbackContext.error("The Interstitial ad wasn't ready yet")
+                }
+            return true
+        } else if (action == "loadRewardedAd") {
+            val options = args.getJSONObject(0)
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    val adUnitId = options.optString("adUnitId")
+                    val autoShow = options.optBoolean("autoShow")
+                    try {
+                        this.rewardedAutoShow = autoShow
+                        RewardedAd.load(
+                            mActivity!!, adUnitId, buildAdRequest(),
+                            object : RewardedAdLoadCallback() {
+                                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                                    rewardedAd = null
+                                    isRewardedLoad = false
+
+                                    val errorData = JSONObject().apply {
+                                        put("responseInfo", loadAdError.responseInfo)
+                                        put("code", loadAdError.code)
+                                        put("message", loadAdError.message)
+                                        put("domain", loadAdError.domain)
+                                        put("cause", loadAdError.cause?.toString() ?: "null")
+                                    }
+
+                                    cWebView!!.loadUrl(
+                                        "javascript:cordova.fireDocumentEvent('on.rewarded.failed.load', ${errorData});"
+                                    )
+
+                                }
+
+                                override fun onAdLoaded(ad: RewardedAd) {
+                                    rewardedAd = ad
+                                    isRewardedLoad = true
+                                    isAdSkip = 0
+                                    if (rewardedAutoShow) {
+                                        isRewardedAutoShow
+                                    }
+
+
+                                    rewardedAdLoadCallback()
+
+                                    cWebView!!.loadUrl(
+                                        "javascript:cordova.fireDocumentEvent('on.rewarded.loaded');"
+                                    )
+
+                                    rewardedAd!!.onPaidEventListener =
+                                        OnPaidEventListener { adValue: AdValue ->
+                                            val valueMicros = adValue.valueMicros
+                                            val currencyCode = adValue.currencyCode
+                                            val precision = adValue.precisionType
+                                            val rewardedAdAdUnitId = rewardedAd!!.adUnitId
+                                            val result = JSONObject()
+                                            try {
+                                                result.put("micros", valueMicros)
+                                                result.put("currency", currencyCode)
+                                                result.put("precision", precision)
+                                                result.put("adUnitId", rewardedAdAdUnitId)
+                                                cWebView!!.loadUrl(
+                                                    "javascript:cordova.fireDocumentEvent('on.rewarded.revenue', ${result});"
+                                                )
+                                            } catch (e: JSONException) {
+                                                callbackContext.error(e.message)
+                                            }
+
+                                        }
+
+
+
+                                    if (isResponseInfo) {
+                                        val result = JSONObject()
+                                        val responseInfo = ad.responseInfo
+                                        try {
+                                            result.put("getResponseId", responseInfo.responseId)
+                                            result.put(
+                                                "getAdapterResponses",
+                                                responseInfo.adapterResponses
+                                            )
+                                            result.put(
+                                                "getResponseExtras",
+                                                responseInfo.responseExtras
+                                            )
+                                            result.put(
+                                                "getMediationAdapterClassName",
+                                                responseInfo.mediationAdapterClassName
+                                            )
+                                            result.put("getBundleExtra", mBundleExtra.toString())
+                                            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedAd.responseInfo', ${result})")
+                                        } catch (e: JSONException) {
+                                            callbackContext.error(e.message)
+                                        }
+                                    }
+
+
+                                }
+
+                                private val isRewardedAutoShow: Unit
+                                    get() {
+                                        if (mActivity != null){
+                                            mActivity!!.runOnUiThread {
+                                                if (isRewardedLoad && rewardedAd != null) {
+                                                    isAdSkip = 1
+                                                    rewardedAd!!.show(mActivity!!) { rewardItem: RewardItem ->
+                                                        isAdSkip = 2
+                                                        val rewardAmount = rewardItem.amount
+                                                        val rewardType = rewardItem.type
+                                                        val result = JSONObject()
+                                                        try {
+                                                            result.put("rewardType", rewardType)
+                                                            result.put("rewardAmount", rewardAmount)
+                                                            cWebView!!.loadUrl(
+                                                                "javascript:cordova.fireDocumentEvent('on.reward.userEarnedReward', ${result});"
+                                                            )
+                                                        } catch (e: JSONException) {
+                                                            callbackContext.error(e.message)
+                                                        }
+
+                                                    }
+                                                }
+                                            }
+                                    }
+                                }
+                            })
+                    } catch (e: Exception) {
+                        callbackContext.error(e.toString())
+                    }
+                }
+            }
+            return true
+        } else if (action == "showRewardedAd") {
+            if(mActivity != null && isRewardedLoad && rewardedAd != null) {
+                mActivity!!.runOnUiThread {
+                    isAdSkip = 1
+                    rewardedAd!!.show(mActivity!!) { rewardItem: RewardItem ->
+                        isAdSkip = 2
+                        val rewardAmount = rewardItem.amount
+                        val rewardType = rewardItem.type
+                        val result = JSONObject()
+                        try {
+                            result.put("rewardType", rewardType)
+                            result.put("rewardAmount", rewardAmount)
+                            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.reward.userEarnedReward', ${result});")
+                        } catch (e: JSONException) {
+                            callbackContext.error(e.message)
+                        }
+
+                    }
+                    rewardedAdLoadCallback()
+
+                }
+
+            } else {
+                callbackContext.error("The rewarded ad wasn't ready yet")
+            }
+            return true
+        } else if (action == "loadRewardedInterstitialAd") {
+            val options = args.getJSONObject(0)
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    val adUnitId = options.optString("adUnitId")
+                    val autoShow = options.optBoolean("autoShow")
+                    try {
+                        this.rIntAutoShow = autoShow
+                        RewardedInterstitialAd.load(
+                            mActivity!!, adUnitId, buildAdRequest(),
+                            object : RewardedInterstitialAdLoadCallback() {
+                                override fun onAdLoaded(ad: RewardedInterstitialAd) {
+                                    rewardedInterstitialAd = ad
+                                    isRewardedInterstitialLoad = true
+                                    isAdSkip = 0
+
+                                    cWebView!!.loadUrl(
+                                        "javascript:cordova.fireDocumentEvent('on.rewardedInt.loaded');"
+                                    )
+
+                                    if (rIntAutoShow) {
+                                        isRIntAutoShow
+                                    }
+
+                                    rewardedInterstitialAdLoadCallback()
+
+                                    rewardedInterstitialAd!!.onPaidEventListener =
+                                        OnPaidEventListener { adValue: AdValue ->
+                                            val valueMicros = adValue.valueMicros
+                                            val currencyCode = adValue.currencyCode
+                                            val precision = adValue.precisionType
+                                            val rewardedIntAdUnitId =
+                                                rewardedInterstitialAd!!.adUnitId
+                                            val result = JSONObject()
+                                            try {
+                                                result.put("micros", valueMicros)
+                                                result.put("currency", currencyCode)
+                                                result.put("precision", precision)
+                                                result.put("adUnitId", rewardedIntAdUnitId)
+                                                cWebView!!.loadUrl(
+                                                    "javascript:cordova.fireDocumentEvent('on.rewardedInt.revenue', ${result});"
+                                                )
+                                            } catch (e: JSONException) {
+                                                callbackContext.error(e.message)
+                                            }
+
+                                        }
+
+
+                                    if (isResponseInfo) {
+                                        val result = JSONObject()
+                                        val responseInfo = rewardedInterstitialAd!!.responseInfo
+                                        try {
+                                            result.put("getResponseId", responseInfo.responseId)
+                                            result.put(
+                                                "getAdapterResponses",
+                                                responseInfo.adapterResponses
+                                            )
+                                            result.put(
+                                                "getResponseExtras",
+                                                responseInfo.responseExtras
+                                            )
+                                            result.put(
+                                                "getMediationAdapterClassName",
+                                                responseInfo.mediationAdapterClassName
+                                            )
+                                            result.put("getBundleExtra", mBundleExtra.toString())
+                                            cWebView!!.loadUrl(
+                                                "javascript:cordova.fireDocumentEvent('on.rewardedIntAd.responseInfo', ${result});"
+                                            )
+                                        } catch (e: JSONException) {
+                                            callbackContext.error(e.message)
+                                        }
+                                    }
+
+
+
+
+                                }
+
+
+
+                                private val isRIntAutoShow: Unit
+                                    get() {
+                                        if (mActivity !== null) {
+                                            mActivity!!.runOnUiThread {
+                                                if (isRewardedInterstitialLoad && rewardedInterstitialAd != null) {
+                                                    isAdSkip = 1
+                                                    rewardedInterstitialAd!!.show(mActivity!!) { rewardItem: RewardItem ->
+                                                        isAdSkip = 2
+                                                        val rewardAmount = rewardItem.amount
+                                                        val rewardType = rewardItem.type
+                                                        val result = JSONObject()
+                                                        try {
+                                                            result.put("rewardType", rewardType)
+                                                            result.put("rewardAmount", rewardAmount)
+                                                            cWebView!!.loadUrl(
+                                                                "javascript:cordova.fireDocumentEvent('on.rewardedInt.userEarnedReward', ${result});"
+                                                            )
+                                                        } catch (e: JSONException) {
+                                                            callbackContext.error(e.message)
+                                                        }
+
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                                    rewardedInterstitialAd = null
+                                    isRewardedInterstitialLoad = false
+                                    val errorData = JSONObject().apply {
+                                        put("responseInfo", loadAdError.responseInfo)
+                                        put("code", loadAdError.code)
+                                        put("message", loadAdError.message)
+                                        put("domain", loadAdError.domain)
+                                        put("cause", loadAdError.cause?.toString() ?: "null")
+                                    }
+                                    cWebView!!.loadUrl(
+                                        "javascript:cordova.fireDocumentEvent('on.rewardedInt.failed.load', ${errorData});"
+                                    )
+
+                                }
+                            })
+                    } catch (e: Exception) {
+                        callbackContext.error(e.toString())
+                    }
+                }
+            }
+            return true
+        } else if (action == "showRewardedInterstitialAd") {
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    if (isRewardedInterstitialLoad && rewardedInterstitialAd != null) {
+                        isAdSkip = 1
+                        rewardedInterstitialAd!!.show(mActivity!!) { rewardItem: RewardItem ->
+                            isAdSkip = 2
+                            val rewardAmount = rewardItem.amount
+                            val rewardType = rewardItem.type
+                            val result = JSONObject()
+                            try {
+                                result.put("rewardType", rewardType)
+                                result.put("rewardAmount", rewardAmount)
+                                cWebView!!.loadUrl(
+                                    "javascript:cordova.fireDocumentEvent('on.rewardedInt.userEarnedReward', ${result});"
+                                )
+                            } catch (e: JSONException) {
+                                callbackContext.error(e.message)
+                            }
+
+                        }
+                        rewardedInterstitialAdLoadCallback()
+                    } else {
+                        callbackContext.error("The rewarded ad wasn't ready yet")
+                    }
+                }
+            }
+            return true
+        } else if (action == "showPrivacyOptionsForm") {
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    try {
+                        val params: ConsentRequestParameters
+                        if (this.setDebugGeography) {
+                            val debugSettings = deviceId?.let {
+                                mActivity?.let { it1 ->
+                                    ConsentDebugSettings.Builder(it1)
+                                        .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
+                                        .addTestDeviceHashedId(it).build()
+                                }
+                            }
+                            params = ConsentRequestParameters.Builder()
+                                .setConsentDebugSettings(debugSettings).build()
+                        } else {
+                            params = ConsentRequestParameters.Builder()
+                                .setTagForUnderAgeOfConsent(this.isSetTagForUnderAgeOfConsent)
+                                .build()
+                        }
+                        consentInformation = mContext?.let {
+                            UserMessagingPlatform.getConsentInformation(
+                                it
+                            )
+                        }
+                        mActivity?.let {
+                            consentInformation?.requestConsentInfoUpdate(
+                                it,
+                                params,
+                                {
+                                    mActivity?.let { it1 ->
+                                        UserMessagingPlatform.loadAndShowConsentFormIfRequired(
+                                            it1
+                                        ) { loadAndShowError: FormError? ->
+                                            if (loadAndShowError != null) {
+                                                mActivity!!.runOnUiThread {
+                                                    cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.failed.show', { message: '" + loadAndShowError.message + "' });")
+                                                }
+                                            }
+                                            if (isPrivacyOptionsRequired == ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED) {
+                                                mActivity?.let { it2 ->
+                                                    UserMessagingPlatform.showPrivacyOptionsForm(
+                                                        it2
+                                                    ) { formError: FormError? ->
+                                                        if (formError != null) {
+                                                            mActivity!!.runOnUiThread {
+                                                                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.failed.show.options', { message: '" + formError.message + "' });")
+                                                            }
                                                         }
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                            },
-                            { requestConsentError: FormError ->
-                                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.info.update.failed', { message: '" + requestConsentError.message + "' });")
-                            })
+                                },
+                                { requestConsentError: FormError ->
+                                    cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.info.update.failed', { message: '" + requestConsentError.message + "' });")
+                                })
+                        }
+                    } catch (e: Exception) {
+                        callbackContext.error(e.toString())
                     }
-                } catch (e: Exception) {
-                    callbackContext.error(e.toString())
                 }
             }
             return true
         } else if (action == "consentReset") {
-            mActivity!!.runOnUiThread {
-                try {
-                    consentInformation!!.reset()
-                } catch (e: Exception) {
-                    callbackContext.error(e.toString())
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    try {
+                        consentInformation!!.reset()
+                    } catch (e: Exception) {
+                        callbackContext.error(e.toString())
+                    }
                 }
             }
             return true
         } else if (action == "getIabTfc") {
-            mActivity!!.runOnUiThread {
-                val gdprApplies = mPreferences!!.getInt("IABTCF_gdprApplies", 0)
-                val purposeConsents = mPreferences!!.getString("IABTCF_PurposeConsents", "")
-                val vendorConsents = mPreferences!!.getString("IABTCF_VendorConsents", "")
-                val consentString = mPreferences!!.getString("IABTCF_TCString", "")
-                val userInfoJson = JSONObject()
-                try {
-                    userInfoJson.put("IABTCF_gdprApplies", gdprApplies)
-                    userInfoJson.put("IABTCF_PurposeConsents", purposeConsents)
-                    userInfoJson.put("IABTCF_VendorConsents", vendorConsents)
-                    userInfoJson.put("IABTCF_TCString", consentString)
-                    val editor = mPreferences!!.edit()
-                    editor.putString("IABTCF_TCString", consentString)
-                    editor.putLong(LAST_ACCESS_SUFFIX, System.currentTimeMillis())
-                    editor.apply()
-                    val key = "IABTCF_TCString"
-                    getString(key)
-                    callbackContext.success(userInfoJson)
-                    cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.getIabTfc');")
-                } catch (e: Exception) {
-                    callbackContext.error(e.toString())
-                    cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.getIabTfc.error');")
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    val gdprApplies = mPreferences!!.getInt("IABTCF_gdprApplies", 0)
+                    val purposeConsents = mPreferences!!.getString("IABTCF_PurposeConsents", "")
+                    val vendorConsents = mPreferences!!.getString("IABTCF_VendorConsents", "")
+                    val consentString = mPreferences!!.getString("IABTCF_TCString", "")
+                    val userInfoJson = JSONObject()
+                    try {
+                        userInfoJson.put("IABTCF_gdprApplies", gdprApplies)
+                        userInfoJson.put("IABTCF_PurposeConsents", purposeConsents)
+                        userInfoJson.put("IABTCF_VendorConsents", vendorConsents)
+                        userInfoJson.put("IABTCF_TCString", consentString)
+                        val editor = mPreferences!!.edit()
+                        editor.putString("IABTCF_TCString", consentString)
+                        editor.putLong(LAST_ACCESS_SUFFIX, System.currentTimeMillis())
+                        editor.apply()
+                        val key = "IABTCF_TCString"
+                        getString(key)
+                        callbackContext.success(userInfoJson)
+                        cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.getIabTfc');")
+                    } catch (e: Exception) {
+                        callbackContext.error(e.toString())
+                        cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.getIabTfc.error');")
+                    }
                 }
             }
             return true
         } else if (action == "loadBannerAd") {
-            val options = args.getJSONObject(0)
-            mActivity!!.runOnUiThread {
-                val adUnitId = options.optString("adUnitId")
-                val position = options.optString("position")
-                val collapsible = options.optString("collapsible")
-                val size = options.optString("size")
-                val autoResize = options.optBoolean("autoResize")
-                val autoShow = options.optBoolean("autoShow")
-                this.bannerAdUnitId = adUnitId
-                this.isPosition = position
-                this.isSize = size
-                this.bannerAutoShow = autoShow
-                this.isAutoResize = autoResize
-                this.collapsiblePos = collapsible
+            if(mActivity != null) {
+                val options = args.getJSONObject(0)
+                mActivity!!.runOnUiThread {
+                    val adUnitId = options.optString("adUnitId")
+                    val position = options.optString("position")
+                    val collapsible = options.optString("collapsible")
+                    val size = options.optString("size")
+                    val autoResize = options.optBoolean("autoResize")
+                    val autoShow = options.optBoolean("autoShow")
+                    this.bannerAdUnitId = adUnitId
+                    this.isPosition = position
+                    this.isSize = size
+                    this.bannerAutoShow = autoShow
+                    this.isAutoResize = autoResize
+                    this.collapsiblePos = collapsible
 
-                isCollapsible = collapsible.isNotEmpty()
-                try {
-                    loadBannerAd(adUnitId, position, size)
-                } catch (e: Exception) {
-                    callbackContext.error(e.toString())
+                    isCollapsible = collapsible.isNotEmpty()
+                    try {
+                        loadBannerAd(adUnitId, position, size)
+                    } catch (e: Exception) {
+                        callbackContext.error(e.toString())
+                    }
                 }
             }
             return true
         } else if (action == "showBannerAd") {
-            mActivity!!.runOnUiThread {
-                if (isBannerPause == 0) {
-                    isShowBannerAds
-                } else if (isBannerPause == 1) {
-                    try {
-                        bannerView!!.visibility = View.VISIBLE
-                        bannerView!!.resume()
-                    } catch (e: Exception) {
-                        callbackContext.error(e.toString())
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    if (isBannerPause == 0) {
+                        isShowBannerAds
+                    } else if (isBannerPause == 1) {
+                        try {
+                            bannerView!!.visibility = View.VISIBLE
+                            bannerView!!.resume()
+                        } catch (e: Exception) {
+                            callbackContext.error(e.toString())
+                        }
                     }
                 }
             }
             return true
         } else if (action == "styleBannerAd") {
             val options = args.getJSONObject(0)
-            mActivity!!.runOnUiThread {
-                val paddingPx = options.optInt("padding")
-                val marginsPx = options.optInt("margins")
-                // final boolean autoResize = options.optBoolean("autoResize");
-                try {
-                    this.paddingInPx = paddingPx
-                    this.marginsInPx = marginsPx
-                    // this.isAutoResize = autoResize;
-                } catch (e: Exception) {
-                    callbackContext.error(e.toString())
-                }
-            }
-            return true
-        } else if (action == "collapsibleBannerAd") {
-            val options = args.getJSONObject(0)
-
-            mActivity!!.runOnUiThread {
-                val enableCollapsible = options.optBoolean("enabledBannerCollapsible")
-                val collapsible = options.optString("collapsiblePosition")
-                try {
-                    this.isCollapsible = enableCollapsible
-                    this.collapsiblePos = collapsible
-                } catch (e: Exception) {
-                    callbackContext.error(e.toString())
-                }
-            }
-            return true
-        } else if (action == "hideBannerAd") {
-            cordova.activity.runOnUiThread {
-                if (isBannerShow) {
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    val paddingPx = options.optInt("padding")
+                    val marginsPx = options.optInt("margins")
+                    // final boolean autoResize = options.optBoolean("autoResize");
                     try {
-                        bannerView!!.visibility = View.GONE
-                        bannerView!!.pause()
-                        isBannerLoad = false
-                        isBannerPause = 1
+                        this.paddingInPx = paddingPx
+                        this.marginsInPx = marginsPx
+                        // this.isAutoResize = autoResize;
                     } catch (e: Exception) {
                         callbackContext.error(e.toString())
                     }
                 }
             }
             return true
-        } else if (action == "removeBannerAd") {
-            mActivity!!.runOnUiThread {
-                try {
-                    if (bannerViewLayout != null && bannerView != null) {
-                        bannerViewLayout!!.removeView(bannerView)
-                        bannerView!!.destroy()
-                        bannerView = null
-                        bannerViewLayout = null
-                        isBannerLoad = false
-                        isBannerShow = false
-                        isBannerPause = 2
-                        lock = true
+        } else if (action == "collapsibleBannerAd") {
+            val options = args.getJSONObject(0)
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    val enableCollapsible = options.optBoolean("enabledBannerCollapsible")
+                    val collapsible = options.optString("collapsiblePosition")
+                    try {
+                        this.isCollapsible = enableCollapsible
+                        this.collapsiblePos = collapsible
+                    } catch (e: Exception) {
+                        callbackContext.error(e.toString())
                     }
-                } catch (e: Exception) {
-                    PUBLIC_CALLBACKS!!.error("Error removing banner: " + e.message)
                 }
             }
-
+            return true
+        } else if (action == "hideBannerAd") {
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    if (isBannerShow) {
+                        try {
+                            bannerView!!.visibility = View.GONE
+                            bannerView!!.pause()
+                            isBannerLoad = false
+                            isBannerPause = 1
+                        } catch (e: Exception) {
+                            callbackContext.error(e.toString())
+                        }
+                    }
+                }
+            }
+            return true
+        } else if (action == "removeBannerAd") {
+            if(mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    try {
+                        if (bannerViewLayout != null && bannerView != null) {
+                            bannerViewLayout!!.removeView(bannerView)
+                            bannerView!!.destroy()
+                            bannerView = null
+                            bannerViewLayout = null
+                            isBannerLoad = false
+                            isBannerShow = false
+                            isBannerPause = 2
+                            lock = true
+                        }
+                    } catch (e: Exception) {
+                        PUBLIC_CALLBACKS!!.error("Error removing banner: " + e.message)
+                    }
+                }
+            }
             return true
         }
         return false
@@ -1026,26 +1147,28 @@ class emiAdmobPlugin : CordovaPlugin() {
 
 
     private fun handleConsentForm() {
-        if (consentInformation!!.isConsentFormAvailable) {
-            mContext?.let {
-                UserMessagingPlatform.loadConsentForm(it,
-                    { consentForm: ConsentForm ->
-                        mActivity?.let { it1 ->
-                            consentForm.show(
-                                it1
-                            ) { formError: FormError? ->
-                                if (formError != null) {
-                                    cordova.activity.runOnUiThread {
-                                        cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.failed.show', { message: '" + formError.message + "' });")
+        if(mActivity != null) {
+            if (consentInformation!!.isConsentFormAvailable) {
+                mContext?.let {
+                    UserMessagingPlatform.loadConsentForm(it,
+                        { consentForm: ConsentForm ->
+                            mActivity?.let { it1 ->
+                                consentForm.show(
+                                    it1
+                                ) { formError: FormError? ->
+                                    if (formError != null) {
+                                        mActivity!!.runOnUiThread {
+                                            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.failed.show', { message: '" + formError.message + "' });")
+                                        }
                                     }
                                 }
                             }
+                        },
+                        { formError: FormError ->
+                            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.failed.load.from', { message: '" + formError.message + "' });")
                         }
-                    },
-                    { formError: FormError ->
-                        cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.failed.load.from', { message: '" + formError.message + "' });")
-                    }
-                )
+                    )
+                }
             }
         }
     }
@@ -1170,12 +1293,12 @@ class emiAdmobPlugin : CordovaPlugin() {
                 isBannerLoad = true
             } else {
                 val errorMessage = "Error showing banner: bannerView or bannerViewLayout is null."
-               // Log.e("isBannerAutoShow", errorMessage)
+                // Log.e("isBannerAutoShow", errorMessage)
                 PUBLIC_CALLBACKS!!.error(errorMessage)
             }
         } catch (e: Exception) {
             val errorMessage = "Error showing banner: " + e.message
-           // Log.e("isBannerAutoShow", errorMessage, e)
+            // Log.e("isBannerAutoShow", errorMessage, e)
             PUBLIC_CALLBACKS!!.error(errorMessage)
         }
     }
@@ -1209,8 +1332,15 @@ class emiAdmobPlugin : CordovaPlugin() {
         }
 
         override fun onAdFailedToLoad(adError: LoadAdError) {
-            mActivity!!.runOnUiThread {
-                try {
+
+            val errorData = JSONObject().apply {
+                put("responseInfo", adError.responseInfo)
+                put("code", adError.code)
+                put("message", adError.message)
+                put("domain", adError.domain)
+                put("cause", adError.cause?.toString() ?: "null")
+            }
+
                     if (bannerViewLayout != null && bannerView != null) {
                         bannerViewLayout!!.removeView(bannerView)
                         bannerView!!.destroy()
@@ -1221,13 +1351,9 @@ class emiAdmobPlugin : CordovaPlugin() {
                         isBannerPause = 2
                         lock = true
                     }
-                } catch (e: Exception) {
-                    PUBLIC_CALLBACKS!!.error("Error removing banner: " + e.message)
-                }
-            }
 
-            PUBLIC_CALLBACKS!!.error(adError.toString())
-            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.failed.load');")
+
+            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.failed.load', ${errorData});")
         }
 
         override fun onAdImpression() {
@@ -1245,14 +1371,12 @@ class emiAdmobPlugin : CordovaPlugin() {
             }
             cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.load');")
 
-
             val eventData = String.format(
                 "{\"collapsible\": \"%s\"}",
                 if (bannerView!!.isCollapsible) "collapsible" else "not collapsible"
             )
 
             cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.is.collapsible', $eventData)")
-
 
             bannerView!!.onPaidEventListener = bannerPaidAdListener
 
@@ -1268,14 +1392,12 @@ class emiAdmobPlugin : CordovaPlugin() {
                         "getMediationAdapterClassName",
                         responseInfo.mediationAdapterClassName
                     )
-
                     if (mBundleExtra != null) {
                         result.put("getBundleExtra", mBundleExtra.toString())
                     } else {
                         result.put("getBundleExtra", JSONObject.NULL)
                     }
-
-                    PUBLIC_CALLBACKS!!.success(result)
+                    cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.bannerAd.responseInfo', ${result});")
                 } catch (e: JSONException) {
                     PUBLIC_CALLBACKS!!.error(e.toString())
                 }
@@ -1303,8 +1425,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             result.put("adUnitId", adUnitId)
             isBannerLoad = false
             isBannerShow = true
-            PUBLIC_CALLBACKS!!.success(result)
-            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.revenue');")
+            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.revenue', ${result});")
         } catch (e: JSONException) {
             PUBLIC_CALLBACKS!!.error(e.message)
         }
@@ -1393,7 +1514,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
 
 
-   private fun setUsingAdManagerRequest(isUsingAdManagerRequest: Boolean) {
+    private fun setUsingAdManagerRequest(isUsingAdManagerRequest: Boolean) {
         this.isUsingAdManagerRequest = isUsingAdManagerRequest
     }
 
@@ -1597,7 +1718,7 @@ class emiAdmobPlugin : CordovaPlugin() {
     }
 
 
-   private val deviceId: String?
+    private val deviceId: String?
         get() {
             var algorithm = "SHA-256"
             try {
@@ -1667,7 +1788,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
 
 
-    private fun appOpenAdLoadCallback(callbackContext: CallbackContext) {
+    private fun appOpenAdLoadCallback() {
         appOpenAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
                 cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.appOpenAd.dismissed');")
@@ -1676,9 +1797,15 @@ class emiAdmobPlugin : CordovaPlugin() {
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.appOpenAd.failed.show');")
-                callbackContext.error(adError.toString())
                 appOpenAd = null
+                isAppOpenAdShow = false
+                val errorData = JSONObject().apply {
+                    put("code", adError.code)
+                    put("message", adError.message)
+                    put("domain", adError.domain)
+                    put("cause", adError.cause?.toString() ?: "null")
+                }
+                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.appOpenAd.failed.show', ${errorData});")
             }
 
             override fun onAdShowedFullScreenContent() {
@@ -1688,7 +1815,7 @@ class emiAdmobPlugin : CordovaPlugin() {
     }
 
 
-    private fun interstitialAdLoadCallback(callbackContext: CallbackContext) {
+    private fun interstitialAdLoadCallback() {
         mInterstitialAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdClicked() {
                 cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.interstitial.click');")
@@ -1705,8 +1832,13 @@ class emiAdmobPlugin : CordovaPlugin() {
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                 mInterstitialAd = null
                 isInterstitialLoad = false
-                callbackContext.error(adError.toString())
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.interstitial.failed.show');")
+                val errorData = JSONObject().apply {
+                    put("code", adError.code)
+                    put("message", adError.message)
+                    put("domain", adError.domain)
+                    put("cause", adError.cause?.toString() ?: "null")
+                }
+                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.interstitial.failed.show', ${errorData});")
             }
 
             override fun onAdImpression() {
@@ -1719,7 +1851,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         }
     }
 
-    private fun rewardedAdLoadCallback(callbackContext: CallbackContext) {
+    private fun rewardedAdLoadCallback() {
         rewardedAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdClicked() {
                 cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.click');")
@@ -1741,8 +1873,13 @@ class emiAdmobPlugin : CordovaPlugin() {
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                 rewardedAd = null
                 isRewardedLoad = false
-                callbackContext.error(adError.toString())
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.failed.show');")
+                val errorData = JSONObject().apply {
+                    put("code", adError.code)
+                    put("message", adError.message)
+                    put("domain", adError.domain)
+                    put("cause", adError.cause?.toString() ?: "null")
+                }
+                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.failed.show', ${errorData});")
             }
 
             override fun onAdImpression() {
@@ -1756,7 +1893,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         }
     }
 
-    private fun rewardedInterstitialAdLoadCallback(callbackContext: CallbackContext) {
+    private fun rewardedInterstitialAdLoadCallback() {
         rewardedInterstitialAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdClicked() {
                 cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.click');")
@@ -1778,8 +1915,13 @@ class emiAdmobPlugin : CordovaPlugin() {
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                 rewardedInterstitialAd = null
                 isRewardedInterstitialLoad = false
-                callbackContext.error(adError.toString())
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.failed.show');")
+                val errorData = JSONObject().apply {
+                    put("code", adError.code)
+                    put("message", adError.message)
+                    put("domain", adError.domain)
+                    put("cause", adError.cause?.toString() ?: "null")
+                }
+                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.failed.show', ${errorData});")
             }
 
             override fun onAdImpression() {
@@ -1800,7 +1942,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         MobileAds.putPublisherFirstPartyIdEnabled(pubIdEnabled)
     }
 
-    private fun Targeting(
+    private fun targeting(
         childDirectedTreatment: Boolean,
         underAgeOfConsent: Boolean,
         contentRating: String?
@@ -1843,7 +1985,9 @@ class emiAdmobPlugin : CordovaPlugin() {
             if (View::class.java.isAssignableFrom(CordovaWebView::class.java)) {
                 return cWebView as View?
             }
-            return mActivity!!.window.decorView.findViewById(R.id.content)
+
+           return mActivity!!.window.decorView.findViewById(View.generateViewId())
+          //  return mActivity!!.window.decorView.findViewById(R.id.content)
         }
 
     override fun onPause(multitasking: Boolean) {

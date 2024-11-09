@@ -10,7 +10,7 @@ exports.showAppOpenAd = function (success, error) {
     exec(success, error, 'emiAdmobPlugin', 'showAppOpenAd', []);
 };
 exports.styleBannerAd = function (options, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'styleBannerAd', [options]); // v1.4.9 ( only Android )
+    exec(success, error, 'emiAdmobPlugin', 'styleBannerAd', [options]); // ( only Android )
 };
 exports.loadBannerAd = function (options, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'loadBannerAd', [options]);
@@ -21,8 +21,8 @@ exports.showBannerAd = function (success, error) {
 exports.hideBannerAd = function (success, error) {
         exec(success, error, 'emiAdmobPlugin', 'hideBannerAd', []);
 };
-exports.removeBannerAd = function (arg0, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'removeBannerAd', [arg0]);
+exports.removeBannerAd = function (success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'removeBannerAd', []);
 };
 exports.loadInterstitialAd = function (options, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'loadInterstitialAd', [options]);
@@ -68,7 +68,7 @@ exports.forceDisplayPrivacyForm = function (success, error) {
 };
 
     
-// v1.4.9 ( only Android )
+// ( only Android )
 // only isUsingAdManagerRequest: true
 // AdManagerAdRequest.Builder
 exports.targetingAdRequest = function (options, success, error) {

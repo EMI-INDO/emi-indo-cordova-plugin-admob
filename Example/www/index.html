@@ -1,6 +1,7 @@
 <html>
 <head>
     <script type="text/javascript" src="cordova.js"></script>
+    <script src="js/appOpenAd.js" defer></script>
     <script src="js/bannerAd.js" defer></script>
     <script src="js/interstitialAd.js" defer></script>
     <script src="js/rewardedAd.js" defer></script>
@@ -10,6 +11,9 @@
 
 <label for="event">Debug Event All response :</label>
 <textarea id="log" name="log" rows="5" cols="40"></textarea>
+
+<p> <button onclick="loadAppOpen();">Auto Show App Open Ad</button></p>
+
 
 <p> <button onclick="loadInterstitial();">Load Interstitial Ad</button></p>
 <p> <button onclick="showInterstitial();">Show Interstitial Ad</button></p>

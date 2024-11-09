@@ -33,11 +33,9 @@ on.interstitial.failed.show
 on.interstitial.impression
 on.interstitial.show
 
- // new
- on.interstitial.revenue
+// New event plugin v1.5.5 or higher
 
-// New event plugin v1.5.5
-
+on.interstitial.revenue
 on.interstitialAd.responseInfo
 
 */
@@ -83,7 +81,7 @@ document.addEventListener('on.interstitial.failed.show', (error) => {
 });
 
 
-
+/*
 // DEBUG
 // isResponseInfo: true, // debug Default false
 document.addEventListener('on.interstitialAd.responseInfo', (data) => {
@@ -92,7 +90,7 @@ document.addEventListener('on.interstitialAd.responseInfo', (data) => {
     if (window.log) window.log.value += ("\n on.interstitialAd.responseInfo" + JSON.stringify(data));
 });
 
-
+*/
 
 
 
@@ -111,7 +109,6 @@ In the Account controls section, click the Impression-level ad revenue toggle to
 */
 
 document.addEventListener('on.interstitial.revenue', (data) => {
-    isInterstitialLoad = false;
 
     console.log(data.value)
     console.log(data.currencyCode)

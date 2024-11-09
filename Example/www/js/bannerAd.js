@@ -87,18 +87,13 @@ on.banner.close
 on.banner.impression
 on.banner.open
 
- // new
-
 on.banner.revenue
 on.banner.remove
 on.banner.hide
 
- // new
+ // New event plugin v1.5.5 or higher
 
  on.is.collapsible
-
- // New event plugin v1.5.5
- 
  on.bannerAd.responseInfo
 
  */
@@ -126,7 +121,7 @@ document.addEventListener('on.banner.failed.load', (error) => {
 
 
 
-
+/*
 // DEBUG
 // isResponseInfo: true, // debug Default false
 document.addEventListener('on.bannerAd.responseInfo', (data) => {
@@ -134,7 +129,7 @@ document.addEventListener('on.bannerAd.responseInfo', (data) => {
     if (window.log) window.log.value += ("\n on.bannerAd.responseInfo" + JSON.stringify(data));
 });
 
-
+*/
 
 
 
