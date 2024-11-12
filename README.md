@@ -12,7 +12,8 @@
 ### IAB Europe Transparency & Consent Framework (CPM: 2.2.0)
 
 
-## New example https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/www
+## New example 
+- https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/www
 
 
 ## Minimum Cordova Engines
@@ -142,7 +143,8 @@ cordova plugin rm emi-indo-cordova-plugin-admob
 
 ## Import the Mobile Ads SDK IOS
 ### Then from the command line run:
-- cd platforms/ios
+- cd platforms/ios 
+- Then run cordova prepare
 ### Then from the command line run:
 - pod install --repo-update
 
@@ -283,103 +285,6 @@ document.addEventListener('on.TCString.expired', () => {
 - [Example IABTFC:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/Advanced%20topics/IABTFC.html) index.html (Not yet updated)
 
 
-
-## Global Variable adunitId
-
-```
-<script>
-Ad format	Demo ad unit ID
-// https://developers.google.com/admob/android/test-ads
-// https://developers.google.com/admob/ios/test-ads
-
-var App_Open_ID;
-var Banner_ID;
-var Interstitial_ID;
-var Rewarded_ID;
-var Rewarded_Interstitial_ID;
-
-/* https://support.google.com/admob/answer/9493252?hl=en
-Best practice when using ad original ID unit, 
-the app must be uploaded to the play store or app store, 
-and you must upload it from there, 
-otherwise you may be subject to ad serving restrictions, 
-if it happens often, it is possible that your admob account will be permanently disabled.
-*/
-
-if (window.cordova.platformId === 'ios') {
-   
-    App_Open_ID = 'ca-app-pub-3940256099942544/5575463023';
-    Banner_ID = 'ca-app-pub-3940256099942544/2934735716';
-    Interstitial_ID = 'ca-app-pub-3940256099942544/4411468910';
-    Rewarded_ID = 'ca-app-pub-3940256099942544/1712485313';
-    Rewarded_Interstitial_ID = 'ca-app-pub-3940256099942544/6978759866';
-    
-} else {
-    // Assume Android
-    App_Open_ID = 'ca-app-pub-3940256099942544/9257395921';
-    Banner_ID = 'ca-app-pub-3940256099942544/6300978111';
-    Interstitial_ID = 'ca-app-pub-3940256099942544/1033173712';
-    Rewarded_ID = 'ca-app-pub-3940256099942544/5224354917';
-    Rewarded_Interstitial_ID = 'ca-app-pub-3940256099942544/5354046379';
-}
-
-
-  cordova.plugins.emiAdmobPlugin.initialize({
-  isUsingAdManagerRequest: true, // true = AdManagerAdRequest.Builder | false = AdRequest.Builder (Default true)
-  isResponseInfo: true, // Default false
-  isConsentDebug: true, // Default false
- });
-
-
- document.addEventListener('on.sdkInitialization', (data) => {
-// JSON.stringify(data)
-   const sdkVersion = data.version;
-// const adAdapter = data.adapters;
-// const conStatus = data.consentStatus;
-// const gdprApplie = data.gdprApplies;
-// const purposeConsent = data.purposeConsents;
-// const vendorConsents = data.vendorConsents;
-// const conTCString = data.consentTCString;
-// const additionalConsent = data.additionalConsent;
-console.log("On Sdk Initialization version: " + sdkVersion);
-
-
-cordova.plugins.emiAdmobPlugin.loadInterstitialAd({
-adUnitId: "ca-app-pub-3940256099942544/1033173712", 
-autoShow: true
-});
-
-});
-
-
-document.addEventListener('on.interstitial.loaded', () => {
-
-   console.log("on interstitial Ad loaded");
-
-});
-
-// all events that contain the keyword dismissed there is a block to load the ad after it is closed by the user.
-// 'on.interstitial.dismissed' | 'on.rewardedInt.dismissed' | 'on.rewarded.dismissed'
-document.addEventListener('on.interstitial.dismissed', () => {
-
-   console.log("on interstitial Ad dismissed");
-   console.log("you can load ads automatically after the ads are closed by users");
-   // loadInterstitialAd();
-
-});
-
-function loadInterstitialAd(){
-
-cordova.plugins.emiAdmobPlugin.loadInterstitialAd({
-adUnitId: "ca-app-pub-3940256099942544/1033173712", 
-autoShow: false
-});
-
-}
-
-
- </script>
-```
 
 
 ## AppOpenAd ADS
@@ -1005,7 +910,7 @@ on.orientation.landscape
 
 
 
-# Admob Mediation
+# Admob Mediation (supports both platforms)
 
 <details>
 <summary>Mediation #9</summary>
@@ -1017,7 +922,7 @@ on.orientation.landscape
 
 ## get Mediation Adapter Name
 
-responseInfo = true // (debugging)
+isResponseInfo: true, // debug Default false // (debugging)
 
 <img src="https://user-images.githubusercontent.com/78555833/230655800-0dbc3f12-72fb-4cf3-b4e6-801704fade28.png" width="250">
 
@@ -1101,30 +1006,39 @@ cordova plugin add emi-indo-cordova-plugin-mediation-ironsource
 
 - Cordova CLI Update Adapter version with Variables
 ```sh
-cordova plugin add emi-indo-cordova-plugin-mediation-meta --variable META_ADAPTER_VERSION="xxxxx"
+cordova plugin add emi-indo-cordova-plugin-mediation-meta --save --variable META_ADAPTER_VERSION="xxxxx" --variable IOS_META_ADAPTER_VERSION="xxxxx"
 ```
 - Update Adapter version with config.xml
 ```sh
 <preference name="META_ADAPTER_VERSION" value="xxxxx" />
+<preference name="IOS_META_ADAPTER_VERSION" value="xxxxx" />
 ```
 
 ### Variables Name
 
-- --variable META_ADAPTER_VERSION="xxxxx"
-- --variable UNITY_ADAPTER_VERSION="xxxxx"
-- --variable APPLOVIN_ADAPTER_VERSION="xxxxx"
-- --variable ADCOLONY_ADAPTER_VERSION="xxxxx"
-- --variable CHARTBOOST_ADAPTER_VERSION="xxxxx"
-- --variable IRONSOURCE_ADAPTER_VERSION="xxxxx"
+- --variable META_ADAPTER_VERSION="xxxxx" --variable IOS_META_ADAPTER_VERSION="xxxxx"
+- --variable UNITY_ADAPTER_VERSION="xxxxx" --variable IOS_UNITY_ADAPTER_VERSION="xxxxx"
+- --variable APPLOVIN_ADAPTER_VERSION="xxxxx" --variable IOS_APPLOVIN_ADAPTER_VERSION="xxxxx"
+- --variable ADCOLONY_ADAPTER_VERSION="xxxxx" --variable IOS_ADCOLONY_ADAPTER_VERSION="xxxxx"
+- --variable CHARTBOOST_ADAPTER_VERSION="xxxxx" --variable IOS_CHARTBOOST_ADAPTER_VERSION="xxxxx"
+- --variable IRONSOURCE_ADAPTER_VERSION="xxxxx" --variable IOS_IRONSOURCE_ADAPTER_VERSION="xxxxx"
 
 ### preference name
-
+## (ANDROID)
 - META_ADAPTER_VERSION
 - UNITY_ADAPTER_VERSION
 - APPLOVIN_ADAPTER_VERSION
 - ADCOLONY_ADAPTER_VERSION
 - CHARTBOOST_ADAPTER_VERSION
 - IRONSOURCE_ADAPTER_VERSION
+
+## (IOS)
+- IOS_META_ADAPTER_VERSION
+- IOS_UNITY_ADAPTER_VERSION
+- IOS_APPLOVIN_ADAPTER_VERSION
+- IOS_ADCOLONY_ADAPTER_VERSION
+- IOS_CHARTBOOST_ADAPTER_VERSION
+- IOS_IRONSOURCE_ADAPTER_VERSION
 
 - ================================
 </details>

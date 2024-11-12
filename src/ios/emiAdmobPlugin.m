@@ -17,10 +17,10 @@ int idfaStatus = 0;
 // int fromStatus = 0; // Deprecated
 int Consent_Status = 0;
 int adFormat = 0;
-int adWidth = 320; // Default
+int adWidth = 320; // Deprecated
 BOOL auto_Show = NO;
 // NSString *Npa = @"1"; // Deprecated
-NSString *Position = @"bottom"; // Default
+NSString *Position = @"bottom-center"; // Default
 NSString *bannerSaveAdUnitId = @""; // autoResize dependency = true
 
 BOOL enableCollapsible = NO;
@@ -1163,8 +1163,8 @@ BOOL isUsingAdManagerRequest = YES;
                             
                             // Prepare reward data as JSON
                             NSDictionary *rewardData = @{
-                                @"currency": reward.type,
-                                @"amount": [reward.amount stringValue]
+                                @"rewardType": reward.type,
+                                @"rewardAmount": [reward.amount stringValue]
                             };
                             NSData *rewardJsonData = [NSJSONSerialization dataWithJSONObject:rewardData options:0 error:nil];
                             NSString *rewardJsonString = [[NSString alloc] initWithData:rewardJsonData encoding:NSUTF8StringEncoding];
@@ -1241,8 +1241,8 @@ BOOL isUsingAdManagerRequest = YES;
             
             // Prepare reward data as JSON
             NSDictionary *rewardData = @{
-                @"currency": reward.type,
-                @"amount": [reward.amount stringValue]
+                @"rewardType": reward.type,
+                @"rewardAmount": [reward.amount stringValue]
             };
             NSData *rewardJsonData = [NSJSONSerialization dataWithJSONObject:rewardData options:0 error:nil];
             NSString *rewardJsonString = [[NSString alloc] initWithData:rewardJsonData encoding:NSUTF8StringEncoding];
@@ -1329,8 +1329,8 @@ BOOL isUsingAdManagerRequest = YES;
                             GADAdReward *reward = self.rewardedAd.adReward;
 
                             NSDictionary *rewardData = @{
-                                @"currency": reward.type,
-                                @"amount": [reward.amount stringValue]
+                                @"rewardType": reward.type,
+                                @"rewardAmount": [reward.amount stringValue]
                             };
                             NSData *rewardJsonData = [NSJSONSerialization dataWithJSONObject:rewardData options:0 error:nil];
                             NSString *rewardJsonString = [[NSString alloc] initWithData:rewardJsonData encoding:NSUTF8StringEncoding];
@@ -1402,8 +1402,8 @@ BOOL isUsingAdManagerRequest = YES;
                 GADAdReward *reward = self.rewardedAd.adReward;
                 
                 NSDictionary *rewardData = @{
-                    @"currency": reward.type,
-                    @"amount": [reward.amount stringValue]
+                    @"rewardType": reward.type,
+                    @"rewardAmount": [reward.amount stringValue]
                 };
                 NSError *jsonError;
                 NSData *jsonData = [NSJSONSerialization dataWithJSONObject:rewardData options:0 error:&jsonError];
