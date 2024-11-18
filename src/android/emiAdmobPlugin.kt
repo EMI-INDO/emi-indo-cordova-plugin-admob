@@ -1186,14 +1186,14 @@ class emiAdmobPlugin : CordovaPlugin() {
     private fun loadBannerAd(adUnitId: String, position: String, size: String) {
         try {
             if (bannerViewLayout == null) {
-                bannerViewLayout = FrameLayout(mContext!!)
+                bannerViewLayout = FrameLayout(mActivity!!)
                 val params = FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
                     FrameLayout.LayoutParams.MATCH_PARENT
                 )
                 val decorView = mActivity!!.window.decorView as ViewGroup
                 decorView.addView(bannerViewLayout, params)
-                bannerView = AdView(mContext!!)
+                bannerView = AdView(mActivity!!)
                 setBannerPosition(position)
                 setBannerSiz(size)
                 bannerView!!.adUnitId = adUnitId
@@ -1475,19 +1475,19 @@ class emiAdmobPlugin : CordovaPlugin() {
             "responsive_adaptive" -> bannerView!!.setAdSize(adSize)
             "anchored_adaptive" -> bannerView!!.setAdSize(
                 AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-                    mContext!!, adWidth
+                    mActivity!!, adWidth
                 )
             )
 
             "full_width_adaptive" -> bannerView!!.setAdSize(
                 AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-                    mContext!!, adWidth
+                    mActivity!!, adWidth
                 )
             )
 
             "in_line_adaptive" -> bannerView!!.setAdSize(
                 AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(
-                    mContext!!, adWidth
+                    mActivity!!, adWidth
                 )
             )
 
@@ -1522,7 +1522,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             val adWidthPixels =
                 if (bannerViewLayout != null && bannerViewLayout!!.width > 0) bannerViewLayout!!.width else outMetrics.widthPixels
             val adWidth = (adWidthPixels / density).toInt()
-            return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(mContext!!, adWidth)
+            return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(mActivity!!, adWidth)
         }
 
 
