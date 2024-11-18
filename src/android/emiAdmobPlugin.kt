@@ -86,12 +86,17 @@ class emiAdmobPlugin : CordovaPlugin() {
 
     private var consentInformation: ConsentInformation? = null
 
+    private var isOverlapping: Boolean = false
+    private var overlappingHeight: Int = 0
+
     var isBannerLoad: Boolean = false
     var isBannerShow: Boolean = false
 
     var isBannerShows: Boolean = true
     private var bannerAutoShow = false
     private var isAutoResize: Boolean = false
+
+
     var appOpenAutoShow: Boolean = false
     var intAutoShow: Boolean = false
     var rewardedAutoShow: Boolean = false
@@ -1077,13 +1082,15 @@ class emiAdmobPlugin : CordovaPlugin() {
             val options = args.getJSONObject(0)
             if(mActivity != null) {
                 mActivity!!.runOnUiThread {
+                    val isOverlapping = options.optBoolean("isOverlapping")
+                    val overlappingHeight = options.optInt("overlappingHeight")
                     val paddingPx = options.optInt("padding")
                     val marginsPx = options.optInt("margins")
-                    // final boolean autoResize = options.optBoolean("autoResize");
                     try {
+                        this.isOverlapping = isOverlapping
+                        this.overlappingHeight = overlappingHeight
                         this.paddingInPx = paddingPx
                         this.marginsInPx = marginsPx
-                        // this.isAutoResize = autoResize;
                     } catch (e: Exception) {
                         callbackContext.error(e.toString())
                     }
@@ -1192,7 +1199,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 bannerView!!.adUnitId = adUnitId
                 bannerView!!.adListener = bannerAdListener
                 bannerView!!.loadAd(buildAdRequest())
-                adjustWebViewForBanner(position)
+                // adjustWebViewForBanner(position)
             } else {
                 Log.d(TAG, "Banner view layout already exists.")
             }
@@ -1369,6 +1376,11 @@ class emiAdmobPlugin : CordovaPlugin() {
             if (bannerAutoShow) {
                 isBannerAutoShow()
             }
+
+            if (isOverlapping) {
+                bannerOverlapping()
+            }
+
             cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.load');")
 
             val eventData = String.format(
@@ -1408,6 +1420,32 @@ class emiAdmobPlugin : CordovaPlugin() {
         override fun onAdOpened() {
             cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.open');")
             isBannerShows = false
+        }
+    }
+
+
+    // fix https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/issues/26
+    private fun bannerOverlapping() {
+        if (bannerView != null && mActivity != null && cWebView != null) {
+            mActivity!!.runOnUiThread {
+                try {
+                    val bannerHeightInPx = bannerView!!.height
+                    val displayMetrics = DisplayMetrics()
+                    mActivity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
+                    val screenHeightInPx = displayMetrics.heightPixels
+
+                    // Adjust the WebView height to account for the banner ad
+                    val webViewHeight = screenHeightInPx - (adSize.height+overlappingHeight)
+                    val layoutParams = cWebView!!.view.layoutParams
+                    layoutParams.height = webViewHeight
+                    cWebView!!.view.layoutParams = layoutParams
+
+                    // Log for debugging
+                    Log.d("BannerAdjustment", "Adjusted WebView height: $webViewHeight")
+                } catch (e: Exception) {
+                    Log.e("AdmobPlugin", "Error adjusting WebView for banner: ${e.message}")
+                }
+            }
         }
     }
 

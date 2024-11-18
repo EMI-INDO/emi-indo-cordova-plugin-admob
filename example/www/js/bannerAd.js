@@ -1,4 +1,4 @@
-// cordova.plugins.emiAdmobPlugin.styleBannerAd({ padding: 50, margins: 50 });  // (Optional only android)
+// ccordova.plugins.emiAdmobPlugin.styleBannerAd({isOverlapping: true, overlappingHeight: 5, padding: 0, margins: 0 });  // ( only android)
 //cordova.plugins.emiAdmobPlugin.loadBannerAd({config});
 //cordova.plugins.emiAdmobPlugin.showBannerAd(); // default
 //cordova.plugins.emiAdmobPlugin.hideBannerAd(); // default
@@ -9,6 +9,13 @@
 function loadBanner() {
 
     if (typeof cordova !== 'undefined') {
+
+        cordova.plugins.emiAdmobPlugin.styleBannerAd({
+            isOverlapping: true, 
+            overlappingHeight: 5, 
+            padding: 0, 
+            margins: 0 
+        });
 
         cordova.plugins.emiAdmobPlugin.loadBannerAd({
             adUnitId: Banner_ID, //Banner_ID,
