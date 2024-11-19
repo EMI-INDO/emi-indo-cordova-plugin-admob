@@ -464,17 +464,17 @@ class emiAdmobPlugin : CordovaPlugin() {
                                 }
 
                                 private fun openAutoShow() {
-                                        try {
-                                            if (mActivity != null && isAppOpenAdShow && appOpenAd != null) {
-                                                mActivity!!.runOnUiThread {
-                                                    appOpenAd!!.show(
-                                                        mActivity!!
-                                                    )
-                                                }
+                                    try {
+                                        if (mActivity != null && isAppOpenAdShow && appOpenAd != null) {
+                                            mActivity!!.runOnUiThread {
+                                                appOpenAd!!.show(
+                                                    mActivity!!
+                                                )
                                             }
-                                        } catch (e: Exception) {
-                                            PUBLIC_CALLBACKS!!.error(e.toString())
                                         }
+                                    } catch (e: Exception) {
+                                        PUBLIC_CALLBACKS!!.error(e.toString())
+                                    }
                                 }
 
                                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
@@ -499,16 +499,16 @@ class emiAdmobPlugin : CordovaPlugin() {
             return true
         } else if (action == "showAppOpenAd") {
 
-                try {
-                    if (mActivity != null && isAppOpenAdShow && appOpenAd != null) {
-                        mActivity!!.runOnUiThread { appOpenAd!!.show(mActivity!!) }
-                        appOpenAdLoadCallback()
-                    } else {
-                        callbackContext.error("The App Open Ad wasn't ready yet")
-                    }
-                } catch (e: Exception) {
-                    PUBLIC_CALLBACKS!!.error(e.toString())
+            try {
+                if (mActivity != null && isAppOpenAdShow && appOpenAd != null) {
+                    mActivity!!.runOnUiThread { appOpenAd!!.show(mActivity!!) }
+                    appOpenAdLoadCallback()
+                } else {
+                    callbackContext.error("The App Open Ad wasn't ready yet")
                 }
+            } catch (e: Exception) {
+                PUBLIC_CALLBACKS!!.error(e.toString())
+            }
 
             return true
         } else if (action == "loadInterstitialAd") {
@@ -613,12 +613,12 @@ class emiAdmobPlugin : CordovaPlugin() {
             return true
         } else if (action == "showInterstitialAd") {
 
-                if (mActivity != null && isInterstitialLoad && mInterstitialAd != null) {
-                    mActivity!!.runOnUiThread { mInterstitialAd!!.show(mActivity!!) }
-                    interstitialAdLoadCallback()
-                } else {
-                    callbackContext.error("The Interstitial ad wasn't ready yet")
-                }
+            if (mActivity != null && isInterstitialLoad && mInterstitialAd != null) {
+                mActivity!!.runOnUiThread { mInterstitialAd!!.show(mActivity!!) }
+                interstitialAdLoadCallback()
+            } else {
+                callbackContext.error("The Interstitial ad wasn't ready yet")
+            }
             return true
         } else if (action == "loadRewardedAd") {
             val options = args.getJSONObject(0)
@@ -738,8 +738,8 @@ class emiAdmobPlugin : CordovaPlugin() {
                                                     }
                                                 }
                                             }
+                                        }
                                     }
-                                }
                             })
                     } catch (e: Exception) {
                         callbackContext.error(e.toString())
@@ -1071,6 +1071,12 @@ class emiAdmobPlugin : CordovaPlugin() {
                         try {
                             bannerView!!.visibility = View.VISIBLE
                             bannerView!!.resume()
+
+                            if (isOverlapping) {
+                                 bannerOverlapping()
+                            }
+
+
                         } catch (e: Exception) {
                             callbackContext.error(e.toString())
                         }
@@ -1121,6 +1127,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                             bannerView!!.pause()
                             isBannerLoad = false
                             isBannerPause = 1
+                            bannerOverlappingToZero()
                         } catch (e: Exception) {
                             callbackContext.error(e.toString())
                         }
@@ -1133,6 +1140,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 mActivity!!.runOnUiThread {
                     try {
                         if (bannerViewLayout != null && bannerView != null) {
+                            bannerOverlappingToZero()
                             bannerViewLayout!!.removeView(bannerView)
                             bannerView!!.destroy()
                             bannerView = null
@@ -1229,6 +1237,11 @@ class emiAdmobPlugin : CordovaPlugin() {
         }
     }
 
+
+
+
+
+
     @SuppressLint("RtlHardcoded")
     private fun setBannerPosition(position: String?) {
         val bannerParams = FrameLayout.LayoutParams(
@@ -1247,6 +1260,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 bannerParams.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
                 bannerParams.setMargins(0, marginsInPx, 0, 0)
                 bannerViewLayout!!.setPadding(0, paddingInPx, 0, 0)
+
             }
 
             "left" -> {
@@ -1290,7 +1304,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
     private fun isBannerAutoShow() {
         try {
-            if (bannerView != null && bannerViewLayout != null) {
+            if (mActivity != null && bannerView != null && bannerViewLayout != null) {
                 if (lock) {
                     bannerViewLayout!!.addView(bannerView)
                     bannerViewLayout!!.bringToFront()
@@ -1313,7 +1327,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
     private val isShowBannerAds: Unit
         get() {
-            if (isBannerLoad && bannerView != null) {
+            if (mActivity != null && isBannerLoad && bannerView != null) {
                 try {
                     if (lock) {
                         bannerViewLayout!!.addView(bannerView)
@@ -1348,16 +1362,16 @@ class emiAdmobPlugin : CordovaPlugin() {
                 put("cause", adError.cause?.toString() ?: "null")
             }
 
-                    if (bannerViewLayout != null && bannerView != null) {
-                        bannerViewLayout!!.removeView(bannerView)
-                        bannerView!!.destroy()
-                        bannerView = null
-                        bannerViewLayout = null
-                        isBannerLoad = false
-                        isBannerShow = false
-                        isBannerPause = 2
-                        lock = true
-                    }
+            if (bannerViewLayout != null && bannerView != null) {
+                bannerViewLayout!!.removeView(bannerView)
+                bannerView!!.destroy()
+                bannerView = null
+                bannerViewLayout = null
+                isBannerLoad = false
+                isBannerShow = false
+                isBannerPause = 2
+                lock = true
+            }
 
 
             cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.failed.load', ${errorData});")
@@ -1424,30 +1438,69 @@ class emiAdmobPlugin : CordovaPlugin() {
     }
 
 
-    // fix https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/issues/26
-    private fun bannerOverlapping() {
+
+
+    private fun bannerOverlappingToZero() {
         if (bannerView != null && mActivity != null && cWebView != null) {
             mActivity!!.runOnUiThread {
                 try {
-                    val bannerHeightInPx = bannerView!!.height
-                    val displayMetrics = DisplayMetrics()
-                    mActivity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
-                    val screenHeightInPx = displayMetrics.heightPixels
+                    val rootView = (cWebView!!.view.parent as View)
+                    rootView.post {
+                        // Get the total height of the parent view
+                        val totalHeight = rootView.height
 
-                    // Adjust the WebView height to account for the banner ad
-                    val webViewHeight = screenHeightInPx - (adSize.height+overlappingHeight)
-                    val layoutParams = cWebView!!.view.layoutParams
-                    layoutParams.height = webViewHeight
-                    cWebView!!.view.layoutParams = layoutParams
+                        // Adjust WebView height to match parent height
+                        val layoutParams = cWebView!!.view.layoutParams
+                        layoutParams.height = totalHeight
+                        cWebView!!.view.layoutParams = layoutParams
 
-                    // Log for debugging
-                    Log.d("BannerAdjustment", "Adjusted WebView height: $webViewHeight")
+                        // Ensure no padding/margin in WebView or its parent
+                        cWebView!!.view.setPadding(0, 0, 0, 0)
+                        (cWebView!!.view.parent as? ViewGroup)?.setPadding(0, 0, 0, 0)
+
+                        // Force layout update
+                        cWebView!!.view.requestLayout()
+
+                        Log.d("BannerAdjustment", "WebView set to full height: $totalHeight")
+                    }
                 } catch (e: Exception) {
-                    Log.e("AdmobPlugin", "Error adjusting WebView for banner: ${e.message}")
+                    Log.e("AdmobPlugin", "Error setting WebView to full height: ${e.message}")
                 }
             }
         }
     }
+
+
+
+
+
+        // fix https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/issues/26
+        private fun bannerOverlapping() {
+            if (bannerView != null && mActivity != null && cWebView != null) {
+                mActivity!!.runOnUiThread {
+                    try {
+                        val bannerHeightInPx = bannerView!!.height
+                        val displayMetrics = DisplayMetrics()
+                        mActivity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
+                        val screenHeightInPx = displayMetrics.heightPixels
+
+                        // Adjust the WebView height to account for the banner ad
+                        val webViewHeight = screenHeightInPx - (adSize.height+overlappingHeight)
+                        val layoutParams = cWebView!!.view.layoutParams
+                        layoutParams.height = webViewHeight
+                        cWebView!!.view.layoutParams = layoutParams
+
+                        // Log for debugging
+                        Log.d("BannerAdjustment", "Adjusted WebView height: $webViewHeight")
+                    } catch (e: Exception) {
+                        Log.e("AdmobPlugin", "Error adjusting WebView for banner: ${e.message}")
+                    }
+                }
+            }
+        }
+
+
+
 
 
     private val bannerPaidAdListener = OnPaidEventListener { adValue ->
@@ -2024,8 +2077,8 @@ class emiAdmobPlugin : CordovaPlugin() {
                 return cWebView as View?
             }
 
-           return mActivity!!.window.decorView.findViewById(View.generateViewId())
-          //  return mActivity!!.window.decorView.findViewById(R.id.content)
+            return mActivity!!.window.decorView.findViewById(View.generateViewId())
+            //  return mActivity!!.window.decorView.findViewById(R.id.content)
         }
 
     override fun onPause(multitasking: Boolean) {
