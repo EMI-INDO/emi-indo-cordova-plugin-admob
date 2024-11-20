@@ -161,6 +161,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 if(mActivity != null) {
                     mActivity!!.runOnUiThread {
                         try {
+                            bannerOverlappingToZero()
                             if (bannerViewLayout != null && bannerView != null) {
                                 val parentView = bannerViewLayout!!.parent as ViewGroup
                                 parentView.removeView(bannerViewLayout)
@@ -169,22 +170,17 @@ class emiAdmobPlugin : CordovaPlugin() {
                                     FrameLayout.LayoutParams.MATCH_PARENT,
                                     FrameLayout.LayoutParams.WRAP_CONTENT
                                 )
-                                val rootView =
-                                    mActivity!!.window.decorView.findViewById<View>(View.generateViewId())
-                                if (rootView is ViewGroup) {
-                                    rootView.addView(bannerViewLayout, params)
-                                } else {
-                                    mActivity!!.addContentView(bannerViewLayout, params)
-                                }
-                                bannerView = AdView(mContext!!)
+                                val decorView = mActivity!!.window.decorView as ViewGroup
+                                decorView.addView(bannerViewLayout, params)
+                                bannerView = AdView(mActivity!!)
                                 setBannerPosition(this.isPosition)
                                 setBannerSiz(this.isSize)
                                 bannerView!!.adUnitId = bannerAdUnitId!!
                                 bannerView!!.adListener = bannerAdListener
                                 bannerView!!.loadAd(buildAdRequest())
-                                adjustWebViewForBanner(this.isPosition)
                                 bannerViewLayout!!.addView(bannerView)
                                 bannerViewLayout!!.bringToFront()
+                                bannerOverlappingToZero()
                             }
                         } catch (e: Exception) {
                             PUBLIC_CALLBACKS!!.error("Error adjusting banner size: " + e.message)
@@ -195,9 +191,15 @@ class emiAdmobPlugin : CordovaPlugin() {
 
             when (orientation) {
                 Configuration.ORIENTATION_PORTRAIT -> {
+                    if (isOverlapping) {
+                        bannerOverlapping()
+                    }
                     cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.orientation.portrait');")
                 }
                 Configuration.ORIENTATION_LANDSCAPE -> {
+                    if (isOverlapping) {
+                        bannerOverlapping()
+                    }
                     cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.orientation.landscape');")
                 }
                 Configuration.ORIENTATION_UNDEFINED -> {
@@ -1071,6 +1073,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                         try {
                             bannerView!!.visibility = View.VISIBLE
                             bannerView!!.resume()
+                           // bannerOverlappingToZero()
 
                             if (isOverlapping) {
                                  bannerOverlapping()
@@ -1362,6 +1365,8 @@ class emiAdmobPlugin : CordovaPlugin() {
                 put("cause", adError.cause?.toString() ?: "null")
             }
 
+            bannerOverlappingToZero()
+
             if (bannerViewLayout != null && bannerView != null) {
                 bannerViewLayout!!.removeView(bannerView)
                 bannerView!!.destroy()
@@ -1439,7 +1444,6 @@ class emiAdmobPlugin : CordovaPlugin() {
 
 
 
-
     private fun bannerOverlappingToZero() {
         if (bannerView != null && mActivity != null && cWebView != null) {
             mActivity!!.runOnUiThread {
@@ -1485,7 +1489,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                         val screenHeightInPx = displayMetrics.heightPixels
 
                         // Adjust the WebView height to account for the banner ad
-                        val webViewHeight = screenHeightInPx - (adSize.height+overlappingHeight)
+                        val webViewHeight = screenHeightInPx - (adSize.height + overlappingHeight)
                         val layoutParams = cWebView!!.view.layoutParams
                         layoutParams.height = webViewHeight
                         cWebView!!.view.layoutParams = layoutParams
