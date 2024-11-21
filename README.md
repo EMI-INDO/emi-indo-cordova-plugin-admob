@@ -1,4 +1,9 @@
 
+## New feature suggestion
+> [!TIP]
+> - Funding is needed to add a new feature of native ads that can be scrolled within html content elements.
+> - I will not settle how much funding is needed to add this feature.
+
 
 # emi-indo-cordova-plugin-admob
  Cordova Plugin Admob Android and IOS
@@ -11,9 +16,13 @@
 ### User Messaging Platform (UMP IOS: 2.6.0) [Release Notes:](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/privacy/download)
 ### IAB Europe Transparency & Consent Framework (CPM: 2.2.0)
 
-
 ## New example 
 - https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/www
+
+
+## Documentation Capacitor example
+-  [Documentation Capacitor example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/discussions/29)
+
 
 
 ## Minimum Cordova Engines

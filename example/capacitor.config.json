@@ -1,0 +1,9 @@
+{
+  "appId": "io.cordova.hellocordova",
+  "appName": "HelloCordova",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "cordova": {
+    "preferences": {}
+  }
+}
