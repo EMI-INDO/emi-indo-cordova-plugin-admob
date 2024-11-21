@@ -1,4 +1,9 @@
 
+## New feature suggestion
+> [!TIP]
+> - Funding is needed to add a new feature of native ads that can be scrolled within html content elements.
+> - I will not settle how much funding is needed to add this feature.
+
 
 # emi-indo-cordova-plugin-admob
  Cordova Plugin Admob Android and IOS
