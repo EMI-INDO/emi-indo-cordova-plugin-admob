@@ -1,7 +1,7 @@
 {
   "name": "emi-indo-cordova-plugin-admob",
-  "version": "1.6.0",
-  "description": "Cordova Plugin Admob Android IOS",
+  "version": "1.6.1",
+  "description": "Cordova Plugin Admob Android IOS Support Capacitor",
   "cordova": {
     "id": "emi-indo-cordova-plugin-admob",
     "platforms": [
@@ -20,7 +20,11 @@
     "admob-plus-cordova",
     "cordova-admob-pro",
     "cordova-admob-ios",
-    "cordova-admob-android"
+    "cordova-admob-android",
+    "capacitor",
+    "capacitor-admob",
+    "capacitor-android",
+    "capacitor-ios"
   ],
   "author": "EMI INDO",
   "email": "cordova.c3addon@gmail.com",

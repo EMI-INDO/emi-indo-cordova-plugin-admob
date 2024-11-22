@@ -20,7 +20,7 @@ function loadBanner() {
         cordova.plugins.emiAdmobPlugin.loadBannerAd({
             adUnitId: Banner_ID, //Banner_ID,
             position: "bottom-center",
-            size: "responsive_adaptive", // autoResize: true (only responsive_adaptive)
+            size: "banner", // autoResize: true (only responsive_adaptive)
             collapsible: "bottom", // position: top | bottom (disable, empty string)
             autoResize: true, // default false
             autoShow: true, // default false

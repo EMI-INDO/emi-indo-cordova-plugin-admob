@@ -3,7 +3,10 @@
   "appName": "HelloCordova",
   "webDir": "www",
   "bundledWebRuntime": false,
-  "cordova": {
-    "preferences": {}
+  "plugins": {
+    "AdMob": {
+      "APP_ID_ANDROID": "ca-app-pub-3940256099942544~3347511713",
+      "APP_ID_IOS": "ca-app-pub-3940256099942544~1458002511"
+    }
   }
 }
