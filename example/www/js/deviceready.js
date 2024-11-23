@@ -20,7 +20,7 @@ otherwise you may be subject to ad serving restrictions,
 if it happens often, it is possible that your admob account will be permanently disabled.
 */
 
-
+let isPlatformIOS = false;
 
 if (window.cordova.platformId === 'ios') {
 
@@ -29,6 +29,8 @@ if (window.cordova.platformId === 'ios') {
     Interstitial_ID = 'ca-app-pub-3940256099942544/4411468910';
     Rewarded_ID = 'ca-app-pub-3940256099942544/1712485313';
     Rewarded_Interstitial_ID = 'ca-app-pub-3940256099942544/6978759866';
+
+    isPlatformIOS = true;
 
 } else {
     // Assume Android
@@ -74,6 +76,11 @@ document.addEventListener("deviceready", function () {
 
 
 
+    if (isPlatformIOS){
+        
+        cordova.plugins.emiAdmobPlugin.requestIDFA(); // requestTrackingAuthorization
+        
+    }
     
 
     // AdMob Sdk initialize

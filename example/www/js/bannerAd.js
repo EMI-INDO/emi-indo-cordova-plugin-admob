@@ -10,12 +10,17 @@ function loadBanner() {
 
     if (typeof cordova !== 'undefined') {
 
+        if (!isPlatformIOS){
+
         cordova.plugins.emiAdmobPlugin.styleBannerAd({
             isOverlapping: true, 
             overlappingHeight: 5, 
             padding: 0, 
             margins: 0 
         });
+        
+    }
+    
 
         cordova.plugins.emiAdmobPlugin.loadBannerAd({
             adUnitId: Banner_ID, //Banner_ID,
