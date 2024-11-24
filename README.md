@@ -11,9 +11,9 @@
 ### Mobile Ads SDK (Android: 23.5.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
 ### User Messaging Platform (UMP Android: 3.1.0) [Release Notes:](https://developers.google.com/admob/android/privacy/release-notes)
 
-### Mobile Ads SDK (IOS: 11.10.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
+### Mobile Ads SDK (IOS: 11.12.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
 
-### User Messaging Platform (UMP IOS: 2.6.0) [Release Notes:](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/privacy/download)
+### User Messaging Platform (UMP IOS: 2.7.0) [Release Notes:](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/privacy/download)
 ### IAB Europe Transparency & Consent Framework (CPM: 2.2.0)
 
 ## New example 
@@ -31,7 +31,10 @@
 
 
 ## IOS Ad Support IOS 18 *
+- Mobile Ads SDK (IOS: 11.12.0)
+- emi-indo-cordova-plugin-admob@1.6.3 or higher requires cocoapods 1.16.2 or higher
 > [!WARNING]
+> - Mobile Ads SDK (IOS: 11.10.0)
 > - emi-indo-cordova-plugin-admob@1.5.2 or higher
 > - Minimum supported Xcode version up to 15.3 or higher
 > - minimum deployment-target: 12.2

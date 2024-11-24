@@ -27,7 +27,6 @@ BOOL isCollapsible = NO;
 BOOL isAutoResize = NO;
 
 int isAdSkip = 0;
-BOOL isIAB = NO;
 BOOL UnderAgeOfConsent = NO;
 BOOL isPrivacyOptions = NO;
 BOOL isDebugGeography = NO;
@@ -165,10 +164,7 @@ BOOL isUsingAdManagerRequest = YES;
   }
   [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
-/*
-- (void)getConsentRequest:(CDVInvokedUrlCommand *)command {
-}
-*/
+
 - (void)startGoogleMobileAdsSDK {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
@@ -366,7 +362,7 @@ BOOL isUsingAdManagerRequest = YES;
     CDVPluginResult *pluginResult;
     NSString *callbackId = command.callbackId;
     
-    if (isIAB == 1) {
+
         NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         
@@ -386,9 +382,7 @@ BOOL isUsingAdManagerRequest = YES;
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
         [self fireEvent:@"" event:@"onGetIabTfc" withData:nil];
-    } else {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-    }
+    
     
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
@@ -475,8 +469,6 @@ BOOL isUsingAdManagerRequest = YES;
            selector:@selector(orientationDidChange:)
                name:UIDeviceOrientationDidChangeNotification
              object:nil];
-
-    isIAB = YES;
     
     NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -553,10 +545,14 @@ BOOL isUsingAdManagerRequest = YES;
   }
 }
 
+
+
+
+/*
+
 - (void)addBannerConstraints {
   self.bannerView.translatesAutoresizingMaskIntoConstraints = NO;
 
-  // Tambahkan constraint berdasarkan posisi
   if ([setPosition isEqualToString:@"bottom-center"]) {
     [self.viewController.view addConstraints:@[
       [NSLayoutConstraint
@@ -596,6 +592,9 @@ BOOL isUsingAdManagerRequest = YES;
   }
 }
 
+*/
+
+
 
 - (void)loadBannerAd:(CDVInvokedUrlCommand *)command {
   CDVPluginResult *pluginResult;
@@ -624,7 +623,7 @@ BOOL isUsingAdManagerRequest = YES;
   if (collapsible != nil && [collapsible length] > 0) {
     isCollapsible = YES;
   } else {
-    isCollapsible = NO;
+    isCollapsible = YES;
   }
 
   if (autoResize) {
@@ -644,15 +643,13 @@ BOOL isUsingAdManagerRequest = YES;
       }
 
       self.viewWidth = frame.size.width;
-
+        
       auto_Show = autoShow;
       adWidth = self.viewWidth;
 
-      
-
-      GADAdSize sizes = [self __AdSizeFromString:size];
-      self.bannerView = [[GADBannerView alloc] initWithAdSize:sizes];
-
+      GADAdSize siz = [self __AdSizeFromString:size];
+      self.bannerView = [[GADBannerView alloc] initWithAdSize:siz];
+        
       GADExtras *extras = [[GADExtras alloc] init];
 
       if (isCollapsible) {
@@ -661,8 +658,6 @@ BOOL isUsingAdManagerRequest = YES;
         [self.globalRequest registerAdNetworkExtras:extras];
           
       }
-
-      
 
       self.bannerView.adUnitID = adUnitId;
       self.bannerView.rootViewController = self.viewController;
@@ -1502,7 +1497,6 @@ BOOL isUsingAdManagerRequest = YES;
     }
 
     [self fireEvent:@"" event:@"on.banner.load" withData:nil];
-    
     
     if (auto_Show && self.bannerView) {
         [self addBannerViewToView:command];
