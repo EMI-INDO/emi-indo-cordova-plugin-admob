@@ -13,17 +13,17 @@
 @synthesize command;
 @synthesize responseInfo;
 @synthesize isPrivacyOptionsRequired;
-int idfaStatus = 0;
+int attStatus = 0;
 // int fromStatus = 0; // Deprecated
 int Consent_Status = 0;
 int adFormat = 0;
-int adWidth = 320; // Deprecated
+int adWidth = 320; // Default
 BOOL auto_Show = NO;
 // NSString *Npa = @"1"; // Deprecated
-NSString *Position = @"bottom-center"; // Default
+NSString *setPosition = @"bottom-center"; // Default
 NSString *bannerSaveAdUnitId = @""; // autoResize dependency = true
 
-BOOL enableCollapsible = NO;
+BOOL isCollapsible = NO;
 BOOL isAutoResize = NO;
 
 int isAdSkip = 0;
@@ -31,7 +31,7 @@ BOOL isIAB = NO;
 BOOL UnderAgeOfConsent = NO;
 BOOL isPrivacyOptions = NO;
 BOOL isDebugGeography = NO;
-BOOL ResponseInfo = NO;
+BOOL isResponseInfo = NO;
 BOOL isUsingAdManagerRequest = YES;
 
 - (BOOL)canRequestAds {
@@ -40,8 +40,20 @@ BOOL isUsingAdManagerRequest = YES;
 - (void)setUsingAdManagerRequest:(BOOL)value {
   isUsingAdManagerRequest = value;
 }
-- (void)ResponseInfo:(BOOL)value {
-  ResponseInfo = value;
+
+- (void)setAdRequest {
+    if (isUsingAdManagerRequest) {
+        self.globalRequest = [GAMRequest request];
+        NSLog(@"Using AdManager request");
+    } else {
+        self.globalRequest = [GADRequest request];
+        NSLog(@"Using AdMob request");
+    }
+}
+
+
+- (void)isResponseInfo:(BOOL)value {
+  isResponseInfo = value;
 }
 - (void)isDebugGeography:(BOOL)value {
   isDebugGeography = value;
@@ -55,7 +67,7 @@ BOOL isUsingAdManagerRequest = YES;
   BOOL setDebugGeography = [[options valueForKey:@"isConsentDebug"] boolValue];
 
   [self setUsingAdManagerRequest:setAdRequest];
-  [self ResponseInfo:responseInfo];
+  [self isResponseInfo:responseInfo];
   [self isDebugGeography:setDebugGeography];
 
   __block CDVPluginResult *pluginResult;
@@ -132,34 +144,23 @@ BOOL isUsingAdManagerRequest = YES;
       [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(
                              ATTrackingManagerAuthorizationStatus status) {
         if (status == ATTrackingManagerAuthorizationStatusDenied) {
-          idfaStatus = ATTrackingManagerAuthorizationStatusDenied;
+          attStatus = ATTrackingManagerAuthorizationStatusDenied;
         } else if (status == ATTrackingManagerAuthorizationStatusAuthorized) {
-          idfaStatus = ATTrackingManagerAuthorizationStatusAuthorized;
+          attStatus = ATTrackingManagerAuthorizationStatusAuthorized;
         } else if (status == ATTrackingManagerAuthorizationStatusRestricted) {
-          idfaStatus = ATTrackingManagerAuthorizationStatusRestricted;
+          attStatus = ATTrackingManagerAuthorizationStatusRestricted;
         } else if (status ==
                    ATTrackingManagerAuthorizationStatusNotDetermined) {
-          idfaStatus = ATTrackingManagerAuthorizationStatusNotDetermined;
+          attStatus = ATTrackingManagerAuthorizationStatusNotDetermined;
         }
       }];
     });
-    [self fireEvent:@""
-              event:@"on."
-                    @"getI"
-                    @"DFA."
-                    @"stat"
-                    @"us"
-           withData:nil];
+      [self fireEvent:@"" event:@"on.getIDFA.status" withData:nil];
+
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                        messageAsInt:idfaStatus];
+                                        messageAsInt:attStatus];
   } else {
-    [self fireEvent:@""
-              event:@"on."
-                    @"getI"
-                    @"DFA."
-                    @"erro"
-                    @"r"
-           withData:nil];
+      [self fireEvent:@"" event:@"on.getIDFA.error" withData:nil];
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
   }
   [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
@@ -187,22 +188,21 @@ BOOL isUsingAdManagerRequest = YES;
         [adaptersArray addObject:adapterInfo];
       }
 
-      NSString *sdkVersion = GADGetStringFromVersionNumber(
-          GADMobileAds.sharedInstance.versionNumber);
-      int Consent_Status =
-          (int)UMPConsentInformation.sharedInstance.consentStatus;
+      NSString *sdkVersion = GADGetStringFromVersionNumber(GADMobileAds.sharedInstance.versionNumber);
+      int Consent_Status = (int)UMPConsentInformation.sharedInstance.consentStatus;
+      int initAttStatus = (int)attStatus;
 
       NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
       NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
       NSNumber *CmpSdkID = [prefs valueForKey:@"IABTCF_CmpSdkID"];
       NSString *gdprApplies = [prefs stringForKey:@"IABTCF_gdprApplies"];
-      NSString *PurposeConsents =
-          [prefs stringForKey:@"IABTCF_PurposeConsents"];
+      NSString *PurposeConsents = [prefs stringForKey:@"IABTCF_PurposeConsents"];
       NSString *TCString = [prefs stringForKey:@"IABTCF_TCString"];
       NSString *additionalConsent = [prefs stringForKey:@"IABTCF_AddtlConsent"];
 
       result[@"version"] = sdkVersion;
       result[@"consentStatus"] = @(Consent_Status);
+      result[@"attStatus"] = @(initAttStatus);
       result[@"adapter"] = adaptersArray;
       result[@"CmpSdkID"] = CmpSdkID;
       result[@"gdprApplies"] = gdprApplies;
@@ -468,46 +468,34 @@ BOOL isUsingAdManagerRequest = YES;
 }
 
 - (void)pluginInitialize {
-  [super pluginInitialize];
+    [super pluginInitialize];
 
-  [[NSNotificationCenter defaultCenter]
-      addObserver:self
-         selector:@selector(orientationDidChange:)
-             name:UIDeviceOrientationDidChangeNotification
-           object:nil];
+    [[NSNotificationCenter defaultCenter]
+        addObserver:self
+           selector:@selector(orientationDidChange:)
+               name:UIDeviceOrientationDidChangeNotification
+             object:nil];
 
-  isIAB = YES;
-  NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
-  NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-  NSNumber *CmpSdkID = [prefs valueForKey:@"IABTCF"
-                                          @"_CmpSd"
-                                          @"kID"];
-  NSString *gdprApplies = [prefs stringForKey:@"IABTCF"
-                                              @"_gdprA"
-                                              @"pplie"
-                                              @"s"];
-  NSString *PurposeConsents = [prefs stringForKey:@"IABTCF"
-                                                  @"_Purpo"
-                                                  @"seCons"
-                                                  @"ents"];
-  NSString *TCString = [prefs stringForKey:@"IABTCF"
-                                           @"_TCStr"
-                                           @"ing"];
-  result[@"IABTCF_"
-         @"CmpSdkID"] = CmpSdkID;
-  result[@"IABTCF_"
-         @"gdprApplies"] = gdprApplies;
-  result[@"IABTCF_"
-         @"PurposeCons"
-         @"ents"] = PurposeConsents;
-  result[@"IABTCF_"
-         @"TCString"] = TCString;
-  // NSLog(@"%@",
-  //   [[NSUserDefaults
-  //   standardUserDefaults]
-  //   dictionaryRepresentation]);
-  [prefs synchronize];
+    isIAB = YES;
+    
+    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    
+    NSNumber *CmpSdkID = [prefs valueForKey:@"IABTCF_CmpSdkID"];
+    NSString *gdprApplies = [prefs stringForKey:@"IABTCF_gdprApplies"];
+    NSString *PurposeConsents = [prefs stringForKey:@"IABTCF_PurposeConsents"];
+    NSString *TCString = [prefs stringForKey:@"IABTCF_TCString"];
+    
+    result[@"IABTCF_CmpSdkID"] = CmpSdkID;
+    result[@"IABTCF_gdprApplies"] = gdprApplies;
+    result[@"IABTCF_PurposeConsents"] = PurposeConsents;
+    result[@"IABTCF_TCString"] = TCString;
+    
+    // NSLog(@"%@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
+    
+    [prefs synchronize];
 }
+
 
 - (void)orientationDidChange:(NSNotification *)notification {
   // NSLog(@"Orientation changed");
@@ -522,6 +510,8 @@ BOOL isUsingAdManagerRequest = YES;
             [self.bannerView removeFromSuperview];
           }
         }
+          
+        [self setAdRequest];
 
         self.bannerViewLayout = [[UIView alloc] initWithFrame:CGRectZero];
         self.bannerViewLayout.translatesAutoresizingMaskIntoConstraints = NO;
@@ -549,7 +539,7 @@ BOOL isUsingAdManagerRequest = YES;
                     rootView.frame.size.width)];
         self.bannerView.adUnitID = bannerSaveAdUnitId;
         self.bannerView.delegate = self;
-        [self.bannerView loadRequest:[GADRequest request]];
+        [self.bannerView loadRequest:self.globalRequest];
 
         [self.bannerViewLayout addSubview:self.bannerView];
         [self.bannerViewLayout bringSubviewToFront:self.bannerView];
@@ -567,7 +557,7 @@ BOOL isUsingAdManagerRequest = YES;
   self.bannerView.translatesAutoresizingMaskIntoConstraints = NO;
 
   // Tambahkan constraint berdasarkan posisi
-  if ([Position isEqualToString:@"bottom-center"]) {
+  if ([setPosition isEqualToString:@"bottom-center"]) {
     [self.viewController.view addConstraints:@[
       [NSLayoutConstraint
           constraintWithItem:self.bannerView
@@ -585,7 +575,7 @@ BOOL isUsingAdManagerRequest = YES;
                                   multiplier:1
                                     constant:0]
     ]];
-  } else if ([Position isEqualToString:@"top-center"]) {
+  } else if ([setPosition isEqualToString:@"top-center"]) {
     [self.viewController.view addConstraints:@[
       [NSLayoutConstraint
           constraintWithItem:self.bannerView
@@ -606,10 +596,10 @@ BOOL isUsingAdManagerRequest = YES;
   }
 }
 
+
 - (void)loadBannerAd:(CDVInvokedUrlCommand *)command {
   CDVPluginResult *pluginResult;
   NSString *callbackId = command.callbackId;
-  adFormat = 3;
   NSDictionary *options = [command.arguments objectAtIndex:0];
   NSString *adUnitId = [options valueForKey:@"adUnitId"];
   NSString *position = [options valueForKey:@"position"];
@@ -620,6 +610,10 @@ BOOL isUsingAdManagerRequest = YES;
 
   bannerSaveAdUnitId = adUnitId;
 
+  setPosition = position;
+    
+  adFormat = 3;
+
   if (adUnitId == nil || [adUnitId length] == 0) {
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
                                      messageAsString:@"Ad unit ID is required"];
@@ -628,15 +622,16 @@ BOOL isUsingAdManagerRequest = YES;
   }
 
   if (collapsible != nil && [collapsible length] > 0) {
-    enableCollapsible = YES;
+    isCollapsible = YES;
   } else {
-    enableCollapsible = NO;
+    isCollapsible = NO;
   }
 
   if (autoResize) {
-
     isAutoResize = YES;
   }
+    
+  [self setAdRequest];
 
   if (adFormat == 3) {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -653,24 +648,26 @@ BOOL isUsingAdManagerRequest = YES;
       auto_Show = autoShow;
       adWidth = self.viewWidth;
 
-      Position = position;
+      
 
       GADAdSize sizes = [self __AdSizeFromString:size];
       self.bannerView = [[GADBannerView alloc] initWithAdSize:sizes];
 
-      GADRequest *request = [GADRequest request];
       GADExtras *extras = [[GADExtras alloc] init];
 
-      if (enableCollapsible) {
+      if (isCollapsible) {
         extras.additionalParameters = @{@"collapsible" : collapsible};
+          
+        [self.globalRequest registerAdNetworkExtras:extras];
+          
       }
 
-      [request registerAdNetworkExtras:extras];
+      
 
       self.bannerView.adUnitID = adUnitId;
       self.bannerView.rootViewController = self.viewController;
       self.bannerView.delegate = self;
-      [self.bannerView loadRequest:request];
+      [self.bannerView loadRequest:self.globalRequest];
       self.bannerView.hidden = YES;
       [parentView addSubview:self.bannerView];
       [parentView bringSubviewToFront:self.bannerView];
@@ -684,6 +681,8 @@ BOOL isUsingAdManagerRequest = YES;
 
   [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
+
+
 
 - (GADAdSize)__AdSizeFromString:(NSString *)size {
 
@@ -718,14 +717,7 @@ BOOL isUsingAdManagerRequest = YES;
     [self addBannerViewToView:command];
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
   } else {
-    [self fireEvent:@""
-              event:@"on."
-                    @"bann"
-                    @"er."
-                    @"fail"
-                    @"ed."
-                    @"show"
-           withData:nil];
+      [self fireEvent:@"" event:@"on.banner.failed.show" withData:nil];
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
   }
   [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
@@ -734,7 +726,7 @@ BOOL isUsingAdManagerRequest = YES;
 - (void)addBannerViewToView:(CDVInvokedUrlCommand *)command {
   bannerView.translatesAutoresizingMaskIntoConstraints = NO;
   [self.viewController.view addSubview:bannerView];
-  if ([Position isEqualToString:@"bottom-center"]) {
+  if ([setPosition isEqualToString:@"bottom-center"]) {
     [self.viewController.view addConstraints:@[
       [NSLayoutConstraint
           constraintWithItem:bannerView
@@ -752,7 +744,7 @@ BOOL isUsingAdManagerRequest = YES;
                                   multiplier:1
                                     constant:0]
     ]];
-  } else if ([Position isEqualToString:@"top-center"]) {
+  } else if ([setPosition isEqualToString:@"top-center"]) {
 
     [self.viewController.view addConstraints:@[
       [NSLayoutConstraint
@@ -834,13 +826,15 @@ BOOL isUsingAdManagerRequest = YES;
     adFormat = 1;
     self.appOpenAd = nil;
     
+    [self setAdRequest];
+    
     if (adFormat == 1) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            GADRequest *request = [GADRequest request];
+
             GADExtras *extras = [[GADExtras alloc] init];
-            [request registerAdNetworkExtras:extras];
+            [self.globalRequest registerAdNetworkExtras:extras];
             
-            [GADAppOpenAd loadWithAdUnitID:adUnitId request:request completionHandler:^(GADAppOpenAd *ad, NSError *error) {
+            [GADAppOpenAd loadWithAdUnitID:adUnitId request:self.globalRequest completionHandler:^(GADAppOpenAd *ad, NSError *error) {
                 if (error) {
                     // Send load error to event
                     NSDictionary *errorData = @{@"error": error.localizedDescription ?: @"Unknown error"};
@@ -881,9 +875,6 @@ BOOL isUsingAdManagerRequest = YES;
                 };
                 
                 
-              
-                
-                
                 if (auto_Show) {
                     NSError *presentError = nil;
                     if ([self.appOpenAd canPresentFromRootViewController:self.viewController error:&presentError]) {
@@ -899,7 +890,7 @@ BOOL isUsingAdManagerRequest = YES;
                 }
                 
                 
-                if (ResponseInfo) {
+                if (isResponseInfo) {
                     GADResponseInfo *responseInfo = ad.responseInfo;
                     NSMutableArray *adNetworkInfoArray = [NSMutableArray array];
 
@@ -953,15 +944,7 @@ BOOL isUsingAdManagerRequest = YES;
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
   } else {
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-    [self fireEvent:@""
-              event:@"on."
-                    @"appO"
-                    @"penA"
-                    @"d."
-                    @"fail"
-                    @"ed."
-                    @"show"
-           withData:nil];
+      [self fireEvent:@"" event:@"on.appOpened.failed.show" withData:nil];
   }
   [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
@@ -975,11 +958,11 @@ BOOL isUsingAdManagerRequest = YES;
     
     auto_Show = autoShow;
     adFormat = 2;
-    
+    [self setAdRequest];
     if (adFormat == 2) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            GADRequest *request = [GADRequest request];
-            [GADInterstitialAd loadWithAdUnitID:adUnitId request:request completionHandler:^(GADInterstitialAd *ad, NSError *error) {
+            
+            [GADInterstitialAd loadWithAdUnitID:adUnitId request:self.globalRequest completionHandler:^(GADInterstitialAd *ad, NSError *error) {
                 if (error) {
                     // Send load error to event
                     NSDictionary *errorData = @{@"error": error.localizedDescription ?: @"Unknown error"};
@@ -1035,7 +1018,7 @@ BOOL isUsingAdManagerRequest = YES;
                 
                 
                 
-                if (ResponseInfo) {
+                if (isResponseInfo) {
                     GADResponseInfo *responseInfo = ad.responseInfo;
                     NSMutableArray *adNetworkInfoArray = [NSMutableArray array];
 
@@ -1109,11 +1092,10 @@ BOOL isUsingAdManagerRequest = YES;
     
     auto_Show = autoShow;
     adFormat = 4;
-    
+    [self setAdRequest];
     if (adFormat == 4) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            GADRequest *request = [GADRequest request];
-            [GADRewardedInterstitialAd loadWithAdUnitID:adUnitId request:request completionHandler:^(GADRewardedInterstitialAd *ad, NSError *error) {
+            [GADRewardedInterstitialAd loadWithAdUnitID:adUnitId request:self.globalRequest completionHandler:^(GADRewardedInterstitialAd *ad, NSError *error) {
                 if (error) {
                     // Send error data to event
                     NSDictionary *errorData = @{@"error": error.localizedDescription ?: @"Unknown error"};
@@ -1128,7 +1110,6 @@ BOOL isUsingAdManagerRequest = YES;
                 isAdSkip = 1;
                 self.rewardedInterstitialAd.fullScreenContentDelegate = self;
                 [self fireEvent:@"" event:@"on.rewardedInt.loaded" withData:nil];
-                
                 
                 
                 __weak __typeof(self) weakSelf = self;
@@ -1183,7 +1164,7 @@ BOOL isUsingAdManagerRequest = YES;
                     }
                     
                     
-                    if (ResponseInfo) {
+                    if (isResponseInfo) {
                         GADResponseInfo *responseInfo = ad.responseInfo;
                         NSMutableArray *adNetworkInfoArray = [NSMutableArray array];
 
@@ -1215,9 +1196,6 @@ BOOL isUsingAdManagerRequest = YES;
                             NSLog(@"Error converting response info to JSON: %@", jsonError.localizedDescription);
                         }
                     }
-                    
-                    
-                    
                     
                 }
             }];
@@ -1274,12 +1252,10 @@ BOOL isUsingAdManagerRequest = YES;
     BOOL autoShow = [[options valueForKey:@"autoShow"] boolValue];
     auto_Show = autoShow;
     adFormat = 3;
-    
+    [self setAdRequest];
     if (adFormat == 3) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            GADRequest *request = [GADRequest request];
-            
-            [GADRewardedAd loadWithAdUnitID:adUnitId request:request completionHandler:^(GADRewardedAd *ad, NSError *error) {
+            [GADRewardedAd loadWithAdUnitID:adUnitId request:self.globalRequest completionHandler:^(GADRewardedAd *ad, NSError *error) {
                 if (error) {
                     NSDictionary *errorData = @{@"error": error.localizedDescription ?: @"Unknown error"};
                     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:errorData options:0 error:nil];
@@ -1297,17 +1273,14 @@ BOOL isUsingAdManagerRequest = YES;
                 __weak __typeof(self) weakSelf = self;
                 self.rewardedAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
                     __strong __typeof(weakSelf) strongSelf = weakSelf;
-                    if (!strongSelf) return; // Pastikan strongSelf tidak null
+                    if (!strongSelf) return;
                     
-                    // Mengambil data ad revenue
                     NSDecimalNumber *adValue = value.value;
                     NSString *currencyCode = value.currencyCode;
                     GADAdValuePrecision precision = value.precision;
 
-                    // Mendapatkan ID unit iklan
                     NSString *adUnitId = strongSelf.rewardedAd.adUnitID;
 
-                    // Mengirim data dalam format JSON
                     NSDictionary *data = @{
                         @"value": adValue,
                         @"currencyCode": currencyCode,
@@ -1337,7 +1310,7 @@ BOOL isUsingAdManagerRequest = YES;
                             
                             [self fireEvent:@"" event:@"on.reward.userEarnedReward" withData:rewardJsonString];
                             isAdSkip = 2;
-                          //  NSLog(@"Reward diterima dengan currency %@, amount %lf", reward.type, [reward.amount doubleValue]);
+                        
                         }];
                     } else {
                         NSDictionary *errorData = @{@"error": presentError.localizedDescription ?: @"Unknown error"};
@@ -1347,7 +1320,7 @@ BOOL isUsingAdManagerRequest = YES;
                     }
                     
                     
-                    if (ResponseInfo) {
+                    if (isResponseInfo) {
                         GADResponseInfo *responseInfo = ad.responseInfo;
                         NSMutableArray *adNetworkInfoArray = [NSMutableArray array];
 
@@ -1514,9 +1487,10 @@ BOOL isUsingAdManagerRequest = YES;
   return hexString;
 }
 
-#pragma mark GADBannerViewDelegate implementation
+ #pragma mark GADBannerViewDelegate implementation
 
 - (void)bannerViewDidReceiveAd:(GADBannerView *)bannerView {
+   // NSLog(@"The last loaded banner is %@collapsible.", (bannerView.isCollapsible ? @"" : @"not "));
     NSString *collapsibleStatus = bannerView.isCollapsible ? @"collapsible" : @"not collapsible";
     NSDictionary *eventData = @{@"collapsible" : collapsibleStatus};
     NSError *error;
@@ -1566,7 +1540,7 @@ BOOL isUsingAdManagerRequest = YES;
     
     
     
-    if (ResponseInfo) {
+    if (isResponseInfo) {
         GADResponseInfo *responseInfo = self.bannerView.responseInfo;
         NSMutableArray *adNetworkInfoArray = [NSMutableArray array];
 
@@ -1637,7 +1611,7 @@ BOOL isUsingAdManagerRequest = YES;
     [self fireEvent:@"" event:@"on.banner.did.dismiss" withData:nil];
 }
 
-#pragma GADFullScreeContentDelegate implementation
+#pragma mark GADFullScreeContentDelegate implementation
 
 - (void)adWillPresentFullScreenContent:(id)ad {
     if (adFormat == 1) {

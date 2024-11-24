@@ -87,7 +87,7 @@ document.addEventListener("deviceready", function () {
     
     cordova.plugins.emiAdmobPlugin.initialize({
 
-        isUsingAdManagerRequest: true, // AdManagerAdRequest.Builder | AdRequest.Builder (Default true)
+        isUsingAdManagerRequest: true, // true = AdManager | false = AdMob (Default true)
         isResponseInfo: true, // debug Default false
         isConsentDebug: true, // debug Default false
 
@@ -101,6 +101,7 @@ document.addEventListener("deviceready", function () {
         const sdkVersion = data.version;
         // const adAdapter = data.adapters;
         const conStatus = data.consentStatus;
+        const attStatus = data.attStatus;
         // const gdprApplie = data.gdprApplies;
         // const purposeConsent = data.purposeConsents;
         // const vendorConsents = data.vendorConsents;
@@ -108,6 +109,11 @@ document.addEventListener("deviceready", function () {
         // const additionalConsent = data.additionalConsent;
         log.value += ("\n On Sdk Initialization version: " + sdkVersion);
         log.value += ("\n On Consent Status: " + conStatus);
+        
+        if (isPlatformIOS){
+            
+            log.value += ("\n On Authorization Status: " + attStatus);
+        }
 
         loadBanner(); // auto show
 

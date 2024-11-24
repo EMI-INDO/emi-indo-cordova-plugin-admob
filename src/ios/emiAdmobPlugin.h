@@ -4,6 +4,7 @@
 #import <UserMessagingPlatform/UserMessagingPlatform.h>
 #import <CommonCrypto/CommonDigest.h>
 @interface emiAdmobPlugin : CDVPlugin<GADBannerViewDelegate, GADFullScreenContentDelegate>{}
+@property(nonatomic, strong) GADRequest *globalRequest;
 @property(nonatomic, strong) GADAppOpenAd *appOpenAd;
 @property(nonatomic, strong) GADBannerView *bannerView;
 @property(nonatomic, strong) GADInterstitialAd *interstitial;
@@ -20,7 +21,6 @@
 - (void)initialize:(CDVInvokedUrlCommand *)command;
 - (void)requestIDFA:(CDVInvokedUrlCommand *)command;
 - (void)showPrivacyOptionsForm:(CDVInvokedUrlCommand *)command;
-// - (void)getConsentRequest:(CDVInvokedUrlCommand *)command;
 - (void)forceDisplayPrivacyForm:(CDVInvokedUrlCommand *)command;
 - (void)consentReset:(CDVInvokedUrlCommand *)command;
 - (void)getIabTfc:(CDVInvokedUrlCommand *)command;
