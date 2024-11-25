@@ -547,55 +547,6 @@ BOOL isUsingAdManagerRequest = YES;
 
 
 
-
-/*
-
-- (void)addBannerConstraints {
-  self.bannerView.translatesAutoresizingMaskIntoConstraints = NO;
-
-  if ([setPosition isEqualToString:@"bottom-center"]) {
-    [self.viewController.view addConstraints:@[
-      [NSLayoutConstraint
-          constraintWithItem:self.bannerView
-                   attribute:NSLayoutAttributeBottom
-                   relatedBy:NSLayoutRelationEqual
-                      toItem:self.viewController.view.safeAreaLayoutGuide
-                   attribute:NSLayoutAttributeBottom
-                  multiplier:1
-                    constant:0],
-      [NSLayoutConstraint constraintWithItem:self.bannerView
-                                   attribute:NSLayoutAttributeCenterX
-                                   relatedBy:NSLayoutRelationEqual
-                                      toItem:self.viewController.view
-                                   attribute:NSLayoutAttributeCenterX
-                                  multiplier:1
-                                    constant:0]
-    ]];
-  } else if ([setPosition isEqualToString:@"top-center"]) {
-    [self.viewController.view addConstraints:@[
-      [NSLayoutConstraint
-          constraintWithItem:self.bannerView
-                   attribute:NSLayoutAttributeTop
-                   relatedBy:NSLayoutRelationEqual
-                      toItem:self.viewController.view.safeAreaLayoutGuide
-                   attribute:NSLayoutAttributeTop
-                  multiplier:1
-                    constant:0],
-      [NSLayoutConstraint constraintWithItem:self.bannerView
-                                   attribute:NSLayoutAttributeCenterX
-                                   relatedBy:NSLayoutRelationEqual
-                                      toItem:self.viewController.view
-                                   attribute:NSLayoutAttributeCenterX
-                                  multiplier:1
-                                    constant:0]
-    ]];
-  }
-}
-
-*/
-
-
-
 - (void)loadBannerAd:(CDVInvokedUrlCommand *)command {
   CDVPluginResult *pluginResult;
   NSString *callbackId = command.callbackId;
@@ -611,7 +562,7 @@ BOOL isUsingAdManagerRequest = YES;
 
   setPosition = position;
     
-  adFormat = 3;
+  adFormat = 5;
 
   if (adUnitId == nil || [adUnitId length] == 0) {
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
@@ -623,7 +574,7 @@ BOOL isUsingAdManagerRequest = YES;
   if (collapsible != nil && [collapsible length] > 0) {
     isCollapsible = YES;
   } else {
-    isCollapsible = YES;
+    isCollapsible = NO;
   }
 
   if (autoResize) {
@@ -632,7 +583,7 @@ BOOL isUsingAdManagerRequest = YES;
     
   [self setAdRequest];
 
-  if (adFormat == 3) {
+  if (adFormat == 5) {
     dispatch_async(dispatch_get_main_queue(), ^{
       UIView *parentView = [self.webView superview];
       CGRect frame = self.bannerView.frame;
@@ -936,6 +887,7 @@ BOOL isUsingAdManagerRequest = YES;
       [self.appOpenAd canPresentFromRootViewController:self.viewController
                                                  error:nil]) {
     [self.appOpenAd presentFromRootViewController:self.viewController];
+    adFormat = 1;
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
   } else {
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
@@ -1006,9 +958,9 @@ BOOL isUsingAdManagerRequest = YES;
                         NSDictionary *errorData = @{@"error": presentError.localizedDescription ?: @"Unknown error"};
                         NSData *errorJsonData = [NSJSONSerialization dataWithJSONObject:errorData options:0 error:nil];
                         NSString *errorJsonString = [[NSString alloc] initWithData:errorJsonData encoding:NSUTF8StringEncoding];
-                        
                         [self fireEvent:@"" event:@"on.interstitial.failed.show" withData:errorJsonString];
                     }
+                    adFormat = 2;
                 }
                 
                 
@@ -1063,6 +1015,7 @@ BOOL isUsingAdManagerRequest = YES;
     NSError *presentError = nil;
     if (self.interstitial && [self.interstitial canPresentFromRootViewController:self.viewController error:&presentError]) {
         [self.interstitial presentFromRootViewController:self.viewController];
+        adFormat = 2;
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     } else {
         // Send show error to event
@@ -1144,9 +1097,9 @@ BOOL isUsingAdManagerRequest = YES;
                             };
                             NSData *rewardJsonData = [NSJSONSerialization dataWithJSONObject:rewardData options:0 error:nil];
                             NSString *rewardJsonString = [[NSString alloc] initWithData:rewardJsonData encoding:NSUTF8StringEncoding];
-                            
-                            [self fireEvent:@"" event:@"on.rewardedInt.userEarnedReward" withData:rewardJsonString];
+                            adFormat = 4;
                             isAdSkip = 2;
+                            [self fireEvent:@"" event:@"on.rewardedInt.userEarnedReward" withData:rewardJsonString];
                             NSLog(@"Reward received with currency %@, amount %ld", reward.type, [reward.amount longValue]);
                         }];
                     } else {
@@ -1219,9 +1172,9 @@ BOOL isUsingAdManagerRequest = YES;
             };
             NSData *rewardJsonData = [NSJSONSerialization dataWithJSONObject:rewardData options:0 error:nil];
             NSString *rewardJsonString = [[NSString alloc] initWithData:rewardJsonData encoding:NSUTF8StringEncoding];
-            
-            [self fireEvent:@"" event:@"on.rewardedInt.userEarnedReward" withData:rewardJsonString];
             isAdSkip = 2;
+            adFormat = 4;
+            [self fireEvent:@"" event:@"on.rewardedInt.userEarnedReward" withData:rewardJsonString];
             NSLog(@"Reward received with currency %@, amount %ld", reward.type, [reward.amount longValue]);
         }];
         
@@ -1260,7 +1213,6 @@ BOOL isUsingAdManagerRequest = YES;
                 }
 
                 self.rewardedAd = ad;
-                
                 isAdSkip = 0;
                 self.rewardedAd.fullScreenContentDelegate = self;
                 [self fireEvent:@"" event:@"on.rewarded.loaded" withData:nil];
@@ -1295,16 +1247,15 @@ BOOL isUsingAdManagerRequest = YES;
                     if ([self.rewardedAd canPresentFromRootViewController:self.viewController error:&presentError]) {
                         [self.rewardedAd presentFromRootViewController:self.viewController userDidEarnRewardHandler:^{
                             GADAdReward *reward = self.rewardedAd.adReward;
-
+                            adFormat = 3;
                             NSDictionary *rewardData = @{
                                 @"rewardType": reward.type,
                                 @"rewardAmount": [reward.amount stringValue]
                             };
                             NSData *rewardJsonData = [NSJSONSerialization dataWithJSONObject:rewardData options:0 error:nil];
                             NSString *rewardJsonString = [[NSString alloc] initWithData:rewardJsonData encoding:NSUTF8StringEncoding];
-                            
-                            [self fireEvent:@"" event:@"on.reward.userEarnedReward" withData:rewardJsonString];
                             isAdSkip = 2;
+                            [self fireEvent:@"" event:@"on.reward.userEarnedReward" withData:rewardJsonString];
                         
                         }];
                     } else {
@@ -1384,7 +1335,7 @@ BOOL isUsingAdManagerRequest = YES;
                 }
 
                 isAdSkip = 2;
-                
+                adFormat = 3;
            
                 NSLog(@"Reward received with currency %@, amount %lf", reward.type, [reward.amount doubleValue]);
             }];
@@ -1531,9 +1482,6 @@ BOOL isUsingAdManagerRequest = YES;
     
 
     
-    
-    
-    
     if (isResponseInfo) {
         GADResponseInfo *responseInfo = self.bannerView.responseInfo;
         NSMutableArray *adNetworkInfoArray = [NSMutableArray array];
@@ -1609,15 +1557,19 @@ BOOL isUsingAdManagerRequest = YES;
 
 - (void)adWillPresentFullScreenContent:(id)ad {
     if (adFormat == 1) {
+        adFormat = 1;
         [self fireEvent:@"" event:@"on.appOpenAd.show" withData:nil];
     } else if (adFormat == 2) {
+        adFormat = 2;
         [self fireEvent:@"" event:@"on.interstitial.show" withData:nil];
         [self fireEvent:@"" event:@"onPresentAd" withData:nil];
     } else if (adFormat == 3) {
+        adFormat = 3;
         [self fireEvent:@"" event:@"on.rewarded.show" withData:nil];
         isAdSkip = 1;
     } else if (adFormat == 4) {
         isAdSkip = 1;
+        adFormat = 4;
         [self fireEvent:@"" event:@"on.rewardedInt.showed" withData:nil];
     }
 }
@@ -1650,15 +1602,17 @@ BOOL isUsingAdManagerRequest = YES;
     } else if (adFormat == 2) {
         [self fireEvent:@"" event:@"on.interstitial.dismissed" withData:nil];
     } else if (adFormat == 3) {
-        [self fireEvent:@"" event:@"on.rewarded.dismissed" withData:nil];
         if (isAdSkip != 2) {
             [self fireEvent:@"" event:@"on.rewarded.ad.skip" withData:nil];
+        } else {
+            [self fireEvent:@"" event:@"on.rewarded.dismissed" withData:nil];
         }
     } else if (adFormat == 4) {
         if (isAdSkip != 2) {
             [self fireEvent:@"" event:@"on.rewardedInt.ad.skip" withData:nil];
+        } else {
+            [self fireEvent:@"" event:@"on.rewardedInt.dismissed" withData:nil];
         }
-        [self fireEvent:@"" event:@"on.rewardedInt.dismissed" withData:nil];
     }
 }
 

@@ -462,7 +462,6 @@ class emiAdmobPlugin : CordovaPlugin() {
                                     }
 
 
-
                                 }
 
                                 private fun openAutoShow() {
@@ -478,22 +477,22 @@ class emiAdmobPlugin : CordovaPlugin() {
                                         PUBLIC_CALLBACKS!!.error(e.toString())
                                     }
                                 }
-
                                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                                     isAppOpenAdShow = false
                                     val errorData = JSONObject().apply {
-                                        put("responseInfo", loadAdError.responseInfo)
+                                        put("responseInfo", loadAdError.responseInfo.toString())
                                         put("code", loadAdError.code)
                                         put("message", loadAdError.message)
                                         put("domain", loadAdError.domain)
                                         put("cause", loadAdError.cause?.toString() ?: "null")
                                     }
-                                    cWebView!!.loadUrl(
-                                        "javascript:cordova.fireDocumentEvent('on.appOpenAd.failed.loaded, ${errorData}');"
+                                    cWebView?.loadUrl(
+                                        "javascript:cordova.fireDocumentEvent('on.appOpenAd.failed.loaded', ${errorData});"
                                     )
                                 }
+
                             })
-                    } catch (e: Exception) {
+                            } catch (e: Exception) {
                         callbackContext.error(e.toString())
                     }
                 }
@@ -595,7 +594,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                     mInterstitialAd = null
                                     isInterstitialLoad = false
                                     val errorData = JSONObject().apply {
-                                        put("responseInfo", loadAdError.responseInfo)
+                                        put("responseInfo", loadAdError.responseInfo.toString())
                                         put("code", loadAdError.code)
                                         put("message", loadAdError.message)
                                         put("domain", loadAdError.domain)
@@ -638,7 +637,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                     isRewardedLoad = false
 
                                     val errorData = JSONObject().apply {
-                                        put("responseInfo", loadAdError.responseInfo)
+                                        put("responseInfo", loadAdError.responseInfo.toString())
                                         put("code", loadAdError.code)
                                         put("message", loadAdError.message)
                                         put("domain", loadAdError.domain)
@@ -888,7 +887,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                     rewardedInterstitialAd = null
                                     isRewardedInterstitialLoad = false
                                     val errorData = JSONObject().apply {
-                                        put("responseInfo", loadAdError.responseInfo)
+                                        put("responseInfo", loadAdError.responseInfo.toString())
                                         put("code", loadAdError.code)
                                         put("message", loadAdError.message)
                                         put("domain", loadAdError.domain)
@@ -1164,35 +1163,6 @@ class emiAdmobPlugin : CordovaPlugin() {
     }
 
 
-    private fun handleConsentForm() {
-        if(mActivity != null) {
-            if (consentInformation!!.isConsentFormAvailable) {
-                mContext?.let {
-                    UserMessagingPlatform.loadConsentForm(it,
-                        { consentForm: ConsentForm ->
-                            mActivity?.let { it1 ->
-                                consentForm.show(
-                                    it1
-                                ) { formError: FormError? ->
-                                    if (formError != null) {
-                                        mActivity!!.runOnUiThread {
-                                            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.failed.show', { message: '" + formError.message + "' });")
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        { formError: FormError ->
-                            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.failed.load.from', { message: '" + formError.message + "' });")
-                        }
-                    )
-                }
-            }
-        }
-    }
-
-
-
 
     private fun loadBannerAd(adUnitId: String, position: String, size: String) {
         try {
@@ -1210,7 +1180,6 @@ class emiAdmobPlugin : CordovaPlugin() {
                 bannerView!!.adUnitId = adUnitId
                 bannerView!!.adListener = bannerAdListener
                 bannerView!!.loadAd(buildAdRequest())
-                // adjustWebViewForBanner(position)
             } else {
                 Log.d(TAG, "Banner view layout already exists.")
             }
@@ -1219,28 +1188,6 @@ class emiAdmobPlugin : CordovaPlugin() {
             Log.d(TAG, "Error showing banner: " + e.message)
         }
     }
-
-    private fun adjustWebViewForBanner(position: String?) {
-        val rootView = bannerViewLayout
-        val webView = rootView?.findViewById<View>(View.generateViewId())
-
-        if (webView != null) {
-            when (position) {
-                "bottom-center", "bottom-right" -> {
-                    webView.setPadding(0, 0, 0, bannerView!!.height)
-                }
-                "top-center", "top-right" -> {
-                    webView.setPadding(0, bannerView!!.height, 0, 0)
-                }
-                else -> {
-                    webView.setPadding(0, 0, 0, 0)
-                }
-            }
-            webView.requestLayout()
-        }
-    }
-
-
 
 
 
@@ -1355,15 +1302,17 @@ class emiAdmobPlugin : CordovaPlugin() {
             cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.close');")
         }
 
-        override fun onAdFailedToLoad(adError: LoadAdError) {
 
+        override fun onAdFailedToLoad(adError: LoadAdError) {
             val errorData = JSONObject().apply {
-                put("responseInfo", adError.responseInfo)
+                put("responseInfo", adError.responseInfo.toString())
                 put("code", adError.code)
                 put("message", adError.message)
                 put("domain", adError.domain)
                 put("cause", adError.cause?.toString() ?: "null")
             }
+
+          cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.failed.load', ${errorData});")
 
             bannerOverlappingToZero()
 
@@ -1379,7 +1328,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             }
 
 
-            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.failed.load', ${errorData});")
+
         }
 
         override fun onAdImpression() {
@@ -1607,6 +1556,33 @@ class emiAdmobPlugin : CordovaPlugin() {
         }
 
 
+
+    private fun handleConsentForm() {
+        if(mActivity != null) {
+            if (consentInformation!!.isConsentFormAvailable) {
+                mContext?.let {
+                    UserMessagingPlatform.loadConsentForm(it,
+                        { consentForm: ConsentForm ->
+                            mActivity?.let { it1 ->
+                                consentForm.show(
+                                    it1
+                                ) { formError: FormError? ->
+                                    if (formError != null) {
+                                        mActivity!!.runOnUiThread {
+                                            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.failed.show', { message: '" + formError.message + "' });")
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        { formError: FormError ->
+                            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.failed.load.from', { message: '" + formError.message + "' });")
+                        }
+                    )
+                }
+            }
+        }
+    }
 
 
     private fun setUsingAdManagerRequest(isUsingAdManagerRequest: Boolean) {
@@ -2080,9 +2056,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             if (View::class.java.isAssignableFrom(CordovaWebView::class.java)) {
                 return cWebView as View?
             }
-
             return mActivity!!.window.decorView.findViewById(View.generateViewId())
-            //  return mActivity!!.window.decorView.findViewById(R.id.content)
         }
 
     override fun onPause(multitasking: Boolean) {
@@ -2127,3 +2101,5 @@ class emiAdmobPlugin : CordovaPlugin() {
         private const val EXPIRATION_TIME = 360L * 24 * 60 * 60 * 1000
     }
 }
+
+
