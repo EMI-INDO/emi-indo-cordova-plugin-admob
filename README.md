@@ -125,9 +125,14 @@ https://developers.google.com/admob/ios/quick-start
 <li> impression-level-ad-revenue</li>
 </ul>
 </details>
+## Version locking the plugin during production is highly recommended.
+
+- Example cordova plugin add emi-indo-cordova-plugin-admob@1.6.0 --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx
+- View plugin version: https://www.npmjs.com/package/emi-indo-cordova-plugin-admob?activeTab=versions
+- Release notes: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases
 
 ## Installation
-
+- Recommendation to version-lock the plugin during production
 - Only platform Android
 ```sh
 cordova plugin add emi-indo-cordova-plugin-admob --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx
