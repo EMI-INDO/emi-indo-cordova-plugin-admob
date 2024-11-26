@@ -125,9 +125,14 @@ https://developers.google.com/admob/ios/quick-start
 <li> impression-level-ad-revenue</li>
 </ul>
 </details>
+## Version locking the plugin during production is highly recommended.
+
+- Example cordova plugin add emi-indo-cordova-plugin-admob@1.6.0 --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx
+- View plugin version: https://www.npmjs.com/package/emi-indo-cordova-plugin-admob?activeTab=versions
+- Release notes: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases
 
 ## Installation
-
+- Recommendation to version-lock the plugin during production
 - Only platform Android
 ```sh
 cordova plugin add emi-indo-cordova-plugin-admob --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx
@@ -345,7 +350,7 @@ document.addEventListener('on.appOpenAd.loaded', () => {
 </pre>
 </details>
 
-- [FULL AppOpenAd basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/Example/www/js/appOpenAd.js) 
+- [FULL AppOpenAd basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/www/js/appOpenAd.js) 
 
 
 
@@ -448,7 +453,7 @@ console.log("Collapsible Status: " + event.collapsible);
 </pre>
 </details>
 
- [FULL Banner basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/Example/www/js/bannerAd.js) 
+ [FULL Banner basic:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/www/js/bannerAd.js) 
 
 
 ## Interstitial ADS
@@ -511,7 +516,7 @@ document.addEventListener('on.interstitial.dismissed', () => {
 </details>
 
 
-[FULL Interstitial basic: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/Example/www/js/interstitialAd.js) 
+[FULL Interstitial basic: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/www/js/interstitialAd.js) 
 
 
 
@@ -640,7 +645,7 @@ document.addEventListener('on.rewarded.dismissed', () => {
 </pre>
 </details>
 
-[FULL Rewarded basic: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/Example/www/js/rewardedAd.js) 
+[FULL Rewarded basic: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/www/js/rewardedAd.js) 
 
 
 

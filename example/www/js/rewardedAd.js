@@ -52,6 +52,17 @@ document.addEventListener('on.rewarded.failed.load', (error) => {
     isRewardedLoad = false;
     console.log("on.rewarded.failed.load" + JSON.stringify(error));
 
+    /*
+    error.code
+    error.message
+    error.domain
+    error.responseInfoId
+    error.responseInfoExtras
+    error.responseInfoAdapter
+    error.responseInfoMediationAdapterClassName
+    error.responseInfoAdapterResponses
+*/
+
     window.log.value += ("\n on.rewarded.failed.load" + JSON.stringify(error));
 });
 
@@ -77,7 +88,7 @@ document.addEventListener('on.reward.userEarnedReward', (rewarded) => {
 // all events that contain the keyword dismissed there is a block to load the ad after it is closed by the user.
 document.addEventListener('on.rewarded.dismissed', () => {
     isRewardedLoad = false;
-    console.log("on interstitial Ad dismissed");
+    console.log("on rewarded Ad dismissed");
     console.log("you can load ads automatically after the ads are closed by users");
     loadRewarded();
 

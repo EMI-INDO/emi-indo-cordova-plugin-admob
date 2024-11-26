@@ -67,6 +67,17 @@ document.addEventListener('on.interstitial.dismissed', () => {
 document.addEventListener('on.interstitial.failed.load', (error) => {
     isInterstitialLoad = false;
     console.log("on.interstitial.failed.load" + JSON.stringify(error));
+
+    /*
+    error.code
+    error.message
+    error.domain
+    error.responseInfoId
+    error.responseInfoExtras
+    error.responseInfoAdapter
+    error.responseInfoMediationAdapterClassName
+    error.responseInfoAdapterResponses
+*/
     
     window.log.value += ("\n on.interstitial.failed.load" + JSON.stringify(error));
 });

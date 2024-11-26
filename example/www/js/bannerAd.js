@@ -128,6 +128,18 @@ document.addEventListener('on.is.collapsible', function (event) {
 
 document.addEventListener('on.banner.failed.load', (error) => {
     console.log("on.banner.failed.load" + JSON.stringify(error));
+
+    /*
+    error.code
+    error.message
+    error.domain
+    error.responseInfoId
+    error.responseInfoExtras
+    error.responseInfoAdapter
+    error.responseInfoMediationAdapterClassName
+    error.responseInfoAdapterResponses
+    */
+
 });
 
 

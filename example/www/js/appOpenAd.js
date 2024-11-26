@@ -72,7 +72,16 @@ document.addEventListener('on.appOpenAd.loaded', () => {
 document.addEventListener('on.appOpenAd.failed.loaded', (error) => {
     isAppOpenAdLoad = false;
     console.log("on.appOpenAd.failed.loaded" + JSON.stringify(error));
-
+/*
+    error.code
+    error.message
+    error.domain
+    error.responseInfoId
+    error.responseInfoExtras
+    error.responseInfoAdapter
+    error.responseInfoMediationAdapterClassName
+    error.responseInfoAdapterResponses
+*/
     window.log.value += ("\n on.appOpenAd.failed.loaded" + JSON.stringify(error));
 });
 

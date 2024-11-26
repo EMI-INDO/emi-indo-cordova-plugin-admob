@@ -50,6 +50,17 @@ document.addEventListener('on.rewardedInt.failed.load', (error) => {
     isRewardedIntLoad = false;
     console.log("on.rewardedInt.failed.load" + JSON.stringify(error));
 
+    /*
+    error.code
+    error.message
+    error.domain
+    error.responseInfoId
+    error.responseInfoExtras
+    error.responseInfoAdapter
+    error.responseInfoMediationAdapterClassName
+    error.responseInfoAdapterResponses
+*/
+
     window.log.value += ("\n on.rewardedInt.failed.load" + JSON.stringify(error));
 });
 
