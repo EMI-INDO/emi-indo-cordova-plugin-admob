@@ -1,6 +1,6 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  id="emi-indo-cordova-plugin-admob" version="1.6.6">
+  id="emi-indo-cordova-plugin-admob" version="1.6.5">
 
   <name>emiAdmobPlugin</name>
   <description>Cordova Plugin Admob Android IOS</description>
@@ -56,9 +56,6 @@
         android:value="true" />
       <meta-data android:name="com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING"
         android:value="true" />
-      <meta-data
-        android:name="com.google.android.gms.ads.INTEGRATION_MANAGER"
-            android:value="webview"/>
     </config-file>
 
     <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->

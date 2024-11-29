@@ -1,12 +1,12 @@
 
+## New feature suggestion
+> [!TIP]
+> - Funding is needed to add a new feature of native ads that can be scrolled within html content elements.
+> - I will not settle how much funding is needed to add this feature.
 
-### emi-indo-cordova-plugin-admob
+
+# emi-indo-cordova-plugin-admob
  Cordova Plugin Admob Android and IOS
- ## Support
- - AdMob
- - AdManager
- - AdSense New [example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/www/js/adSense.js)
-
 
 ### Mobile Ads SDK (Android: 23.5.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
 ### User Messaging Platform (UMP Android: 3.1.0) [Release Notes:](https://developers.google.com/admob/android/privacy/release-notes)
@@ -132,6 +132,7 @@ https://developers.google.com/admob/ios/quick-start
 - Release notes: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases
 
 ## Installation
+- Recommendation to version-lock the plugin during production
 - Only platform Android
 ```sh
 cordova plugin add emi-indo-cordova-plugin-admob --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx
@@ -174,7 +175,7 @@ cordova plugin rm emi-indo-cordova-plugin-admob
 
 cordova.plugins.emiAdmobPlugin.initialize({
 
-  isUsingAdManagerRequest: true, // true = AdManager | false = AdMob (Default true)
+  isUsingAdManagerRequest: true, // true = AdManagerAdRequest.Builder | false = AdRequest.Builder (Default true)
   isResponseInfo: true, // Default false (Debug true)
   isConsentDebug: true, // Default false (Debug true)
 
