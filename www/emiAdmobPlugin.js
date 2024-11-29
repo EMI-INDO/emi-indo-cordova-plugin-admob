@@ -3,6 +3,12 @@ var exec = require('cordova/exec');
 exports.initialize = function (options, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'initialize', [options]);
 };
+exports.registerWebView = function (success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'registerWebView', []);
+};
+exports.loadUrl = function (options, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'loadUrl', [options]);
+};
 exports.loadAppOpenAd = function (options, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'loadAppOpenAd', [options]);
 };
