@@ -1446,8 +1446,19 @@ BOOL isUsingAdManagerRequest = YES;
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         [self fireEvent:@"" event:@"on.is.collapsible" withData:jsonString];
     }
+    
+    // Get the banner height
+    CGFloat bannerHeight = bannerView.bounds.size.height;
 
-    [self fireEvent:@"" event:@"on.banner.load" withData:nil];
+
+    
+    // Prepare height data for banner load event
+    NSDictionary *bannerLoadData = @{@"height" : @(bannerHeight)};
+    NSData *bannerLoadJsonData = [NSJSONSerialization dataWithJSONObject:bannerLoadData options:0 error:&error];
+    NSString *bannerLoadJsonString = [[NSString alloc] initWithData:bannerLoadJsonData encoding:NSUTF8StringEncoding];
+    
+    // Fire the banner load event with the height data
+    [self fireEvent:@"" event:@"on.banner.load" withData:bannerLoadJsonString];
     
     if (auto_Show && self.bannerView) {
         [self addBannerViewToView:command];
