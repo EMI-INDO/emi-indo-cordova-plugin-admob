@@ -1521,7 +1521,15 @@ class emiAdmobPlugin : CordovaPlugin() {
                 bannerOverlapping()
             }
 
-            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.load');")
+            val bannerHeight=adSize.height;
+
+            //val bannerLoadEventData = String.format("{\"height\": %d}", bannerHeight)
+
+            val bannerLoadEventData = String.format(Locale.US, "{\"height\": %d}", bannerHeight)
+
+            //cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.load');")
+
+            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.load', $bannerLoadEventData);")
 
             val eventData = String.format(
                 "{\"collapsible\": \"%s\"}",
