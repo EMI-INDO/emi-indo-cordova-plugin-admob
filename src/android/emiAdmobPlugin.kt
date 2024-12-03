@@ -14,6 +14,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
+import android.webkit.WebView
 import android.widget.FrameLayout
 import androidx.preference.PreferenceManager
 import com.google.ads.mediation.admob.AdMobAdapter
@@ -57,6 +58,7 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
+
 
 /**
  * Created by EMI INDO So on Apr 2, 2023
@@ -180,6 +182,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                 bannerView!!.loadAd(buildAdRequest())
                                 bannerViewLayout!!.addView(bannerView)
                                 bannerViewLayout!!.bringToFront()
+                                bannerViewLayout!!.requestFocus();
                                 bannerOverlappingToZero()
                             }
                         } catch (e: Exception) {
@@ -223,7 +226,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
         if (action == "initialize") {
             val options = args.getJSONObject(0)
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     val setAdRequest = options.optBoolean("isUsingAdManagerRequest")
                     val responseInfo = options.optBoolean("isResponseInfo")
@@ -288,7 +291,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             return true
         } else if (action == "targeting") {
             val options = args.getJSONObject(0)
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     try {
                         val childDirectedTreatment = options.optBoolean("childDirectedTreatment")
@@ -307,7 +310,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             return true
         } else if (action == "targetingAdRequest") {
             val options = args.getJSONObject(0)
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     val customTargetingEnabled = options.optBoolean("customTargetingEnabled")
                     val categoryExclusionsEnabled = options.optBoolean("categoryExclusionsEnabled")
@@ -345,7 +348,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             return true
         } else if (action == "setPersonalizationState") {
             val options = args.getJSONObject(0)
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     val setPPT = options.optString("setPersonalizationState")
                     try {
@@ -359,7 +362,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             return true
         } else if (action == "setPPS") {
             val options = args.getJSONObject(0)
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     val ppsEnabled = options.optBoolean("ppsEnabled")
                     val iabContent = options.optString("iabContent")
@@ -377,7 +380,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             return true
         } else if (action == "globalSettings") {
             val options = args.getJSONObject(0)
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     val setAppMuted = options.optBoolean("setAppMuted")
                     val setAppVolume = options.optInt("setAppVolume").toFloat()
@@ -392,7 +395,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             return true
         } else if (action == "loadAppOpenAd") {
             val options = args.getJSONObject(0)
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     val adUnitId = options.optString("adUnitId")
                     val autoShow = options.optBoolean("autoShow")
@@ -437,28 +440,34 @@ class emiAdmobPlugin : CordovaPlugin() {
                                             }
                                         }
 
+
                                     if (isResponseInfo) {
                                         val result = JSONObject()
                                         val responseInfo = ad.responseInfo
                                         try {
-                                            result.put("getResponseId", responseInfo.responseId)
+                                            result.put(
+                                                "getResponseId",
+                                                responseInfo.responseId.toString()
+                                            )
                                             result.put(
                                                 "getAdapterResponses",
-                                                responseInfo.adapterResponses
+                                                responseInfo.adapterResponses.toString()
                                             )
                                             result.put(
                                                 "getResponseExtras",
-                                                responseInfo.responseExtras
+                                                responseInfo.responseExtras.toString()
                                             )
                                             result.put(
                                                 "getMediationAdapterClassName",
-                                                responseInfo.mediationAdapterClassName
+                                                responseInfo.mediationAdapterClassName.toString()
                                             )
                                             result.put("getBundleExtra", mBundleExtra.toString())
                                             cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.appOpenAd.responseInfo', ${result})")
                                         } catch (e: JSONException) {
                                             callbackContext.error(e.message)
                                         }
+
+
                                     }
 
 
@@ -477,14 +486,34 @@ class emiAdmobPlugin : CordovaPlugin() {
                                         PUBLIC_CALLBACKS!!.error(e.toString())
                                     }
                                 }
+
                                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                                     isAppOpenAdShow = false
                                     val errorData = JSONObject().apply {
-                                        put("responseInfo", loadAdError.responseInfo.toString())
                                         put("code", loadAdError.code)
                                         put("message", loadAdError.message)
                                         put("domain", loadAdError.domain)
                                         put("cause", loadAdError.cause?.toString() ?: "null")
+
+                                        val responseId =
+                                            loadAdError.responseInfo?.responseId.toString()
+                                        val responseExtras =
+                                            loadAdError.responseInfo?.responseExtras.toString()
+                                        val loadedAdapterResponseInfo =
+                                            loadAdError.responseInfo?.loadedAdapterResponseInfo.toString()
+                                        val mediationAdapterClassName =
+                                            loadAdError.responseInfo?.mediationAdapterClassName.toString()
+                                        val adapterResponses =
+                                            loadAdError.responseInfo?.adapterResponses.toString()
+
+                                        put("responseInfoId", responseId)
+                                        put("responseInfoExtras", responseExtras)
+                                        put("responseInfoAdapter", loadedAdapterResponseInfo)
+                                        put(
+                                            "responseInfoMediationAdapterClassName",
+                                            mediationAdapterClassName
+                                        )
+                                        put("responseInfoAdapterResponses", adapterResponses)
                                     }
                                     cWebView?.loadUrl(
                                         "javascript:cordova.fireDocumentEvent('on.appOpenAd.failed.loaded', ${errorData});"
@@ -492,7 +521,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                 }
 
                             })
-                            } catch (e: Exception) {
+                    } catch (e: Exception) {
                         callbackContext.error(e.toString())
                     }
                 }
@@ -514,7 +543,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             return true
         } else if (action == "loadInterstitialAd") {
             val options = args.getJSONObject(0)
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     val adUnitId = options.optString("adUnitId")
                     val autoShow = options.optBoolean("autoShow")
@@ -546,7 +575,10 @@ class emiAdmobPlugin : CordovaPlugin() {
                                                 "getAdapterResponses",
                                                 responseInfo.adapterResponses
                                             )
-                                            result.put("getResponseExtras", responseInfo.responseExtras)
+                                            result.put(
+                                                "getResponseExtras",
+                                                responseInfo.responseExtras
+                                            )
                                             result.put(
                                                 "getMediationAdapterClassName",
                                                 responseInfo.mediationAdapterClassName
@@ -586,20 +618,46 @@ class emiAdmobPlugin : CordovaPlugin() {
                                 private val isIntAutoShow: Unit
                                     get() {
                                         if (mActivity != null && isInterstitialLoad && mInterstitialAd != null) {
-                                            mActivity!!.runOnUiThread { mInterstitialAd!!.show(mActivity!!) }
+                                            mActivity!!.runOnUiThread {
+                                                mInterstitialAd!!.show(
+                                                    mActivity!!
+                                                )
+                                            }
                                         }
                                     }
 
                                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                                     mInterstitialAd = null
                                     isInterstitialLoad = false
+
                                     val errorData = JSONObject().apply {
-                                        put("responseInfo", loadAdError.responseInfo.toString())
                                         put("code", loadAdError.code)
                                         put("message", loadAdError.message)
                                         put("domain", loadAdError.domain)
                                         put("cause", loadAdError.cause?.toString() ?: "null")
+
+                                        val responseId =
+                                            loadAdError.responseInfo?.responseId.toString()
+                                        val responseExtras =
+                                            loadAdError.responseInfo?.responseExtras.toString()
+                                        val loadedAdapterResponseInfo =
+                                            loadAdError.responseInfo?.loadedAdapterResponseInfo.toString()
+                                        val mediationAdapterClassName =
+                                            loadAdError.responseInfo?.mediationAdapterClassName.toString()
+                                        val adapterResponses =
+                                            loadAdError.responseInfo?.adapterResponses.toString()
+
+                                        put("responseInfoId", responseId)
+                                        put("responseInfoExtras", responseExtras)
+                                        put("responseInfoAdapter", loadedAdapterResponseInfo)
+                                        put(
+                                            "responseInfoMediationAdapterClassName",
+                                            mediationAdapterClassName
+                                        )
+                                        put("responseInfoAdapterResponses", adapterResponses)
                                     }
+
+
                                     cWebView!!.loadUrl(
                                         "javascript:cordova.fireDocumentEvent('on.interstitial.failed.load', ${errorData});"
                                     )
@@ -623,7 +681,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             return true
         } else if (action == "loadRewardedAd") {
             val options = args.getJSONObject(0)
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     val adUnitId = options.optString("adUnitId")
                     val autoShow = options.optBoolean("autoShow")
@@ -637,11 +695,33 @@ class emiAdmobPlugin : CordovaPlugin() {
                                     isRewardedLoad = false
 
                                     val errorData = JSONObject().apply {
-                                        put("responseInfo", loadAdError.responseInfo.toString())
                                         put("code", loadAdError.code)
                                         put("message", loadAdError.message)
                                         put("domain", loadAdError.domain)
                                         put("cause", loadAdError.cause?.toString() ?: "null")
+
+
+                                        val responseId =
+                                            loadAdError.responseInfo?.responseId.toString()
+                                        val responseExtras =
+                                            loadAdError.responseInfo?.responseExtras.toString()
+                                        val loadedAdapterResponseInfo =
+                                            loadAdError.responseInfo?.loadedAdapterResponseInfo.toString()
+                                        val mediationAdapterClassName =
+                                            loadAdError.responseInfo?.mediationAdapterClassName.toString()
+                                        val adapterResponses =
+                                            loadAdError.responseInfo?.adapterResponses.toString()
+
+                                        put("responseInfoId", responseId)
+                                        put("responseInfoExtras", responseExtras)
+                                        put("responseInfoAdapter", loadedAdapterResponseInfo)
+                                        put(
+                                            "responseInfoMediationAdapterClassName",
+                                            mediationAdapterClassName
+                                        )
+                                        put("responseInfoAdapterResponses", adapterResponses)
+
+
                                     }
 
                                     cWebView!!.loadUrl(
@@ -717,7 +797,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
                                 private val isRewardedAutoShow: Unit
                                     get() {
-                                        if (mActivity != null){
+                                        if (mActivity != null) {
                                             mActivity!!.runOnUiThread {
                                                 if (isRewardedLoad && rewardedAd != null) {
                                                     isAdSkip = 1
@@ -749,7 +829,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             }
             return true
         } else if (action == "showRewardedAd") {
-            if(mActivity != null && isRewardedLoad && rewardedAd != null) {
+            if (mActivity != null && isRewardedLoad && rewardedAd != null) {
                 mActivity!!.runOnUiThread {
                     isAdSkip = 1
                     rewardedAd!!.show(mActivity!!) { rewardItem: RewardItem ->
@@ -776,7 +856,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             return true
         } else if (action == "loadRewardedInterstitialAd") {
             val options = args.getJSONObject(0)
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     val adUnitId = options.optString("adUnitId")
                     val autoShow = options.optBoolean("autoShow")
@@ -850,10 +930,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                     }
 
 
-
-
                                 }
-
 
 
                                 private val isRIntAutoShow: Unit
@@ -887,11 +964,30 @@ class emiAdmobPlugin : CordovaPlugin() {
                                     rewardedInterstitialAd = null
                                     isRewardedInterstitialLoad = false
                                     val errorData = JSONObject().apply {
-                                        put("responseInfo", loadAdError.responseInfo.toString())
                                         put("code", loadAdError.code)
                                         put("message", loadAdError.message)
                                         put("domain", loadAdError.domain)
                                         put("cause", loadAdError.cause?.toString() ?: "null")
+
+                                        val responseId =
+                                            loadAdError.responseInfo?.responseId.toString()
+                                        val responseExtras =
+                                            loadAdError.responseInfo?.responseExtras.toString()
+                                        val loadedAdapterResponseInfo =
+                                            loadAdError.responseInfo?.loadedAdapterResponseInfo.toString()
+                                        val mediationAdapterClassName =
+                                            loadAdError.responseInfo?.mediationAdapterClassName.toString()
+                                        val adapterResponses =
+                                            loadAdError.responseInfo?.adapterResponses.toString()
+
+                                        put("responseInfoId", responseId)
+                                        put("responseInfoExtras", responseExtras)
+                                        put("responseInfoAdapter", loadedAdapterResponseInfo)
+                                        put(
+                                            "responseInfoMediationAdapterClassName",
+                                            mediationAdapterClassName
+                                        )
+                                        put("responseInfoAdapterResponses", adapterResponses)
                                     }
                                     cWebView!!.loadUrl(
                                         "javascript:cordova.fireDocumentEvent('on.rewardedInt.failed.load', ${errorData});"
@@ -906,7 +1002,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             }
             return true
         } else if (action == "showRewardedInterstitialAd") {
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     if (isRewardedInterstitialLoad && rewardedInterstitialAd != null) {
                         isAdSkip = 1
@@ -934,7 +1030,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             }
             return true
         } else if (action == "showPrivacyOptionsForm") {
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     try {
                         val params: ConsentRequestParameters
@@ -999,7 +1095,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             }
             return true
         } else if (action == "consentReset") {
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     try {
                         consentInformation!!.reset()
@@ -1010,7 +1106,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             }
             return true
         } else if (action == "getIabTfc") {
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     val gdprApplies = mPreferences!!.getInt("IABTCF_gdprApplies", 0)
                     val purposeConsents = mPreferences!!.getString("IABTCF_PurposeConsents", "")
@@ -1038,7 +1134,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             }
             return true
         } else if (action == "loadBannerAd") {
-            if(mActivity != null) {
+            if (mActivity != null) {
                 val options = args.getJSONObject(0)
                 mActivity!!.runOnUiThread {
                     val adUnitId = options.optString("adUnitId")
@@ -1064,7 +1160,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             }
             return true
         } else if (action == "showBannerAd") {
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     if (isBannerPause == 0) {
                         isShowBannerAds
@@ -1072,11 +1168,12 @@ class emiAdmobPlugin : CordovaPlugin() {
                         try {
                             bannerView!!.visibility = View.VISIBLE
                             bannerView!!.resume()
-                           // bannerOverlappingToZero()
 
                             if (isOverlapping) {
-                                 bannerOverlapping()
+                                bannerOverlapping()
                             }
+
+                            bannerViewLayout!!.requestFocus();
 
 
                         } catch (e: Exception) {
@@ -1088,7 +1185,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             return true
         } else if (action == "styleBannerAd") {
             val options = args.getJSONObject(0)
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     val isOverlapping = options.optBoolean("isOverlapping")
                     val overlappingHeight = options.optInt("overlappingHeight")
@@ -1107,7 +1204,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             return true
         } else if (action == "collapsibleBannerAd") {
             val options = args.getJSONObject(0)
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     val enableCollapsible = options.optBoolean("enabledBannerCollapsible")
                     val collapsible = options.optString("collapsiblePosition")
@@ -1121,7 +1218,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             }
             return true
         } else if (action == "hideBannerAd") {
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     if (isBannerShow) {
                         try {
@@ -1138,7 +1235,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             }
             return true
         } else if (action == "removeBannerAd") {
-            if(mActivity != null) {
+            if (mActivity != null) {
                 mActivity!!.runOnUiThread {
                     try {
                         if (bannerViewLayout != null && bannerView != null) {
@@ -1158,8 +1255,67 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
+        } else if (action == "registerWebView") {
+            if (mActivity != null) {
+                mActivity!!.runOnUiThread {
+                    try {
+                        registerWebView(callbackContext)
+                    } catch (e: Exception) {
+                        PUBLIC_CALLBACKS!!.error("Error register WebView: " + e.message)
+                    }
+                }
+            }
+            return true
+        } else if (action == "loadUrl") {
+            val options = args.getJSONObject(0)
+            if (mActivity != null) {
+                val url = options.optString("url")
+                mActivity!!.runOnUiThread {
+                    try {
+                        loadUrl(url, callbackContext)
+                    } catch (e: Exception) {
+                        PUBLIC_CALLBACKS!!.error("Error load Url: " + e.message)
+                    }
+                }
+
+            }
+            return true
         }
         return false
+    }
+
+
+    private fun registerWebView(callbackContext: CallbackContext) {
+        try {
+            val webView = cWebView?.view
+            if (webView is WebView) {
+                MobileAds.registerWebView(webView)
+                callbackContext.success("WebView registered successfully")
+            } else {
+                callbackContext.error("View is not a WebView.")
+            }
+        } catch (e: Exception) {
+                callbackContext.error("Error registering WebView: ${e.message}")
+        }
+
+    }
+
+
+    private fun loadUrl(url: String, callbackContext: CallbackContext) {
+        try {
+                val webView = cWebView?.view
+
+                if (webView is WebView) {
+                    webView.loadUrl(url)
+                    callbackContext.success("URL loaded successfully: $url")
+                } else {
+                    callbackContext.error("WebView is not available.")
+                }
+
+        } catch (e: Exception) {
+            callbackContext.error("Error loading URL: ${e.message}")
+        }
     }
 
 
@@ -1258,6 +1414,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 if (lock) {
                     bannerViewLayout!!.addView(bannerView)
                     bannerViewLayout!!.bringToFront()
+                    bannerViewLayout!!.requestFocus();
                     lock = false
                 }
                 isBannerPause = 0
@@ -1282,6 +1439,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                     if (lock) {
                         bannerViewLayout!!.addView(bannerView)
                         bannerViewLayout!!.bringToFront()
+                        bannerViewLayout!!.requestFocus();
                         lock = false
                     }
                     isBannerShow = true
@@ -1305,11 +1463,25 @@ class emiAdmobPlugin : CordovaPlugin() {
 
         override fun onAdFailedToLoad(adError: LoadAdError) {
             val errorData = JSONObject().apply {
-                put("responseInfo", adError.responseInfo.toString())
                 put("code", adError.code)
                 put("message", adError.message)
                 put("domain", adError.domain)
                 put("cause", adError.cause?.toString() ?: "null")
+
+                val responseId = adError.responseInfo?.responseId.toString()
+                val responseExtras = adError.responseInfo?.responseExtras.toString()
+                val loadedAdapterResponseInfo =
+                    adError.responseInfo?.loadedAdapterResponseInfo.toString()
+                val mediationAdapterClassName =
+                    adError.responseInfo?.mediationAdapterClassName.toString()
+                val adapterResponses =
+                    adError.responseInfo?.adapterResponses.toString()
+
+                put("responseInfoId", responseId)
+                put("responseInfoExtras", responseExtras)
+                put("responseInfoAdapter", loadedAdapterResponseInfo)
+                put("responseInfoMediationAdapterClassName", mediationAdapterClassName)
+                put("responseInfoAdapterResponses", adapterResponses)
             }
 
           cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.failed.load', ${errorData});")
@@ -1351,7 +1523,11 @@ class emiAdmobPlugin : CordovaPlugin() {
 
             val bannerHeight=adSize.height;
 
+            //val bannerLoadEventData = String.format("{\"height\": %d}", bannerHeight)
+
             val bannerLoadEventData = String.format(Locale.US, "{\"height\": %d}", bannerHeight)
+
+            //cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.load');")
 
             cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.load', $bannerLoadEventData);")
 
@@ -2105,5 +2281,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         private const val EXPIRATION_TIME = 360L * 24 * 60 * 60 * 1000
     }
 }
+
+
 
 
