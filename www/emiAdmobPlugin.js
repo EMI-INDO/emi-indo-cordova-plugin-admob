@@ -73,6 +73,9 @@ exports.forceDisplayPrivacyForm = function (success, error) {
         exec(success, error, 'emiAdmobPlugin', 'forceDisplayPrivacyForm', []); // only IOS
 };
 
+exports.metaData = function (options, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'metaData', [options]);
+};
     
 // ( only Android )
 // only isUsingAdManagerRequest: true

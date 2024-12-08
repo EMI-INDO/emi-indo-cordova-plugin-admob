@@ -138,6 +138,8 @@ class emiAdmobPlugin : CordovaPlugin() {
 
     private var isUsingAdManagerRequest = false
 
+    private var isCustomConsentManager = false
+
 
     override fun initialize(cordova: CordovaInterface, webView: CordovaWebView) {
         super.initialize(cordova, webView)
@@ -234,6 +236,14 @@ class emiAdmobPlugin : CordovaPlugin() {
                     setUsingAdManagerRequest(setAdRequest)
                     this.isResponseInfo = responseInfo
                     this.setDebugGeography = setDebugGeography
+
+                    // If the user uses a custom CMP
+                    if (this.isCustomConsentManager) {
+                        cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.custom.consent.manager.used');")
+                        initializeMobileAdsSdk()
+                        return@runOnUiThread
+                    }
+
                     val params: ConsentRequestParameters
                     if (this.setDebugGeography) {
                         val debugSettings = mActivity?.let {
@@ -1202,19 +1212,11 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
-        } else if (action == "collapsibleBannerAd") {
+        } else if (action == "metaData") {
             val options = args.getJSONObject(0)
+            val useCustomConsentManager = options.optBoolean("useCustomConsentManager")
             if (mActivity != null) {
-                mActivity!!.runOnUiThread {
-                    val enableCollapsible = options.optBoolean("enabledBannerCollapsible")
-                    val collapsible = options.optString("collapsiblePosition")
-                    try {
-                        this.isCollapsible = enableCollapsible
-                        this.collapsiblePos = collapsible
-                    } catch (e: Exception) {
-                        callbackContext.error(e.toString())
-                    }
-                }
+                this.isCustomConsentManager = useCustomConsentManager
             }
             return true
         } else if (action == "hideBannerAd") {
@@ -1296,7 +1298,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 callbackContext.error("View is not a WebView.")
             }
         } catch (e: Exception) {
-                callbackContext.error("Error registering WebView: ${e.message}")
+            callbackContext.error("Error registering WebView: ${e.message}")
         }
 
     }
@@ -1304,14 +1306,14 @@ class emiAdmobPlugin : CordovaPlugin() {
 
     private fun loadUrl(url: String, callbackContext: CallbackContext) {
         try {
-                val webView = cWebView?.view
+            val webView = cWebView?.view
 
-                if (webView is WebView) {
-                    webView.loadUrl(url)
-                    callbackContext.success("URL loaded successfully: $url")
-                } else {
-                    callbackContext.error("WebView is not available.")
-                }
+            if (webView is WebView) {
+                webView.loadUrl(url)
+                callbackContext.success("URL loaded successfully: $url")
+            } else {
+                callbackContext.error("WebView is not available.")
+            }
 
         } catch (e: Exception) {
             callbackContext.error("Error loading URL: ${e.message}")
@@ -1484,7 +1486,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 put("responseInfoAdapterResponses", adapterResponses)
             }
 
-          cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.failed.load', ${errorData});")
+            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.failed.load', ${errorData});")
 
             bannerOverlappingToZero()
 
@@ -1599,30 +1601,30 @@ class emiAdmobPlugin : CordovaPlugin() {
 
 
 
-        // fix https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/issues/26
-        private fun bannerOverlapping() {
-            if (bannerView != null && mActivity != null && cWebView != null) {
-                mActivity!!.runOnUiThread {
-                    try {
-                        val bannerHeightInPx = bannerView!!.height
-                        val displayMetrics = DisplayMetrics()
-                        mActivity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
-                        val screenHeightInPx = displayMetrics.heightPixels
+    // fix https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/issues/26
+    private fun bannerOverlapping() {
+        if (bannerView != null && mActivity != null && cWebView != null) {
+            mActivity!!.runOnUiThread {
+                try {
+                    val bannerHeightInPx = bannerView!!.height
+                    val displayMetrics = DisplayMetrics()
+                    mActivity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
+                    val screenHeightInPx = displayMetrics.heightPixels
 
-                        // Adjust the WebView height to account for the banner ad
-                        val webViewHeight = screenHeightInPx - (adSize.height + overlappingHeight)
-                        val layoutParams = cWebView!!.view.layoutParams
-                        layoutParams.height = webViewHeight
-                        cWebView!!.view.layoutParams = layoutParams
+                    // Adjust the WebView height to account for the banner ad
+                    val webViewHeight = screenHeightInPx - (adSize.height + overlappingHeight)
+                    val layoutParams = cWebView!!.view.layoutParams
+                    layoutParams.height = webViewHeight
+                    cWebView!!.view.layoutParams = layoutParams
 
-                        // Log for debugging
-                        Log.d("BannerAdjustment", "Adjusted WebView height: $webViewHeight")
-                    } catch (e: Exception) {
-                        Log.e("AdmobPlugin", "Error adjusting WebView for banner: ${e.message}")
-                    }
+                    // Log for debugging
+                    Log.d("BannerAdjustment", "Adjusted WebView height: $webViewHeight")
+                } catch (e: Exception) {
+                    Log.e("AdmobPlugin", "Error adjusting WebView for banner: ${e.message}")
                 }
             }
         }
+    }
 
 
 
@@ -1785,7 +1787,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                     try {
                         (brandSafetyUrls as ArrayList<String>).add(brandSafetyArr.getString(i))
                     } catch (e: JSONException) {
-                        // e.printStackTrace();
+                         e.printStackTrace();
                     }
                 }
             }
@@ -1794,7 +1796,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             this.ppIdVl = ppId
             this.cURLVl = ctURL
         } catch (e: JSONException) {
-            //  e.printStackTrace();
+              e.printStackTrace();
         }
     }
 
@@ -1808,7 +1810,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
         } catch (e: JSONException) {
-            // e.printStackTrace();
+             e.printStackTrace();
         }
     }
 
@@ -1835,7 +1837,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             val sdkVersion = MobileAds.getVersion().toString()
-            val mStatus = consentInformation!!.consentStatus.toString()
+            val mStatus = consentInformation?.consentStatus.toString()
 
             val adapterInfo = StringBuilder()
             for (adapterClass in statusMap.keys) {
@@ -2273,7 +2275,3 @@ class emiAdmobPlugin : CordovaPlugin() {
         private const val EXPIRATION_TIME = 360L * 24 * 60 * 60 * 1000
     }
 }
-
-
-
-
