@@ -1523,7 +1523,11 @@ class emiAdmobPlugin : CordovaPlugin() {
                 bannerOverlapping()
             }
 
-            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.load');")
+            val bannerHeight= adSize.height;
+
+            val bannerLoadEventData = String.format(Locale.US, "{\"height\": %d}", bannerHeight)
+
+            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.load', $bannerLoadEventData);")
 
             val eventData = String.format(
                 "{\"collapsible\": \"%s\"}",
@@ -1787,7 +1791,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                     try {
                         (brandSafetyUrls as ArrayList<String>).add(brandSafetyArr.getString(i))
                     } catch (e: JSONException) {
-                         e.printStackTrace();
+                        e.printStackTrace();
                     }
                 }
             }
@@ -1796,7 +1800,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             this.ppIdVl = ppId
             this.cURLVl = ctURL
         } catch (e: JSONException) {
-              e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -1810,7 +1814,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
         } catch (e: JSONException) {
-             e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

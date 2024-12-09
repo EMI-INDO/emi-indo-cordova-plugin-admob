@@ -80,8 +80,17 @@ document.addEventListener("deviceready", function () {
         
         cordova.plugins.emiAdmobPlugin.requestIDFA(); // requestTrackingAuthorization
         
-    }
-    
+    } 
+
+
+   // deactivate Google's consent
+    /*
+     cordova.plugins.emiAdmobPlugin.metaData({
+
+            useCustomConsentManager: false // Default false only android
+
+    });
+    */
 
     // AdMob Sdk initialize
     

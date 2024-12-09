@@ -114,7 +114,8 @@ on.banner.hide
 
 // EVENT For example
 
-document.addEventListener('on.banner.load', () => {
+document.addEventListener('on.banner.load', (arg) => {
+    let bannerAdHeight=arg.height;
     console.log("on banner load");
 });
 

@@ -8,7 +8,7 @@
  - AdSense New [example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/www/js/adSense.js)
 
 
-### Mobile Ads SDK (Android: 23.5.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
+### Mobile Ads SDK (Android: 23.6.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
 ### User Messaging Platform (UMP Android: 3.1.0) [Release Notes:](https://developers.google.com/admob/android/privacy/release-notes)
 
 ### Mobile Ads SDK (IOS: 11.12.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
