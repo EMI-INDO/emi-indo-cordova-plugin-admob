@@ -40,10 +40,7 @@
       <uses-permission android:name="android.permission.INTERNET" />
       <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     </config-file>
-    
-    <config-file parent="./application" target="AndroidManifest.xml">
-            <property android:name="android.adservices.AD_SERVICES_CONFIG" android:resource="@xml/gma_ad_services_config" tools:replace="android:resource" />
-    </config-file>
+
 
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
       <activity
