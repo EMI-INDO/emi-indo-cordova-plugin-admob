@@ -1,6 +1,6 @@
 {
   "name": "emi-indo-cordova-plugin-admob",
-  "version": "1.6.8",
+  "version": "1.6.9",
   "description": "Cordova Plugin Admob Android IOS Support Capacitor",
   "cordova": {
     "id": "emi-indo-cordova-plugin-admob",

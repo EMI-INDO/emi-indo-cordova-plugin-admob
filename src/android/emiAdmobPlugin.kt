@@ -1132,8 +1132,8 @@ class emiAdmobPlugin : CordovaPlugin() {
                         editor.putString("IABTCF_TCString", consentString)
                         editor.putLong(LAST_ACCESS_SUFFIX, System.currentTimeMillis())
                         editor.apply()
-                        val key = "IABTCF_TCString"
-                        getString(key)
+                        //val key = "IABTCF_TCString"
+                        getString(consentString.toString())
                         callbackContext.success(userInfoJson)
                         cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.getIabTfc');")
                     } catch (e: Exception) {
@@ -1604,13 +1604,12 @@ class emiAdmobPlugin : CordovaPlugin() {
 
 
 
-
     // fix https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/issues/26
     private fun bannerOverlapping() {
         if (bannerView != null && mActivity != null && cWebView != null) {
             mActivity!!.runOnUiThread {
                 try {
-                    val bannerHeightInPx = bannerView!!.height
+                   // val bannerHeightInPx = bannerView!!.height
                     val displayMetrics = DisplayMetrics()
                     mActivity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
                     val screenHeightInPx = displayMetrics.heightPixels
@@ -1629,6 +1628,8 @@ class emiAdmobPlugin : CordovaPlugin() {
             }
         }
     }
+
+
 
 
 
@@ -2005,7 +2006,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                     }
                     return sb.toString().uppercase(Locale.getDefault())
                 } catch (ex: NoSuchAlgorithmException) {
-                    // ex.printStackTrace();
+                     ex.printStackTrace();
                     return null
                 }
             }
