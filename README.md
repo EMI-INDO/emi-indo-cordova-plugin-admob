@@ -14,7 +14,7 @@
 ### Mobile Ads SDK (IOS: 11.12.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
 
 ### User Messaging Platform (UMP IOS: 2.7.0) [Release Notes:](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/privacy/download)
-### IAB Europe Transparency & Consent Framework (CPM: 2.2.0)
+### IAB Europe Transparency & Consent Framework (CMP: 2.2.0)
 
 ## New example 
 - https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/www
