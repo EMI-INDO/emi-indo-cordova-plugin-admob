@@ -21,7 +21,7 @@
 ### Mobile Ads SDK (Android: 23.6.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
 ### User Messaging Platform (UMP Android: 3.1.0) [Release Notes:](https://developers.google.com/admob/android/privacy/release-notes)
 
-### Mobile Ads SDK (IOS: 11.12.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
+### Mobile Ads SDK (IOS: 11.13.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
 
 ### User Messaging Platform (UMP IOS: 2.7.0) [Release Notes:](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/privacy/download)
 ### IAB Europe Transparency & Consent Framework (CMP: 2.2.0)
