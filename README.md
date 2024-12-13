@@ -7,6 +7,16 @@
  - AdManager
  - AdSense New [example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/www/js/adSense.js)
 
+> [!NOTE]  
+> - To maintain this plugin in the long run, 
+> - for (regular maintenance),
+> - just give me a cup of coffee.
+ 
+ ## 💰Sponsor this project
+  [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)  
+  [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F16NI8H)
+##  [Check all release notes:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/)
+
 
 ### Mobile Ads SDK (Android: 23.6.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
 ### User Messaging Platform (UMP Android: 3.1.0) [Release Notes:](https://developers.google.com/admob/android/privacy/release-notes)
@@ -16,13 +26,16 @@
 ### User Messaging Platform (UMP IOS: 2.7.0) [Release Notes:](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/privacy/download)
 ### IAB Europe Transparency & Consent Framework (CMP: 2.2.0)
 
-## New example 
-- https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/www
 
 
 ## Documentation Capacitor example
 -  [Documentation Capacitor example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/discussions/29)
 
+### This is not a dependency, it's a separate plugin but highly recommended.
+https://github.com/EMI-INDO/emi-indo-cordova-plugin-fanalytics
+
+## New example 
+- https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/www
 
 
 ## Minimum Cordova Engines
@@ -99,11 +112,6 @@ https://developers.google.com/admob/ios/quick-start
 [![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhLhjgjUkLSlagAcfz_0KwNXLLfvZnkrs8YG4PAUo9y5e0kyTDwUYAHATmWzyF0ZkJ7EWCsvsJIhP-rIDPnAMrrQKkmuZxM38lW4JIzzfb0LZWTh0q9FCbEPEZBjbgkZbzsFlI23Y30uTPR-TEiVpt9w5gFUQXrep0_Tlyj_koRJUhc66zxE2UUJPsejEE/s320/mq2.webp)](https://youtu.be/sLXHKdU6DAg)
 
 
-
-## 💰Sponsor this project
-  [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)  
-  [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F16NI8H)
-##  [Check all release notes:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/)
 
 
 
