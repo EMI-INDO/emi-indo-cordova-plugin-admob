@@ -1,8 +1,8 @@
 
 
 ### emi-indo-cordova-plugin-admob
- Cordova Plugin Admob Android and IOS
- ## Support Ad
+ Cordova/Quasar/Capacitor Plugin Admob Android and IOS
+ ## Support Request Ad Builder
  - AdMob
  - AdManager
  - AdSense New [example ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example/www/js/adSense.js)
