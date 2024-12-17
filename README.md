@@ -48,6 +48,7 @@ https://github.com/EMI-INDO/emi-indo-cordova-plugin-fanalytics
 
 
 ## IOS Ad Support IOS 18 *
+- Fix error build IOS: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/discussions/42
 - Mobile Ads SDK (IOS: 11.12.0)
 - emi-indo-cordova-plugin-admob@1.6.3 or higher requires cocoapods 1.16.2 or higher
 > [!WARNING]
