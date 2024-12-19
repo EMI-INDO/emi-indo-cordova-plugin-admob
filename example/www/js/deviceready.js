@@ -83,7 +83,7 @@ document.addEventListener("deviceready", function () {
     } 
 
 
-   // deactivate Google's consent
+   // (Optional) deactivate Google's consent
     /*
      cordova.plugins.emiAdmobPlugin.metaData({
 

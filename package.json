@@ -1,7 +1,7 @@
 {
   "name": "emi-indo-cordova-plugin-admob",
-  "version": "1.7.9",
-  "description": "Cordova Plugin Admob Android IOS Support Capacitor",
+  "version": "1.8.9",
+  "description": "Cordova/Quasar/Capacitor Plugin Admob Android IOS",
   "cordova": {
     "id": "emi-indo-cordova-plugin-admob",
     "platforms": [
@@ -27,7 +27,9 @@
     "capacitor-ios",
     "adsense",
     "webview",
-    "admanager"
+    "admanager",
+    "quasar-framework",
+    "quasar"
   ],
   "author": "EMI INDO",
   "email": "cordova.c3addon@gmail.com",

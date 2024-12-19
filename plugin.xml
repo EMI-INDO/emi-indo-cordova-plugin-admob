@@ -1,9 +1,9 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  id="emi-indo-cordova-plugin-admob" version="1.7.9">
+  id="emi-indo-cordova-plugin-admob" version="1.8.9">
 
   <name>emiAdmobPlugin</name>
-  <description>Cordova Plugin Admob Android IOS</description>
+  <description>Cordova/Quasar/Capacitor Plugin Admob Android IOS</description>
   <author>EMI INDO</author>
   <license>ISC</license>
 
@@ -93,7 +93,7 @@
 
     <config-file parent="/*" target="config.xml">
     <!--minimum deployment-target: 12.2  -->
-		<preference name="deployment-target" value="12.2" />
+		<preference name="deployment-target" value="12.3" />
 		<preference name="SwiftVersion" value="5.10" />
 	</config-file>
 

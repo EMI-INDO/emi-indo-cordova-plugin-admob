@@ -1,4 +1,4 @@
-// ccordova.plugins.emiAdmobPlugin.styleBannerAd({isOverlapping: true, overlappingHeight: 5, padding: 0, margins: 0 });  // ( only android)
+// ccordova.plugins.emiAdmobPlugin.styleBannerAd({isOverlapping: true, overlappingHeight: 0, padding: 0, margins: 0 });  // ( only android)
 //cordova.plugins.emiAdmobPlugin.loadBannerAd({config});
 //cordova.plugins.emiAdmobPlugin.showBannerAd(); // default
 //cordova.plugins.emiAdmobPlugin.hideBannerAd(); // default
@@ -14,9 +14,9 @@ function loadBanner() {
 
         cordova.plugins.emiAdmobPlugin.styleBannerAd({
             isOverlapping: true, 
-            overlappingHeight: 5, 
-            padding: 0, 
-            margins: 0 
+            overlappingHeight: 0, // default 0 (Automatic)
+            padding: 0, // default 0
+            margins: 0 // default 0 (Automatic)
         });
         
     }
@@ -24,7 +24,7 @@ function loadBanner() {
 
         cordova.plugins.emiAdmobPlugin.loadBannerAd({
             adUnitId: Banner_ID, //Banner_ID,
-            position: "bottom-center",
+            position: "bottom-center", // "Recommended: bottom-center"
             size: "banner", // autoResize: true (only responsive_adaptive)
             collapsible: "bottom", // position: top | bottom (disable, empty string)
             autoResize: true, // default false
@@ -114,9 +114,33 @@ on.banner.hide
 
 // EVENT For example
 
+
+// (Optional)
+// This is only triggered when cordova.plugins.emiAdmobPlugin.styleBannerAd
+document.addEventListener('on.style.banner.ad', (data) => {
+    console.log("on.style.banner.ad: " + JSON.stringify(data));
+/*
+    const navBarHeight = data.navBarHeight;
+    const screenHeight = data.screenHeight;
+    const usableHeight = data.usableHeight;
+    const isOverlapping = data.isOverlapping;
+    const overlappingHeight = data.overlappingHeight;
+    const paddingInPx = data.paddingInPx;
+    const marginsInPx = data.marginsInPx;
+*/
+
+   // You can load banner ads here, or manipulate variables, even rearrange cordova.plugins.emiAdmobPlugin.styleBannerAd to your liking.
+
+
+});
+
+
+
+
+
 document.addEventListener('on.banner.load', (arg) => {
     let bannerAdHeight=arg.height;
-    console.log("on banner load");
+    console.log("on banner load", bannerAdHeight);
 });
 
 

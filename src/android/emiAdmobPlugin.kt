@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.graphics.Point
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -1197,18 +1198,59 @@ class emiAdmobPlugin : CordovaPlugin() {
             val options = args.getJSONObject(0)
             if (mActivity != null) {
                 mActivity!!.runOnUiThread {
-                    val isOverlapping = options.optBoolean("isOverlapping")
-                    val overlappingHeight = options.optInt("overlappingHeight")
-                    val paddingPx = options.optInt("padding")
-                    val marginsPx = options.optInt("margins")
-                    try {
-                        this.isOverlapping = isOverlapping
-                        this.overlappingHeight = overlappingHeight
-                        this.paddingInPx = paddingPx
-                        this.marginsInPx = marginsPx
-                    } catch (e: Exception) {
-                        callbackContext.error(e.toString())
+                    val screenHeight: Int
+                    val usableHeight: Int
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        val windowMetrics = cordova.activity.windowManager.currentWindowMetrics
+                        val insets = windowMetrics.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars())
+                        screenHeight = windowMetrics.bounds.height()
+                        usableHeight = screenHeight - insets.bottom
+                    } else {
+                        val display = cordova.activity.windowManager.defaultDisplay
+                        val size = Point()
+                        val realSize = Point()
+                        display.getSize(size)
+                        display.getRealSize(realSize)
+
+                        usableHeight = size.y
+                        screenHeight = realSize.y
                     }
+
+                    val navBarHeight = maxOf(0, screenHeight - usableHeight)
+
+                    val isOverlapping = options.optBoolean("isOverlapping", false)
+                    val overlappingHeight = options.optInt("overlappingHeight", navBarHeight)
+                    val paddingPx = options.optInt("padding", 0)
+                    val marginsPx = options.optInt("margins", navBarHeight)
+
+                    val result = JSONObject()
+                    try {
+                        // Make sure to only set variables if they have the correct values
+                        this.isOverlapping = isOverlapping
+                        this.overlappingHeight = if (overlappingHeight > 0) overlappingHeight else navBarHeight
+                        this.paddingInPx = paddingPx
+                        this.marginsInPx = if (marginsPx > 0) marginsPx else navBarHeight
+
+                        // Add more useful data to the result
+                        result.put("navBarHeight", navBarHeight)
+                        result.put("screenHeight", screenHeight)
+                        result.put("usableHeight", usableHeight)
+                        result.put("isOverlapping", isOverlapping)
+                        result.put("overlappingHeight", this.overlappingHeight)
+                        result.put("paddingInPx", paddingPx)
+                        result.put("marginsInPx", this.marginsInPx)
+
+                        cWebView?.let {
+                            it.loadUrl("javascript:cordova.fireDocumentEvent('on.style.banner.ad', ${result});")
+                        } ?: run {
+                            callbackContext.error("Error: cWebView is null.")
+                        }
+
+                    } catch (e: Exception) {
+                        callbackContext.error("Error in styleBannerAd: ${e.message}")
+                    }
+
                 }
             }
             return true
@@ -1609,7 +1651,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         if (bannerView != null && mActivity != null && cWebView != null) {
             mActivity!!.runOnUiThread {
                 try {
-                   // val bannerHeightInPx = bannerView!!.height
+                    // val bannerHeightInPx = bannerView!!.height
                     val displayMetrics = DisplayMetrics()
                     mActivity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
                     val screenHeightInPx = displayMetrics.heightPixels
@@ -2006,7 +2048,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                     }
                     return sb.toString().uppercase(Locale.getDefault())
                 } catch (ex: NoSuchAlgorithmException) {
-                     ex.printStackTrace();
+                    ex.printStackTrace();
                     return null
                 }
             }

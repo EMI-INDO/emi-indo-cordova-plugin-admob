@@ -75,7 +75,7 @@ document.addEventListener('on.interstitial.loaded', () => {
 
     if (typeof cordova !== 'undefined') {
 
-        cordova.plugins.EmiFirebaseAnalyticsPlugin.logEvent({ name: "interstitial_Ad", params: adEventData.on_interstitial_loaded });
+        cordova.plugins.EmiFirebaseAnalyticsPlugin.logEvent({ name: "on_interstitial_loaded", params: adEventData.on_interstitial_loaded });
 
     }
   
@@ -92,7 +92,7 @@ document.addEventListener('on.interstitial.dismissed', () => {
     
     if (typeof cordova !== 'undefined') {
 
-        cordova.plugins.EmiFirebaseAnalyticsPlugin.logEvent({ name: "interstitial_Ad", params: adEventData.on_interstitial_dismissed });
+        cordova.plugins.EmiFirebaseAnalyticsPlugin.logEvent({ name: "on_interstitial_dismissed", params: adEventData.on_interstitial_dismissed });
 
     }
 
@@ -118,7 +118,7 @@ document.addEventListener('on.interstitial.failed.load', (error) => {
     
 if (typeof cordova !== 'undefined') {
 
-    cordova.plugins.EmiFirebaseAnalyticsPlugin.logEvent({ name: "interstitial_Ad", params: adEventData.on_interstitial_failed_load });
+    cordova.plugins.EmiFirebaseAnalyticsPlugin.logEvent({ name: "on_interstitial_failed_load", params: adEventData.on_interstitial_failed_load });
 
 }
 
@@ -133,7 +133,7 @@ document.addEventListener('on.interstitial.failed.show', (error) => {
    
     if (typeof cordova !== 'undefined') {
 
-        cordova.plugins.EmiFirebaseAnalyticsPlugin.logEvent({ name: "interstitial_Ad", params: adEventData.on_interstitial_failed_show });
+        cordova.plugins.EmiFirebaseAnalyticsPlugin.logEvent({ name: "on_interstitial_failed_show", params: adEventData.on_interstitial_failed_show });
     
     }
 
@@ -167,7 +167,7 @@ document.addEventListener('on.interstitial.revenue', (data) => {
   
         cordova.plugins.EmiFirebaseAnalyticsPlugin.setAdMobRevenuePaid({ data: adRevenuePaid });
 
-        cordova.plugins.EmiFirebaseAnalyticsPlugin.logEvent({ name: "interstitial_Ad", params: adEventData.on_interstitial_revenue });
+        cordova.plugins.EmiFirebaseAnalyticsPlugin.logEvent({ name: "on_interstitial_revenue", params: adEventData.on_interstitial_revenue });
   
     }
 

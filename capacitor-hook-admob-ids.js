@@ -6,13 +6,11 @@ const configPath = path.join(process.cwd(), 'capacitor.config.json');
 const androidPlatformPath = path.join(process.cwd(), 'android');
 const iosPlatformPath = path.join(process.cwd(), 'ios');
 const pluginPath = path.join(process.cwd(), 'node_modules', 'emi-indo-cordova-plugin-admob', 'plugin.xml');
-const infoPlistPath = path.join(process.cwd(), 'ios', 'App', 'App', 'Info.plist'); 
-
+const infoPlistPath = path.join(process.cwd(), 'ios', 'App', 'App', 'Info.plist');
 
 function fileExists(filePath) {
   return fs.existsSync(filePath);
 }
-
 
 function getAdMobConfig() {
   if (!fileExists(configPath)) {
@@ -29,9 +27,9 @@ function getAdMobConfig() {
   return {
     APP_ID_ANDROID: admobConfig.APP_ID_ANDROID,
     APP_ID_IOS: admobConfig.APP_ID_IOS,
+    USE_LITE_ADS: admobConfig.USE_LITE_ADS === "lite",
   };
 }
-
 
 function updatePluginXml(admobConfig) {
   if (!fileExists(pluginPath)) {
@@ -45,10 +43,21 @@ function updatePluginXml(admobConfig) {
     .replace(/<preference name="APP_ID_ANDROID" default=".*?" \/>/, `<preference name="APP_ID_ANDROID" default="${admobConfig.APP_ID_ANDROID}" />`)
     .replace(/<preference name="APP_ID_IOS" default=".*?" \/>/, `<preference name="APP_ID_IOS" default="${admobConfig.APP_ID_IOS}" />`);
 
-  fs.writeFileSync(pluginPath, pluginContent, 'utf8');
-  console.log('AdMob IDs successfully updated in plugin.xml');
-}
+  if (admobConfig.USE_LITE_ADS) {
+    pluginContent = pluginContent.replace(
+      /<framework src="com.google.android.gms:play-services-ads:.*?" \/>/,
+      `<framework src="com.google.android.gms:play-services-ads-lite:$PLAY_SERVICES_VERSION" />`
+    );
+  } else {
+    pluginContent = pluginContent.replace(
+      /<framework src="com.google.android.gms:play-services-ads-lite:.*?" \/>/,
+      `<framework src="com.google.android.gms:play-services-ads:$PLAY_SERVICES_VERSION" />`
+    );
+  }
 
+  fs.writeFileSync(pluginPath, pluginContent, 'utf8');
+  console.log('AdMob IDs and framework dependency successfully updated in plugin.xml');
+}
 
 function updateInfoPlist(admobConfig) {
   if (!fileExists(infoPlistPath)) {
@@ -59,13 +68,8 @@ function updateInfoPlist(admobConfig) {
   const plistContent = fs.readFileSync(infoPlistPath, 'utf8');
   const plistData = plist.parse(plistContent);
 
-
   plistData.GADApplicationIdentifier = admobConfig.APP_ID_IOS;
-
- 
   plistData.NSUserTrackingUsageDescription = 'This identifier will be used to deliver personalized ads to you.';
-
-  
   plistData.GADDelayAppMeasurementInit = true;
 
   // https://developers.google.com/admob/ios/quick-start
@@ -114,15 +118,12 @@ function updateInfoPlist(admobConfig) {
     { SKAdNetworkIdentifier: '3qcr597p9d.skadnetwork' }, // Zucks
 ];
 
-
   const updatedPlistContent = plist.build(plistData);
   fs.writeFileSync(infoPlistPath, updatedPlistContent, 'utf8');
   console.log('AdMob IDs and additional configurations successfully updated in Info.plist');
 }
 
-
 try {
-
   if (!fileExists(configPath)) {
     throw new Error('capacitor.config.json not found. Skipping setup.');
   }
@@ -131,14 +132,11 @@ try {
     throw new Error('Neither Android nor iOS platforms are found. Ensure platforms are added to your Capacitor project.');
   }
 
-  
   const admobConfig = getAdMobConfig();
-
 
   if (fileExists(androidPlatformPath)) {
     updatePluginXml(admobConfig);
   }
-
 
   if (fileExists(iosPlatformPath)) {
     updateInfoPlist(admobConfig);
@@ -146,3 +144,7 @@ try {
 } catch (error) {
   console.error(error.message);
 }
+
+
+  
+  
