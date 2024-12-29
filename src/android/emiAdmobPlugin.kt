@@ -93,6 +93,7 @@ class emiAdmobPlugin : CordovaPlugin() {
     private var overlappingHeight: Int = 0
     private var statusBarHide: Boolean = false
 
+    var adType="";
 
     var isBannerLoad: Boolean = false
     var isBannerShow: Boolean = false
@@ -1369,6 +1370,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
 
     private fun loadBannerAd(adUnitId: String, position: String, size: String) {
+        adType=size;
         try {
             if (bannerViewLayout == null) {
                 bannerViewLayout = FrameLayout(mActivity!!)
@@ -1555,6 +1557,12 @@ class emiAdmobPlugin : CordovaPlugin() {
             cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.impression');")
         }
 
+        private fun getAdHeightInDp(adSize: AdSize, context: Context): Int {
+            val heightInPixels = adSize.getHeightInPixels(context)
+            val density = context.resources.displayMetrics.density
+            return (heightInPixels / density).toInt()
+        }
+
 
         override fun onAdLoaded() {
             // Log.d(TAG, "onAdLoaded: Ad finished loading successfully.");
@@ -1569,9 +1577,38 @@ class emiAdmobPlugin : CordovaPlugin() {
                 bannerOverlapping()
             }
 
-            val bannerHeight= adSize.height;
 
-            val bannerLoadEventData = String.format(Locale.US, "{\"height\": %d}", bannerHeight)
+
+
+
+
+            val context = cordova.activity.applicationContext
+            //val adType="fluid";
+            // Get the AdSize object based on the type
+            var currentAdSize = when (adType) {
+                "banner" -> AdSize.BANNER
+                "large_banner" -> AdSize.LARGE_BANNER
+                "medium_rectangle" -> AdSize.MEDIUM_RECTANGLE
+                "full_banner" -> AdSize.FULL_BANNER
+                "leaderboard" -> AdSize.LEADERBOARD
+
+                //"fluid" -> AdSize.FLUID
+                //"in_line_adaptive" -> AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(context, adWidth)
+
+                else -> adSize // Default fallback to the adaptive ad size
+            }
+
+            // Calculate the height in dp
+            val bannerHeightDp = getAdHeightInDp(currentAdSize, context)
+
+            //bannerHeight=currentAdSize;
+
+
+            val bannerLoadEventData = String.format(Locale.US, "{\"height\": %d}", bannerHeightDp)
+
+
+
+
 
             cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.load', $bannerLoadEventData);")
 
@@ -1670,7 +1707,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                         cWebView!!.view.layoutParams = layoutParams
                     }
 
-                   // Log.d("BannerAdjustment", "Adjusted WebView height: $webViewHeight")
+                    // Log.d("BannerAdjustment", "Adjusted WebView height: $webViewHeight")
                 } catch (e: Exception) {
                     Log.e("AdmobPlugin", "Error adjusting WebView for banner: ${e.message}")
                 }
