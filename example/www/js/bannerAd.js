@@ -14,7 +14,6 @@ function loadBanner() {
 
         cordova.plugins.emiAdmobPlugin.styleBannerAd({
             isOverlapping: true,
-            isStatusBarHide: false,
             overlappingHeight: 0, // default 0 (Automatic)
             padding: 0, // default 0
             margins: 0 // default 0 (Automatic)

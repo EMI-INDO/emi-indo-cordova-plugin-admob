@@ -91,9 +91,8 @@ class emiAdmobPlugin : CordovaPlugin() {
 
     private var isOverlapping: Boolean = false
     private var overlappingHeight: Int = 0
-    private var statusBarHide: Boolean = false
 
-    var adType="";
+    var adType = ""
 
     var isBannerLoad: Boolean = false
     var isBannerShow: Boolean = false
@@ -1223,7 +1222,6 @@ class emiAdmobPlugin : CordovaPlugin() {
                     val navBarHeight = maxOf(0, screenHeight - usableHeight)
 
                     val isOverlapping = options.optBoolean("isOverlapping", false)
-                    val statusBarHide = options.optBoolean("isStatusBarHide")
                     val overlappingHeight = options.optInt("overlappingHeight", navBarHeight)
                     val paddingPx = options.optInt("padding", 0)
                     val marginsPx = options.optInt("margins", navBarHeight)
@@ -1232,7 +1230,6 @@ class emiAdmobPlugin : CordovaPlugin() {
                     try {
                         // Make sure to only set variables if they have the correct values
                         this.isOverlapping = isOverlapping
-                        this.statusBarHide = statusBarHide
                         this.overlappingHeight = if (overlappingHeight > 0) overlappingHeight else navBarHeight
                         this.paddingInPx = paddingPx
                         this.marginsInPx = if (marginsPx > 0) marginsPx else navBarHeight
@@ -1370,7 +1367,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
 
     private fun loadBannerAd(adUnitId: String, position: String, size: String) {
-        adType=size;
+        adType = size;
         try {
             if (bannerViewLayout == null) {
                 bannerViewLayout = FrameLayout(mActivity!!)
@@ -1695,17 +1692,11 @@ class emiAdmobPlugin : CordovaPlugin() {
                     val displayMetrics = DisplayMetrics()
                     mActivity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
                     val screenHeightInPx = displayMetrics.heightPixels
-                    if (statusBarHide){
-                        val webViewHeight = screenHeightInPx - (adSize.height)
-                        val layoutParams = cWebView!!.view.layoutParams
-                        layoutParams.height = webViewHeight
-                        cWebView!!.view.layoutParams = layoutParams
-                    } else {
+
                         val webViewHeight = screenHeightInPx - (adSize.height + overlappingHeight)
                         val layoutParams = cWebView!!.view.layoutParams
                         layoutParams.height = webViewHeight
                         cWebView!!.view.layoutParams = layoutParams
-                    }
 
                     // Log.d("BannerAdjustment", "Adjusted WebView height: $webViewHeight")
                 } catch (e: Exception) {
