@@ -504,6 +504,7 @@ BOOL isUsingAdManagerRequest = YES;
         }
           
         [self setAdRequest];
+          
 
         self.bannerViewLayout = [[UIView alloc] initWithFrame:CGRectZero];
         self.bannerViewLayout.translatesAutoresizingMaskIntoConstraints = NO;
@@ -809,11 +810,12 @@ BOOL isUsingAdManagerRequest = YES;
                     NSString *adUnitId = strongSelf.appOpenAd.adUnitID;
 
                     NSDictionary *data = @{
-                        @"value": adValue,
-                        @"currencyCode": currencyCode,
+                        @"value": adValue ?: [NSNull null],
+                        @"currencyCode": currencyCode ?: @"",
                         @"precision": @(precision),
-                        @"adUnitId": adUnitId
+                        @"adUnitId": adUnitId ?: @""
                     };
+
                     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:nil];
                     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
@@ -937,11 +939,12 @@ BOOL isUsingAdManagerRequest = YES;
                     NSString *adUnitId = strongSelf.interstitial.adUnitID;
 
                     NSDictionary *data = @{
-                        @"value": adValue,
-                        @"currencyCode": currencyCode,
+                        @"value": adValue ?: [NSNull null],
+                        @"currencyCode": currencyCode ?: @"",
                         @"precision": @(precision),
-                        @"adUnitId": adUnitId
+                        @"adUnitId": adUnitId ?: @""
                     };
+                    
                     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:nil];
                     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
@@ -1072,10 +1075,10 @@ BOOL isUsingAdManagerRequest = YES;
                     NSString *adUnitId = strongSelf.rewardedInterstitialAd.adUnitID;
 
                     NSDictionary *data = @{
-                        @"value": adValue,
-                        @"currencyCode": currencyCode,
+                        @"value": adValue ?: [NSNull null],
+                        @"currencyCode": currencyCode ?: @"",
                         @"precision": @(precision),
-                        @"adUnitId": adUnitId
+                        @"adUnitId": adUnitId ?: @""
                     };
                     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:nil];
                     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -1229,10 +1232,10 @@ BOOL isUsingAdManagerRequest = YES;
                     NSString *adUnitId = strongSelf.rewardedAd.adUnitID;
 
                     NSDictionary *data = @{
-                        @"value": adValue,
-                        @"currencyCode": currencyCode,
+                        @"value": adValue ?: [NSNull null],
+                        @"currencyCode": currencyCode ?: @"",
                         @"precision": @(precision),
-                        @"adUnitId": adUnitId
+                        @"adUnitId": adUnitId ?: @""
                     };
                     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:nil];
                     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -1480,10 +1483,10 @@ BOOL isUsingAdManagerRequest = YES;
         NSString *adUnitId = strongSelf.bannerView.adUnitID;
 
         NSDictionary *data = @{
-            @"value": adValue,
-            @"currencyCode": currencyCode,
+            @"value": adValue ?: [NSNull null],
+            @"currencyCode": currencyCode ?: @"",
             @"precision": @(precision),
-            @"adUnitId": adUnitId
+            @"adUnitId": adUnitId ?: @""
         };
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:nil];
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];

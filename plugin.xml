@@ -1,6 +1,6 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  id="emi-indo-cordova-plugin-admob" version="1.9.9">
+  id="emi-indo-cordova-plugin-admob" version="2.0.0">
 
   <name>emiAdmobPlugin</name>
   <description>Cordova/Quasar/Capacitor Plugin Admob Android IOS</description>
@@ -73,6 +73,13 @@
     <!-- Dependency Consent status will automatically reset after 12 months -->
     <preference name="ANDROID_X" default="1.2.0" />
     <framework src="androidx.preference:preference:$ANDROID_X" />
+
+    <preference name="MULTI_WINDOW" default="false" />
+
+    <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application/activity[@android:name='MainActivity']">
+            <activity android:resizeableActivity="$MULTI_WINDOW" />
+    </edit-config>
+
 
 
     <config-file parent="/*" target="AndroidManifest.xml" />
