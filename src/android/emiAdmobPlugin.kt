@@ -93,6 +93,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
     private var isOverlapping: Boolean = false
     private var overlappingHeight: Int = 0
+    private var isStatusBarShow: Boolean = true
 
     var adType = ""
 
@@ -1158,6 +1159,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                     val navBarHeight = maxOf(0, screenHeight - usableHeight)
 
                     val isOverlapping = options.optBoolean("isOverlapping", false)
+                    val setStatusBarShow = options.optBoolean("isStatusBarShow", true)
                     val overlappingHeight = options.optInt("overlappingHeight", navBarHeight)
                     val paddingPx = options.optInt("padding", 0)
                     val marginsPx = options.optInt("margins", navBarHeight)
@@ -1166,6 +1168,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                     try {
                         // Make sure to only set variables if they have the correct values
                         this.isOverlapping = isOverlapping
+                        this.isStatusBarShow = setStatusBarShow
                         this.overlappingHeight = if (overlappingHeight > 0) overlappingHeight else navBarHeight
                         this.paddingInPx = paddingPx
                         this.marginsInPx = if (marginsPx > 0) marginsPx else navBarHeight
@@ -1607,27 +1610,30 @@ class emiAdmobPlugin : CordovaPlugin() {
 
 
 
-    private fun bannerOverlapping() {
-        if (bannerView != null && mActivity != null && cWebView != null) {
-            mActivity?.runOnUiThread {
-                try {
-
-                    val displayMetrics = DisplayMetrics()
-                    mActivity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
-                    val screenHeightInPx = displayMetrics.heightPixels
-
-                    val webViewHeight = screenHeightInPx - (adSize.height + overlappingHeight)
-                    val layoutParams = cWebView?.view?.layoutParams
-                    layoutParams?.height = webViewHeight
-                    cWebView?.view?.layoutParams = layoutParams
-
-                    // Log.d("BannerAdjustment", "Adjusted WebView height: $webViewHeight")
-                } catch (e: Exception) {
-                    Log.e("AdmobPlugin", "Error adjusting WebView for banner: ${e.message}")
+   private fun bannerOverlapping() {
+    if (bannerView != null && mActivity != null && cWebView != null) {
+        mActivity?.runOnUiThread {
+            try {
+                val displayMetrics = DisplayMetrics()
+                mActivity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
+                val screenHeightInPx = displayMetrics.heightPixels
+                
+                val webViewHeight = if (isStatusBarShow) {
+                    screenHeightInPx - (adSize.height + overlappingHeight)
+                } else {
+                    screenHeightInPx + (adSize.height + overlappingHeight)
                 }
+                val layoutParams = cWebView!!.view.layoutParams
+                layoutParams.height = webViewHeight
+                cWebView!!.view.layoutParams = layoutParams
+
+                // Log.d("BannerAdjustment", "Adjusted WebView height: $webViewHeight")
+            } catch (e: Exception) {
+                Log.e("AdmobPlugin", "Error adjusting WebView for banner: ${e.message}")
             }
         }
     }
+}
 
 
 

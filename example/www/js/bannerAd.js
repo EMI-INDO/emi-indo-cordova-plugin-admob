@@ -10,16 +10,16 @@ function loadBanner() {
 
     if (typeof cordova !== 'undefined') {
 
-        if (!isPlatformIOS){
-
+      
         cordova.plugins.emiAdmobPlugin.styleBannerAd({
-            isOverlapping: true,
-            overlappingHeight: 0, // default 0 (Automatic)
-            padding: 0, // default 0
-            margins: 0 // default 0 (Automatic)
+            isOverlapping: true, // default false IOS | Android
+            isStatusBarShow: true, // default true Only Android
+            paddingWebView: 1.0, // Only IOS > padding banner Container and webView Container
+            overlappingHeight: 0, // default 0 (Automatic) Only Android
+            padding: 0, // default 0 Only Android
+            margins: 0 // default 0 (Automatic) Only Android
         });
         
-    }
     
 
         cordova.plugins.emiAdmobPlugin.loadBannerAd({
@@ -37,6 +37,30 @@ function loadBanner() {
 
 
 
+function showBanner() {
+
+    if (typeof cordova !== 'undefined') {
+        cordova.plugins.emiAdmobPlugin.showBannerAd();
+    }
+
+}
+
+function hideBanner() {
+
+    if (typeof cordova !== 'undefined') {
+        cordova.plugins.emiAdmobPlugin.hideBannerAd();
+    }
+
+}
+
+
+function removeBanner() {
+
+    if (typeof cordova !== 'undefined') {
+        cordova.plugins.emiAdmobPlugin.removeBannerAd();
+    }
+
+}
 
 
 /* ///////<<<<  bannerAd position  >>>>>>\\\\\\\

@@ -4,6 +4,7 @@
 #import <Cordova/CDVPlugin.h>
 #import <Foundation/Foundation.h>
 #import <UserMessagingPlatform/UserMessagingPlatform.h>
+#import <Cordova/CDVViewController.h>
 @implementation emiAdmobPlugin
 @synthesize appOpenAd;
 @synthesize bannerView;
@@ -18,6 +19,7 @@ int attStatus = 0;
 int Consent_Status = 0;
 int adFormat = 0;
 int adWidth = 320; // Default
+
 BOOL auto_Show = NO;
 // NSString *Npa = @"1"; // Deprecated
 NSString *setPosition = @"bottom-center"; // Default
@@ -26,12 +28,18 @@ NSString *bannerSaveAdUnitId = @""; // autoResize dependency = true
 BOOL isCollapsible = NO;
 BOOL isAutoResize = NO;
 
+
+CGFloat paddingWebView = 0; // Default
+BOOL isSetOverlapping = NO; // Default
+CGFloat bannerHeightFinal = 50; // Default
+
 int isAdSkip = 0;
 BOOL UnderAgeOfConsent = NO;
 BOOL isPrivacyOptions = NO;
 BOOL isDebugGeography = NO;
 BOOL isResponseInfo = NO;
 BOOL isUsingAdManagerRequest = YES;
+
 
 - (BOOL)canRequestAds {
   return UMPConsentInformation.sharedInstance.canRequestAds;
@@ -259,7 +267,7 @@ BOOL isUsingAdManagerRequest = YES;
                 } else {
                     [UMPConsentForm presentPrivacyOptionsFormFromViewController:self.viewController completionHandler:^(NSError *_Nullable formError) {
                         if (formError) {
-                            // NSLog(@"Error when displaying the form: %@", formError);
+                             NSLog(@"Error when displaying the form: %@", formError);
                         }
                     }];
                 }
@@ -324,8 +332,7 @@ BOOL isUsingAdManagerRequest = YES;
 
 - (BOOL)isPrivacyOptionsRequired {
   UMPPrivacyOptionsRequirementStatus status = UMPConsentInformation.sharedInstance.privacyOptionsRequirementStatus;
-  // NSLog(@"[isPrivacyOptionsRequired] Privacy option status: %ld",
-  // (long)status);
+
   return status == UMPPrivacyOptionsRequirementStatusRequired;
 }
 
@@ -347,9 +354,6 @@ BOOL isUsingAdManagerRequest = YES;
       Consent_Status = UMPConsentStatusObtained;
     }
 
-  /*  NSLog(@"The Consent "
-          @"Status %i",
-          Consent_Status); */
     CDVPluginResult *pluginResult =
         [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                              messageAsInt:Consent_Status];
@@ -448,7 +452,7 @@ BOOL isUsingAdManagerRequest = YES;
         requestConfiguration.maxAdContentRating =
             GADMaxAdContentRatingMatureAudience;
       } else {
-        // NSLog(@"Unknown content rating: %@", contentRating);
+         NSLog(@"Unknown content rating: %@", contentRating);
       }
     }
 
@@ -538,9 +542,7 @@ BOOL isUsingAdManagerRequest = YES;
         [self.bannerViewLayout bringSubviewToFront:self.bannerView];
 
       } @catch (NSException *exception) {
-        // NSLog(@"Error adjusting banner size: %@", exception.reason);
-        // PUBLIC_CALLBACKS.error([NSString stringWithFormat:@"Error adjusting
-        // banner size: %@", exception.reason]);
+       //  banner size: %@", exception.reason]);
       }
     });
   }
@@ -631,37 +633,12 @@ BOOL isUsingAdManagerRequest = YES;
 
 
 
-- (GADAdSize)__AdSizeFromString:(NSString *)size {
-
-  if (self.viewWidth == 0) {
-    self.viewWidth = [UIScreen mainScreen].bounds.size.width;
-  }
-
-  if ([size isEqualToString:@"responsive_adaptive"]) {
-    return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(
-        self.viewWidth);
-  } else if ([size isEqualToString:@"in_line_adaptive"]) {
-    return GADCurrentOrientationInlineAdaptiveBannerAdSizeWithWidth(
-        self.viewWidth);
-  } else if ([size isEqualToString:@"banner"]) {
-    return GADAdSizeBanner;
-  } else if ([size isEqualToString:@"large_banner"]) {
-    return GADAdSizeLargeBanner;
-  } else if ([size isEqualToString:@"full_banner"]) {
-    return GADAdSizeFullBanner;
-  } else if ([size isEqualToString:@"leaderboard"]) {
-    return GADAdSizeLeaderboard;
-  } else {
-    return GADAdSizeBanner;
-  }
-}
-
 - (void)showBannerAd:(CDVInvokedUrlCommand *)command {
   CDVPluginResult *pluginResult;
   NSString *callbackId = command.callbackId;
   if (self.bannerView) {
     self.bannerView.hidden = NO;
-    [self addBannerViewToView:command];
+      [self addBannerViewToView:command];
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
   } else {
       [self fireEvent:@"" event:@"on.banner.failed.show" withData:nil];
@@ -730,13 +707,162 @@ BOOL isUsingAdManagerRequest = YES;
                                     constant:0]
     ]];
   }
+    [self bannerOverlapping];
 }
+
+
+
+
+
+- (void)bannerOverlapping {
+    if (!self.bannerView || !self.webView) {
+        NSLog(@"[AdPlugin] Error: Missing bannerView or webView. Adjustment skipped.");
+        return;
+    }
+    
+    if (isSetOverlapping){
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+
+                CGFloat screenWidth = UIScreen.mainScreen.bounds.size.width;
+                CGFloat screenHeight = UIScreen.mainScreen.bounds.size.height;
+                
+                CGFloat navigationBarHeight = 0.0;
+                if (@available(iOS 11.0, *)) {
+                    navigationBarHeight = self.viewController.view.safeAreaInsets.bottom;
+                }
+                
+                if (!self.bannerContainer) {
+                    self.bannerContainer = [[UIView alloc] initWithFrame:CGRectZero];
+                   // self.bannerContainer.backgroundColor = [UIColor redColor]; // Debug
+                    [self.viewController.view addSubview:self.bannerContainer];
+                }
+                
+                if (!self.webViewContainer) {
+                    self.webViewContainer = [[UIView alloc] initWithFrame:CGRectZero];
+                    // self.webViewContainer.backgroundColor = [UIColor blueColor]; // Debug
+                    [self.viewController.view addSubview:self.webViewContainer];
+                }
+                
+                CGRect bannerContainerFrame = CGRectZero;
+                if ([setPosition isEqualToString:@"top-center"]) {
+                    bannerContainerFrame = CGRectMake(0, 0, screenWidth, bannerHeightFinal);
+                } else if ([setPosition isEqualToString:@"bottom-center"]) {
+                    bannerContainerFrame = CGRectMake(0, screenHeight - paddingWebView - bannerHeightFinal - navigationBarHeight, screenWidth, bannerHeightFinal);
+                }
+                self.bannerContainer.frame = bannerContainerFrame;
+                
+                self.bannerView.frame = self.bannerContainer.bounds;
+                [self.bannerContainer addSubview:self.bannerView];
+                
+                CGRect webViewContainerFrame = CGRectZero;
+                if ([setPosition isEqualToString:@"top-center"]) {
+                    webViewContainerFrame = CGRectMake(0, bannerHeightFinal, screenWidth, screenHeight - bannerHeightFinal);
+                } else if ([setPosition isEqualToString:@"bottom-center"]) {
+                    
+                    webViewContainerFrame = CGRectMake(0, 0, screenWidth, screenHeight - bannerHeightFinal - paddingWebView - navigationBarHeight);
+                    
+                }
+                self.webViewContainer.frame = webViewContainerFrame;
+                
+                self.webView.frame = self.webViewContainer.bounds;
+                [self.webViewContainer addSubview:self.webView];
+                
+                [self.bannerContainer setNeedsLayout];
+                [self.bannerContainer layoutIfNeeded];
+                [self.webViewContainer setNeedsLayout];
+                [self.webViewContainer layoutIfNeeded];
+                
+                
+                NSLog(@"[AdPlugin] Banner and WebView are now in separate containers with proper sizing.");
+            } @catch (NSException *exception) {
+                NSLog(@"[AdPlugin] Error adjusting layout for banner and WebView: %@", exception.reason);
+            }
+            
+        });
+    }
+}
+
+
+
+
+
+- (void)styleBannerAd:(CDVInvokedUrlCommand *)command {
+
+    NSDictionary *options = [command.arguments objectAtIndex:0];
+    BOOL isOverlapping = [[options valueForKey:@"isOverlapping"] boolValue];
+    CGFloat paddingContainer = [[options valueForKey:@"paddingWebView"] floatValue];
+
+    isSetOverlapping = isOverlapping;
+    paddingWebView = paddingContainer;
+
+}
+
+
+- (GADAdSize)__AdSizeFromString:(NSString *)size {
+
+  if (self.viewWidth == 0) {
+    self.viewWidth = [UIScreen mainScreen].bounds.size.width;
+  }
+
+  if ([size isEqualToString:@"responsive_adaptive"]) {
+    return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(
+        self.viewWidth);
+  } else if ([size isEqualToString:@"in_line_adaptive"]) {
+    return GADCurrentOrientationInlineAdaptiveBannerAdSizeWithWidth(
+        self.viewWidth);
+  } else if ([size isEqualToString:@"banner"]) {
+    return GADAdSizeBanner;
+  } else if ([size isEqualToString:@"large_banner"]) {
+    return GADAdSizeLargeBanner;
+  } else if ([size isEqualToString:@"full_banner"]) {
+    return GADAdSizeFullBanner;
+  } else if ([size isEqualToString:@"leaderboard"]) {
+    return GADAdSizeLeaderboard;
+  } else {
+    return GADAdSizeBanner;
+  }
+}
+
+
+
+
+
+
+- (void)resetWebViewHeight {
+    if (!self.webView) {
+        NSLog(@"[AdPlugin] Error: WebView is missing. Reset skipped.");
+        return;
+    }
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @try {
+
+            CGFloat screenHeightInPx = UIScreen.mainScreen.bounds.size.height;
+
+            CGRect webViewFrame = self.webView.frame;
+            webViewFrame.size.height = screenHeightInPx;
+            self.webView.frame = webViewFrame;
+
+            [self.webView setNeedsLayout];
+            [self.webView layoutIfNeeded];
+
+        } @catch (NSException *exception) {
+            NSLog(@"[AdPlugin] Error resetting WebView height: %@", exception.reason);
+        }
+    });
+}
+
+
+
 - (void)hideBannerAd:(CDVInvokedUrlCommand *)command {
   CDVPluginResult *pluginResult;
   NSString *callbackId = command.callbackId;
   if (self.bannerView) {
     dispatch_async(dispatch_get_main_queue(), ^{
       self.bannerView.hidden = YES;
+      [self resetWebViewHeight];
       [self fireEvent:@"" event:@"on.banner.hide" withData:nil];
     });
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
@@ -753,6 +879,7 @@ BOOL isUsingAdManagerRequest = YES;
       self.bannerView.hidden = YES;
       [self.bannerView removeFromSuperview];
       self.bannerView = nil;
+      [self resetWebViewHeight];
       [self fireEvent:@"" event:@"on.banner.remove" withData:nil];
     });
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
@@ -1436,6 +1563,15 @@ BOOL isUsingAdManagerRequest = YES;
   return hexString;
 }
 
+
+
+
+
+
+
+
+
+
  #pragma mark GADBannerViewDelegate implementation
 
 - (void)bannerViewDidReceiveAd:(GADBannerView *)bannerView {
@@ -1452,9 +1588,9 @@ BOOL isUsingAdManagerRequest = YES;
     
     // Get the banner height
     CGFloat bannerHeight = bannerView.bounds.size.height;
+    bannerHeightFinal = bannerHeight;
 
 
-    
     // Prepare height data for banner load event
     NSDictionary *bannerLoadData = @{@"height" : @(bannerHeight)};
     NSData *bannerLoadJsonData = [NSJSONSerialization dataWithJSONObject:bannerLoadData options:0 error:&error];
@@ -1465,7 +1601,7 @@ BOOL isUsingAdManagerRequest = YES;
     
     if (auto_Show && self.bannerView) {
         [self addBannerViewToView:command];
-        self.bannerView.hidden = NO;
+        [self showBannerAd:command];
     } else {
         [self fireEvent:@"" event:@"on.banner.failed.show" withData:nil];
     }

@@ -1,6 +1,6 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  id="emi-indo-cordova-plugin-admob" version="2.0.2">
+  id="emi-indo-cordova-plugin-admob" version="2.0.3">
 
   <name>emiAdmobPlugin</name>
   <description>Cordova/Quasar/Capacitor Plugin Admob Android IOS</description>
@@ -51,7 +51,6 @@
         android:value="$APP_ID_ANDROID" />
       <meta-data android:name="com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT"
         android:value="true" />
-
       <meta-data android:name="com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING"
         android:value="true" />
       <meta-data
@@ -98,7 +97,7 @@
 
     <config-file parent="/*" target="config.xml">
     <!--minimum deployment-target: 12.2  -->
-		<preference name="deployment-target" value="12.3" />
+		<preference name="deployment-target" value="13.0" />
 		<preference name="SwiftVersion" value="5.10" />
 	</config-file>
 
