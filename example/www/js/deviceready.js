@@ -83,11 +83,14 @@ document.addEventListener("deviceready", function () {
     } 
 
 
-   // (Optional) deactivate Google's consent
+   // (Optional) 
     /*
      cordova.plugins.emiAdmobPlugin.metaData({
 
-            useCustomConsentManager: false // Default false only android
+            useCustomConsentManager: false, // deactivate Google's consent Default false only android
+
+            isEnabledKeyword: false, // Default false only android
+            setKeyword: "" // https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/discussions/54
 
     });
     */
