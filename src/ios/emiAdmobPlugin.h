@@ -25,6 +25,7 @@
 - (void)showPrivacyOptionsForm:(CDVInvokedUrlCommand *)command;
 - (void)forceDisplayPrivacyForm:(CDVInvokedUrlCommand *)command;
 - (void)consentReset:(CDVInvokedUrlCommand *)command;
+- (void)metaData:(CDVInvokedUrlCommand *)command;
 - (void)getIabTfc:(CDVInvokedUrlCommand *)command;
 - (void)loadAppOpenAd:(CDVInvokedUrlCommand *)command;
 - (void)showAppOpenAd:(CDVInvokedUrlCommand *)command;

@@ -10,15 +10,30 @@ function loadBanner() {
 
     if (typeof cordova !== 'undefined') {
 
-      
-        cordova.plugins.emiAdmobPlugin.styleBannerAd({
+        // IOS Still under development
+        if (isPlatformIOS){
+            // If there is a problem isOverlapping: false
+            cordova.plugins.emiAdmobPlugin.styleBannerAd({
+                isOverlapping: true, // default false IOS | Android
+                paddingWebView: 1.0 // Only IOS
+            });
+            
+        } else {
+
+         // Android
+
+         cordova.plugins.emiAdmobPlugin.styleBannerAd({
             isOverlapping: true, // default false IOS | Android
             isStatusBarShow: true, // default true Only Android
-            paddingWebView: 1.0, // Only IOS > padding banner Container and webView Container
             overlappingHeight: 0, // default 0 (Automatic) Only Android
             padding: 0, // default 0 Only Android
             margins: 0 // default 0 (Automatic) Only Android
         });
+
+
+        }
+
+        
         
     
 

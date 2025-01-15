@@ -83,14 +83,14 @@ document.addEventListener("deviceready", function () {
     } 
 
 
-   // (Optional) 
-    /*
+   // (Optional IOS | ANDROID) 
+   // Documentation: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/discussions/54
+    /*  
      cordova.plugins.emiAdmobPlugin.metaData({
 
-            useCustomConsentManager: false, // deactivate Google's consent Default false only android
-
-            isEnabledKeyword: false, // Default false only android
-            setKeyword: "" // https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/discussions/54
+            useCustomConsentManager: false, // deactivate Google's consent Default false (IOS | ANDROID)
+            isEnabledKeyword: false, // Default false (IOS | ANDROID)
+            setKeyword: "" // string separated by commas without spaces (IOS | ANDROID) 
 
     });
     */

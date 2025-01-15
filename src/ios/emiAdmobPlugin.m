@@ -25,6 +25,8 @@ BOOL auto_Show = NO;
 NSString *setPosition = @"bottom-center"; // Default
 NSString *bannerSaveAdUnitId = @""; // autoResize dependency = true
 
+
+
 BOOL isCollapsible = NO;
 BOOL isAutoResize = NO;
 
@@ -41,12 +43,18 @@ BOOL isResponseInfo = NO;
 BOOL isUsingAdManagerRequest = YES;
 
 
+BOOL isCustomConsentManager = NO;
+BOOL isEnabledKeyword = NO;
+NSString *setKeyword = @"";
+
+
 - (BOOL)canRequestAds {
   return UMPConsentInformation.sharedInstance.canRequestAds;
 }
 - (void)setUsingAdManagerRequest:(BOOL)value {
   isUsingAdManagerRequest = value;
 }
+
 
 - (void)setAdRequest {
     if (isUsingAdManagerRequest) {
@@ -56,7 +64,21 @@ BOOL isUsingAdManagerRequest = YES;
         self.globalRequest = [GADRequest request];
         NSLog(@"Using AdMob request");
     }
+    
+    if (isEnabledKeyword && setKeyword.length > 0) {
+            NSArray *keywords = [setKeyword componentsSeparatedByString:@","];
+            for (NSString *keyword in keywords) {
+                NSString *trimmedKeyword = [keyword stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                if (trimmedKeyword.length > 0) {
+                    NSLog(@"Adding keyword: %@", trimmedKeyword);
+                    [self.globalRequest setKeywords:[self.globalRequest.keywords arrayByAddingObject:trimmedKeyword]];
+                }
+            }
+        }
+    
 }
+
+
 
 
 - (void)isResponseInfo:(BOOL)value {
@@ -76,12 +98,19 @@ BOOL isUsingAdManagerRequest = YES;
   [self setUsingAdManagerRequest:setAdRequest];
   [self isResponseInfo:responseInfo];
   [self isDebugGeography:setDebugGeography];
+    
+    if (isCustomConsentManager) {
+        [self startGoogleMobileAdsSDK];
+        [self fireEvent:@"" event:@"on.custom.consent.manager.used" withData:nil];
+       return;
+    }
 
   __block CDVPluginResult *pluginResult;
   NSString *callbackId = command.callbackId;
   NSString *deviceId = [self __getAdMobDeviceId];
   UMPRequestParameters *parameters = [[UMPRequestParameters alloc] init];
-
+    
+   
   if (setDebugGeography) {
     UMPDebugSettings *debugSettings = [[UMPDebugSettings alloc] init];
     parameters.debugSettings = debugSettings;
@@ -327,6 +356,10 @@ BOOL isUsingAdManagerRequest = YES;
         });
     }];
 }
+
+
+
+
 
 
 
@@ -632,20 +665,20 @@ BOOL isUsingAdManagerRequest = YES;
 }
 
 
-
 - (void)showBannerAd:(CDVInvokedUrlCommand *)command {
-  CDVPluginResult *pluginResult;
-  NSString *callbackId = command.callbackId;
-  if (self.bannerView) {
-    self.bannerView.hidden = NO;
-      [self addBannerViewToView:command];
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-  } else {
-      [self fireEvent:@"" event:@"on.banner.failed.show" withData:nil];
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-  }
-  [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+    @try {
+        if (self.bannerView) {
+            self.bannerView.hidden = NO;
+            [self addBannerViewToView:command];
+        } else {
+            [self fireEvent:@"" event:@"on.banner.failed.show" withData:nil];
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"[AdPlugin] Error in showBannerAd: %@", exception.reason);
+    }
 }
+
 
 - (void)addBannerViewToView:(CDVInvokedUrlCommand *)command {
   bannerView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -707,7 +740,9 @@ BOOL isUsingAdManagerRequest = YES;
                                     constant:0]
     ]];
   }
-    [self bannerOverlapping];
+    if (isSetOverlapping){
+        [self bannerOverlapping];
+    }
 }
 
 
@@ -785,7 +820,16 @@ BOOL isUsingAdManagerRequest = YES;
 }
 
 
+- (void)metaData:(CDVInvokedUrlCommand *)command {
+    NSDictionary *options = [command.arguments objectAtIndex:0];
+    BOOL useCustomConsentManager = [[options valueForKey:@"useCustomConsentManager"] boolValue];
+    BOOL useCustomKeyword = [[options valueForKey:@"isEnabledKeyword"] boolValue];
+    NSString *keywordValue = [options valueForKey:@"setKeyword"];
 
+    isCustomConsentManager = useCustomConsentManager;
+    isEnabledKeyword = useCustomKeyword;
+    setKeyword = keywordValue;
+}
 
 
 - (void)styleBannerAd:(CDVInvokedUrlCommand *)command {
@@ -1600,7 +1644,6 @@ BOOL isUsingAdManagerRequest = YES;
     [self fireEvent:@"" event:@"on.banner.load" withData:bannerLoadJsonString];
     
     if (auto_Show && self.bannerView) {
-        [self addBannerViewToView:command];
         [self showBannerAd:command];
     } else {
         [self fireEvent:@"" event:@"on.banner.failed.show" withData:nil];
