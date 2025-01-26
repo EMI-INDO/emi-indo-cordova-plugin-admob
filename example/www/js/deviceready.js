@@ -77,7 +77,7 @@ document.addEventListener("deviceready", function () {
 
 
     if (isPlatformIOS){
-        
+        // with callback: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/issues/57
         cordova.plugins.emiAdmobPlugin.requestIDFA(); // requestTrackingAuthorization
         
     } 
@@ -100,8 +100,8 @@ document.addEventListener("deviceready", function () {
     cordova.plugins.emiAdmobPlugin.initialize({
 
         isUsingAdManagerRequest: true, // true = AdManager | false = AdMob (Default true)
-        isResponseInfo: true, // debug Default false
-        isConsentDebug: true, // debug Default false
+        isResponseInfo: false, // debug true | Production false
+        isConsentDebug: false, // debug true | Production false
 
     });
 
@@ -112,8 +112,8 @@ document.addEventListener("deviceready", function () {
         // JSON.stringify(data)
         const sdkVersion = data.version;
         // const adAdapter = data.adapters;
-        const conStatus = data.consentStatus;
-        const attStatus = data.attStatus;
+        const conStatus = data.consentStatus; // UMP
+        const attStatus = data.attStatus; // ATT
         // const gdprApplie = data.gdprApplies;
         // const purposeConsent = data.purposeConsents;
         // const vendorConsents = data.vendorConsents;

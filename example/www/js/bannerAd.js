@@ -41,7 +41,7 @@ function loadBanner() {
             adUnitId: Banner_ID, //Banner_ID,
             position: "bottom-center", // "Recommended: bottom-center"
             size: "banner", // autoResize: true (only responsive_adaptive)
-            collapsible: "bottom", // position: top | bottom (disable, empty string)
+            collapsible: "", // position: top | bottom (disable, empty string)
             autoResize: true, // default false
             autoShow: true, // default false
 
@@ -158,7 +158,7 @@ on.banner.hide
 // This is only triggered when cordova.plugins.emiAdmobPlugin.styleBannerAd
 document.addEventListener('on.style.banner.ad', (data) => {
     console.log("on.style.banner.ad: " + JSON.stringify(data));
-/*
+/*  (ANDROID)
     const navBarHeight = data.navBarHeight;
     const screenHeight = data.screenHeight;
     const usableHeight = data.usableHeight;
@@ -168,8 +168,12 @@ document.addEventListener('on.style.banner.ad', (data) => {
     const marginsInPx = data.marginsInPx;
 */
 
-   // You can load banner ads here, or manipulate variables, even rearrange cordova.plugins.emiAdmobPlugin.styleBannerAd to your liking.
-
+/*  (IOS)
+    const screenHeight = data.screenHeight;
+    const screenWidth = data.screenWidth;
+    const safeAreaTop = data.safeAreaTop;
+    const safeAreaBottom = data.safeAreaBottom;
+*/
 
 });
 

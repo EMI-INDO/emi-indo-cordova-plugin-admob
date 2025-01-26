@@ -1,44 +1,43 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <script type="text/javascript" src="cordova.js"></script>
-    <script src="js/deviceready.js" defer></script>
-    <script src="js/appOpenAd.js" defer></script>
-    <script src="js/bannerAd.js" defer></script>
-    <script src="js/interstitialAd.js" defer></script>
-    <script src="js/rewardedAd.js" defer></script>
-    <script src="js/rewardedInterstitialAd.js" defer></script>
-    <script src="js/adSense.js" defer></script>
-    <script src="js/privacyOptionsFormShow.js" defer></script>
+  <meta charset="utf-8">
+      <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#000000">
+  <title>Cordova | Capacitor | Quasar</title>
+  <style> </style>
+  <link rel="stylesheet" href="css/index.css">
+  <script type="text/javascript" src="cordova.js"></script>
+  <script src="js/deviceready.js" defer></script>
+  <script src="js/appOpenAd.js" defer></script>
+  <script src="js/bannerAd.js" defer></script>
+  <script src="js/interstitialAd.js" defer></script>
+  <script src="js/rewardedAd.js" defer></script>
+  <script src="js/rewardedInterstitialAd.js" defer></script>
+  <script src="js/adSense.js" defer></script>
+  <script src="js/privacyOptionsFormShow.js" defer></script>
 </head>
 <body>
-    
-    
-<label for="event">Debug Event All response :</label>
-<textarea id="log" name="log" rows="20" cols="40"></textarea>
-
-<p> <button onclick="loadAppOpen();">Auto Show App Open Ad</button></p>
-
-<p> <button onclick="loadBanner();">load a show Banner Ad</button></p>
-<p> <button onclick="showBanner();">show Banner Ad</button></p>
-<p> <button onclick="hideBanner();">hide Banner Ad</button></p>
-<p> <button onclick="removeBanner();">remove Banner Ad</button></p>
-
-<p> <button onclick="loadInterstitial();">Load Interstitial Ad</button></p>
-<p> <button onclick="showInterstitial();">Show Interstitial Ad</button></p>
-
-<p> <button onclick="loadRewarded();">Load Rewarded Ad</button></p>
-<p> <button onclick="showRewarded();">Show Rewarded Ad</button></p>
-
-<p> <button onclick="loadRewardedInt();">Load Rewarded Int Ad</button></p>
-<p> <button onclick="showRewardedInt();">Show Rewarded int Ad</button></p>
-
-<p> <button onclick="registerWebView();">AdSense Register</button></p>
-<p> <button onclick="loadUrl();">AdSense load Url</button></p>
-
-<p> <button onclick="showPrivacyOptionsForm();">Show Privacy Options Form</button></p>
-<p> <button onclick="forceDisplayPrivacyForm();">Force Display Privacy Form</button></p>
-
-<p> <button onclick="cleanText();">Clean response Text</button></p>
-
+  <h1>Ad Management Panel</h1>
+  <div class="button-container">
+    <button onclick="loadAppOpen();">Auto Show App Open Ad</button>
+    <button onclick="loadBanner();">Load and Show Banner Ad</button>
+    <button onclick="showBanner();">Show Banner Ad</button>
+    <button onclick="hideBanner();">Hide Banner Ad</button>
+    <button onclick="removeBanner();">Remove Banner Ad</button>
+    <button onclick="loadInterstitial();">Load Interstitial Ad</button>
+    <button onclick="showInterstitial();">Show Interstitial Ad</button>
+    <button onclick="loadRewarded();">Load Rewarded Ad</button>
+    <button onclick="showRewarded();">Show Rewarded Ad</button>
+    <button onclick="loadRewardedInt();">Load Rewarded Int Ad</button>
+    <button onclick="showRewardedInt();">Show Rewarded Int Ad</button>
+    <button onclick="registerWebView();">AdSense Register</button>
+    <button onclick="loadUrl();">AdSense Load Url</button>
+    <button onclick="showPrivacyOptionsForm();">Show Privacy Options Form</button>
+    <button onclick="forceDisplayPrivacyForm();">Force Display Privacy Form</button>
+    <button onclick="cleanText();">Clean Response Text</button>
+  </div>
+  <label for="log">Debug Event All Response:</label>
+  <textarea id="log" name="log" placeholder="Logs will appear here..."></textarea>
 </body>
 </html>
