@@ -15,6 +15,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
+import android.view.WindowManager
 import android.webkit.WebView
 import android.widget.FrameLayout
 import androidx.preference.PreferenceManager
@@ -51,7 +52,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.apache.cordova.CallbackContext
-import org.apache.cordova.CordovaInterface
 import org.apache.cordova.CordovaPlugin
 import org.apache.cordova.CordovaWebView
 import org.json.JSONArray
@@ -109,7 +109,6 @@ class emiAdmobPlugin : CordovaPlugin() {
     var intAutoShow: Boolean = false
     var rewardedAutoShow: Boolean = false
     var rIntAutoShow: Boolean = false
-    private var isCollapsible: Boolean = false
     var lock: Boolean = true
     private var setDebugGeography: Boolean = false
 
@@ -119,7 +118,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
     private var mPreferences: SharedPreferences? = null
     var mBundleExtra: Bundle? = null
-    private var collapsiblePos: String? = null
+    private var collapsiblePos: String? = ""
 
     // only isUsingAdManagerRequest = true
     private var customTargetingEnabled: Boolean = false
@@ -151,24 +150,24 @@ class emiAdmobPlugin : CordovaPlugin() {
     private var mContext: Context? = null
 
 
-    override fun initialize(cordova: CordovaInterface, webView: CordovaWebView) {
-        super.initialize(cordova, webView)
+    private var isFullScreen: Boolean = false
+    private var loadBannerAdNew: Boolean = false
+    private var bannerOverlapping: Boolean = false
+
+
+    override fun pluginInitialize() {
+        super.pluginInitialize()
 
         cWebView = webView
         mActivity = cordova.activity
 
         if (mActivity != null) {
-
             mContext = mActivity?.applicationContext
-
             mPreferences = mContext?.let { PreferenceManager.getDefaultSharedPreferences(it) }
-
         } else {
             Log.e("PluginCordova", "Activity is null during initialization")
         }
     }
-
-
 
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -177,57 +176,16 @@ class emiAdmobPlugin : CordovaPlugin() {
         if (orientation != isOrientation) {
             cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.screen.rotated');")
             isOrientation = orientation
-            if (this.isAutoResize) {
-                if(mActivity != null) {
-                    mActivity?.runOnUiThread {
-                        try {
-                            bannerOverlappingToZero()
-                            if (bannerViewLayout != null && bannerView != null) {
-                                val parentView = bannerViewLayout?.parent as ViewGroup
-                                parentView.removeView(bannerViewLayout)
-                                bannerViewLayout = FrameLayout(mActivity!!)
-                                val params = FrameLayout.LayoutParams(
-                                    FrameLayout.LayoutParams.MATCH_PARENT,
-                                    FrameLayout.LayoutParams.WRAP_CONTENT
-                                )
-                                val decorView = mActivity?.window?.decorView as ViewGroup
-                                decorView.addView(bannerViewLayout, params)
-                                bannerView = AdView(mActivity!!)
-                                setBannerPosition(this.isPosition)
-                                setBannerSize(this.isSize)
-                                bannerView?.adUnitId = bannerAdUnitId!!
-                                bannerView?.adListener = bannerAdListener
-                                bannerView?.loadAd(buildAdRequest())
-                                bannerViewLayout?.addView(bannerView)
-                                bannerViewLayout?.bringToFront()
-                                bannerViewLayout?.requestFocus();
-                                bannerOverlappingToZero()
-                            }
-                        } catch (e: Exception) {
-                            PUBLIC_CALLBACKS?.error("Error adjusting banner size: " + e.message)
-                        }
-                    }
-                }
-            }
-
             when (orientation) {
                 Configuration.ORIENTATION_PORTRAIT -> {
-                    if (isOverlapping) {
-                        bannerOverlapping()
-                    }
                     cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.orientation.portrait');")
                 }
                 Configuration.ORIENTATION_LANDSCAPE -> {
-                    if (isOverlapping) {
-                        bannerOverlapping()
-                    }
                     cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.orientation.landscape');")
                 }
                 Configuration.ORIENTATION_UNDEFINED -> {
                     cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.orientation.undefined');")
                 }
-
-
             }
         }
     }
@@ -313,8 +271,8 @@ class emiAdmobPlugin : CordovaPlugin() {
                     }
                 }
             }
-
             return true
+
         } else if (action == "targeting") {
             val options = args.getJSONObject(0)
             if (mActivity != null) {
@@ -334,6 +292,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
         } else if (action == "targetingAdRequest") {
             val options = args.getJSONObject(0)
             if (mActivity != null) {
@@ -358,13 +317,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                         this.cExclusionsValue = categoryExclusions
                         this.ppIdVl = ppId
                         this.cURLVl = ctURL
-                        targetingAdRequest(
-                            customTargeting,
-                            categoryExclusions,
-                            ppId,
-                            ctURL,
-                            brandSafetyArr
-                        )
+                        targetingAdRequest( customTargeting, categoryExclusions, ppId, ctURL, brandSafetyArr)
                         callbackContext.success()
                     } catch (e: Exception) {
                         callbackContext.error(e.toString())
@@ -372,6 +325,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
         } else if (action == "setPersonalizationState") {
             val options = args.getJSONObject(0)
             if (mActivity != null) {
@@ -386,6 +340,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
         } else if (action == "setPPS") {
             val options = args.getJSONObject(0)
             if (mActivity != null) {
@@ -404,6 +359,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
         } else if (action == "globalSettings") {
             val options = args.getJSONObject(0)
             if (mActivity != null) {
@@ -419,6 +375,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
         } else if (action == "loadAppOpenAd") {
             val options = args.getJSONObject(0)
             if (mActivity != null) {
@@ -533,6 +490,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
         } else if (action == "showAppOpenAd") {
 
             try {
@@ -658,6 +616,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
         } else if (action == "showInterstitialAd") {
 
             if (mActivity != null && isInterstitialLoad && mInterstitialAd != null) {
@@ -798,6 +757,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
         } else if (action == "showRewardedAd") {
             if (mActivity != null && isRewardedLoad && rewardedAd != null) {
                 mActivity?.runOnUiThread {
@@ -824,6 +784,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 callbackContext.error("The rewarded ad wasn't ready yet")
             }
             return true
+
         } else if (action == "loadRewardedInterstitialAd") {
             val options = args.getJSONObject(0)
             if (mActivity != null) {
@@ -953,6 +914,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
         } else if (action == "showRewardedInterstitialAd") {
             if (mActivity != null) {
                 mActivity?.runOnUiThread {
@@ -981,6 +943,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
         } else if (action == "showPrivacyOptionsForm") {
             if (mActivity != null) {
                 mActivity?.runOnUiThread {
@@ -1046,6 +1009,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
         } else if (action == "consentReset") {
             if (mActivity != null) {
                 mActivity?.runOnUiThread {
@@ -1085,6 +1049,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
         } else if (action == "loadBannerAd") {
             if (mActivity != null) {
                 val options = args.getJSONObject(0)
@@ -1102,7 +1067,6 @@ class emiAdmobPlugin : CordovaPlugin() {
                     this.isAutoResize = autoResize
                     this.collapsiblePos = collapsible
 
-                    isCollapsible = collapsible.isNotEmpty()
                     try {
                         loadBannerAd(adUnitId, position, size)
                     } catch (e: Exception) {
@@ -1111,6 +1075,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
         } else if (action == "showBannerAd") {
             if (mActivity != null) {
                 mActivity?.runOnUiThread {
@@ -1135,6 +1100,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
         } else if (action == "styleBannerAd") {
             val options = args.getJSONObject(0)
             if (mActivity != null) {
@@ -1198,6 +1164,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
         } else if (action == "metaData") {
             val options = args.getJSONObject(0)
             val useCustomConsentManager = options.optBoolean("useCustomConsentManager")
@@ -1226,6 +1193,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
             }
             return true
+
         } else if (action == "removeBannerAd") {
             if (mActivity != null) {
                 mActivity?.runOnUiThread {
@@ -1271,6 +1239,31 @@ class emiAdmobPlugin : CordovaPlugin() {
                     }
                 }
 
+            }
+            return true
+        } else if (action == "loadBannerAdNewApi") {
+            if (mActivity != null) {
+                val options = args.getJSONObject(0)
+                mActivity?.runOnUiThread {
+                    val adUnitId = options.optString("adUnitId")
+                    val position = options.optString("position")
+                    val collapsible = options.optString("collapsible")
+                    val size = options.optString("size")
+                    val autoShow = options.optBoolean("autoShow")
+                    val overlapping = options.optBoolean("overlapping")
+                    this.bannerAdUnitId = adUnitId
+                    this.isPosition = position
+                    this.isSize = size
+                    this.bannerAutoShow = autoShow
+                    this.loadBannerAdNew = true
+                    this.collapsiblePos = collapsible
+                    this.bannerOverlapping = overlapping
+                    try {
+                        loadBannerAd(adUnitId, position, size)
+                    } catch (e: Exception) {
+                        callbackContext.error(e.toString())
+                    }
+                }
             }
             return true
         }
@@ -1434,6 +1427,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                         bannerViewLayout?.bringToFront()
                         bannerViewLayout?.requestFocus();
                         lock = false
+
                     }
                     isBannerShow = true
                 } catch (e: Exception) {
@@ -1539,6 +1533,16 @@ class emiAdmobPlugin : CordovaPlugin() {
 
             //bannerHeight=currentAdSize;
 
+            if (loadBannerAdNew && isPosition.equals("top-center", ignoreCase = true)){
+
+                loadBannerAdNewApiTop() // loadBannerAdNewApi
+
+            } else if (loadBannerAdNew && isPosition.equals("bottom-center", ignoreCase = true)) {
+
+                adjustWebViewHeight(currentAdSize) // loadBannerAdNewApi
+
+            }
+
 
             val bannerLoadEventData = String.format(Locale.US, "{\"height\": %d}", bannerHeightDp)
 
@@ -1590,25 +1594,44 @@ class emiAdmobPlugin : CordovaPlugin() {
                 try {
                     val rootView = (cWebView?.view?.parent as View)
                     rootView.post {
-                        // Get the total height of the parent view
                         val totalHeight = rootView.height
-
-                        // Adjust WebView height to match parent height
                         val layoutParams = cWebView?.view?.layoutParams
                         layoutParams?.height = totalHeight
                         cWebView?.view?.layoutParams = layoutParams
-
-                        // Ensure no padding/margin in WebView or its parent
                         cWebView?.view?.setPadding(0, 0, 0, 0)
                         (cWebView?.view?.parent as? ViewGroup)?.setPadding(0, 0, 0, 0)
-
-                        // Force layout update
                         cWebView?.view?.requestLayout()
 
-                        Log.d("BannerAdjustment", "WebView set to full height: $totalHeight")
+                       // Log.d("BannerAdjustment", "WebView set to full height: $totalHeight")
                     }
                 } catch (e: Exception) {
-                    Log.e("AdmobPlugin", "Error setting WebView to full height: ${e.message}")
+                   // Log.e("AdmobPlugin", "Error setting WebView to full height: ${e.message}")
+                }
+            }
+        }
+    }
+
+
+    private fun bannerOverlapping() {
+        if (bannerView != null && mActivity != null && cWebView != null) {
+            mActivity?.runOnUiThread {
+                try {
+                    val displayMetrics = DisplayMetrics()
+                    mActivity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
+                    val screenHeightInPx = displayMetrics.heightPixels
+
+                    val webViewHeight = if (isFullScreen) {
+                        screenHeightInPx - adSize.height
+                    } else {
+                        screenHeightInPx - adSize.height
+                    }
+                    val layoutParams = cWebView!!.view.layoutParams
+                    layoutParams.height = webViewHeight
+                    cWebView!!.view.layoutParams = layoutParams
+
+                    // Log.d("BannerAdjustment", "Adjusted WebView height: $webViewHeight")
+                } catch (e: Exception) {
+                    Log.e("AdmobPlugin", "Error adjusting WebView for banner: ${e.message}")
                 }
             }
         }
@@ -1617,34 +1640,9 @@ class emiAdmobPlugin : CordovaPlugin() {
 
 
 
-   private fun bannerOverlapping() {
-    if (bannerView != null && mActivity != null && cWebView != null) {
-        mActivity?.runOnUiThread {
-            try {
-                val displayMetrics = DisplayMetrics()
-                mActivity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
-                val screenHeightInPx = displayMetrics.heightPixels
-                
-                val webViewHeight = if (isStatusBarShow) {
-                    screenHeightInPx - (adSize.height + overlappingHeight)
-                } else {
-                    screenHeightInPx + (adSize.height + overlappingHeight)
-                }
-                val layoutParams = cWebView!!.view.layoutParams
-                layoutParams.height = webViewHeight
-                cWebView!!.view.layoutParams = layoutParams
-
-                // Log.d("BannerAdjustment", "Adjusted WebView height: $webViewHeight")
-            } catch (e: Exception) {
-                Log.e("AdmobPlugin", "Error adjusting WebView for banner: ${e.message}")
-            }
-        }
-    }
-}
 
 
-
-        private val bannerPaidAdListener = OnPaidEventListener { adValue ->
+    private val bannerPaidAdListener = OnPaidEventListener { adValue ->
             val valueMicros = adValue.valueMicros.takeIf { it > 0 } ?: 0L
             val currencyCode = adValue.currencyCode.ifBlank { "UNKNOWN" }
             val precision = adValue.precisionType.takeIf { it >= 0 } ?: AdValue.PrecisionType.UNKNOWN
@@ -1785,13 +1783,7 @@ class emiAdmobPlugin : CordovaPlugin() {
     }
 
 
-    private fun targetingAdRequest(
-        customTargeting: JSONArray?,
-        categoryExclusions: String,
-        ppId: String,
-        ctURL: String,
-        brandSafetyArr: JSONArray?
-    ) {
+    private fun targetingAdRequest(customTargeting: JSONArray?, categoryExclusions: String, ppId: String, ctURL: String, brandSafetyArr: JSONArray?) {
         try {
             customTargetingList = ArrayList()
 
@@ -1841,6 +1833,8 @@ class emiAdmobPlugin : CordovaPlugin() {
 
     @SuppressLint("DefaultLocale")
     private fun initializeMobileAdsSdk() {
+
+        isFullScreen = isFullScreenMode(mActivity!!)
 
         if (isMobileAdsInitializeCalled.getAndSet(true)) {
             return
@@ -1909,7 +1903,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
             if (this.customTargetingEnabled) {
                 if (customTargetingList!!.isEmpty()) {
-                    Log.d(TAG, "List is empty")
+                   // Log.d(TAG, "List is empty")
                     PUBLIC_CALLBACKS?.error("List is empty")
                 } else {
                     builder.addCustomTargeting("age", customTargetingList!!)
@@ -1938,7 +1932,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
             if (this.brandSafetyEnabled) {
                 if (brandSafetyUrls!!.isEmpty()) {
-                    Log.d(TAG, "List is empty")
+                    //Log.d(TAG, "List is empty")
                     PUBLIC_CALLBACKS?.error("List is empty")
                 } else {
                     builder.setNeighboringContentUrls(brandSafetyUrls!!)
@@ -1953,7 +1947,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
             val bundleExtra = Bundle()
             // bundleExtra.putString("npa", this.Npa); DEPRECATED Beginning January 16, 2024
-            if (isCollapsible) {
+            if (collapsiblePos !== "") {
                 bundleExtra.putString("collapsible", this.collapsiblePos)
             }
             bundleExtra.putBoolean("is_designed_for_families", this.isSetTagForChildDirectedTreatment)
@@ -1981,7 +1975,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             val builder = AdRequest.Builder()
             val bundleExtra = Bundle()
             // bundleExtra.putString("npa", this.Npa); DEPRECATED Beginning January 16, 2024
-            if (isCollapsible) {
+            if (collapsiblePos !== "") {
                 bundleExtra.putString("collapsible", this.collapsiblePos)
             }
 
@@ -2226,11 +2220,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         MobileAds.putPublisherFirstPartyIdEnabled(pubIdEnabled)
     }
 
-    private fun targeting(
-        childDirectedTreatment: Boolean,
-        underAgeOfConsent: Boolean,
-        contentRating: String?
-    ) {
+    private fun targeting(childDirectedTreatment: Boolean, underAgeOfConsent: Boolean, contentRating: String) {
         val requestConfiguration = MobileAds.getRequestConfiguration().toBuilder()
         requestConfiguration.setTagForChildDirectedTreatment(if (childDirectedTreatment) RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE else RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_FALSE)
         requestConfiguration.setTagForUnderAgeOfConsent(if (underAgeOfConsent) RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_TRUE else RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE)
@@ -2244,8 +2234,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         MobileAds.setRequestConfiguration(requestConfiguration.build())
     }
 
-    private val isPrivacyOptionsRequired: ConsentInformation.PrivacyOptionsRequirementStatus
-        get() = consentInformation?.getPrivacyOptionsRequirementStatus() ?: ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED
+    private val isPrivacyOptionsRequired: ConsentInformation.PrivacyOptionsRequirementStatus get() = consentInformation?.getPrivacyOptionsRequirementStatus() ?: ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED
 
 
 
@@ -2262,6 +2251,195 @@ class emiAdmobPlugin : CordovaPlugin() {
         MobileAds.setRequestConfiguration(requestConfiguration)
     }
 
+
+
+
+    // START loadBannerAdNewApi
+
+    private fun isFullScreenMode(activity: Activity): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            activity.window.decorView.rootWindowInsets?.isVisible(WindowInsets.Type.statusBars()) == false
+        } else {
+            (activity.window.attributes.flags and WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0
+        }
+    }
+
+
+
+    private fun loadBannerAdNewApiTop() {
+        mActivity?.let { activity ->
+            bannerView?.post {
+                val bannerHeightPx = bannerView?.height ?: 0
+                val statusBarHeight = getStatusBarHeight(activity)
+
+                if (isPosition.equals("top-center", ignoreCase = true)) {
+                    val bannerLp = bannerView?.layoutParams as? FrameLayout.LayoutParams
+                    bannerLp?.let { lp ->
+                        if (isOverlapping) {
+                            if (isFullScreen) {
+                                lp.topMargin = 0
+                                bannerView?.layoutParams = lp
+                            } else {
+                                lp.topMargin = 0 // bannerHeightPx // + statusBarHeight
+                                bannerView?.layoutParams = lp
+                            }
+                        } else {
+                            if (isFullScreen) {
+                                lp.topMargin = 0
+                                bannerView?.layoutParams = lp
+                            } else {
+                                lp.topMargin = statusBarHeight
+                                bannerView?.layoutParams = lp
+                            }
+                        }
+
+                    }
+                }
+
+                cWebView?.let { webView ->
+                    val webLp = webView.view.layoutParams as FrameLayout.LayoutParams
+                    if (isPosition.equals("top-center", ignoreCase = true)) {
+
+                        if (isOverlapping) {
+                            if (isFullScreen) {
+                                webLp.topMargin = 0 //+ statusBarHeight
+                            } else {
+                                webLp.topMargin = 0 //bannerHeightPx // + statusBarHeight
+                            }
+                        } else {
+                            if (isFullScreen) {
+                                webLp.topMargin = bannerHeightPx
+                            } else {
+                                webLp.topMargin = bannerHeightPx
+                            }
+                        }
+
+
+                    }
+
+                    webView.view.layoutParams = webLp
+                    webView.view.requestLayout()
+                }
+            }}
+    }
+
+
+
+
+
+    @SuppressLint("InternalInsetResource")
+    private fun getStatusBarHeight(context: Context): Int {
+        var result = 0
+        val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = context.resources.getDimensionPixelSize(resourceId)
+        }
+        return result
+    }
+
+
+    @SuppressLint("DiscouragedApi", "InternalInsetResource")
+    private fun getNavigationBarHeight(context: Context): Int {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Preferred method for API 30+
+            val windowMetrics = context.getSystemService(WindowManager::class.java).currentWindowMetrics
+            val insets = windowMetrics.windowInsets.getInsetsIgnoringVisibility(
+                WindowInsets.Type.navigationBars()
+            )
+            insets.bottom
+        } else {
+            val resources = context.resources
+            val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+            if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
+        }
+    }
+
+
+
+    private fun getScreenMetrics(): Pair<Int, Int> {
+        mActivity?.let { activity ->
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val windowMetrics = activity.windowManager.currentWindowMetrics
+                val insets = windowMetrics.windowInsets
+                    .getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars())
+                val screenHeight = windowMetrics.bounds.height()
+
+                val usableHeight = screenHeight - insets.bottom
+                Pair(screenHeight, usableHeight)
+            } else {
+                @Suppress("DEPRECATION")
+                val display = activity.windowManager.defaultDisplay
+                val size = Point()
+                val realSize = Point()
+                @Suppress("DEPRECATION")
+                display.getSize(size)
+                @Suppress("DEPRECATION")
+                display.getRealSize(realSize)
+
+                Pair(realSize.y, size.y)
+            }
+        } ?: throw IllegalStateException("Activity is null")
+    }
+
+
+    private fun adjustWebViewHeight(adSize: AdSize) {
+
+        mActivity?.let { activity ->
+
+            val bannerHeightPx = adSize.getHeightInPixels(activity)
+
+            val (screenHeight, usableHeight) = getScreenMetrics()
+
+            val navBarHeight = if (!isFullScreen) getNavigationBarHeight(activity) else 0
+
+            val adjustment = (bannerHeightPx * 0.3).toInt()
+
+            val newWebViewHeight = if (isFullScreen) {
+                if (bannerOverlapping) {
+                    screenHeight - 0
+                } else {
+                    screenHeight - bannerHeightPx
+                }
+            } else {
+                if (bannerOverlapping) {
+                    usableHeight - 0 //navBarHeight - bannerHeightPx
+                } else {
+                    usableHeight - navBarHeight - bannerHeightPx + adjustment
+                }
+            }
+
+
+
+            if (!bannerOverlapping) {
+                cWebView?.let { webView ->
+                    val layoutParams = webView.view.layoutParams
+                    layoutParams.height = newWebViewHeight.coerceAtLeast(0)
+                    webView.view.layoutParams = layoutParams
+                    webView.view.requestLayout()
+                }
+            }
+
+
+
+            if (!isFullScreen) {
+                bannerViewLayout?.let { container ->
+                    container.post {
+                        val params = container.layoutParams
+                        if (params is ViewGroup.MarginLayoutParams) {
+                            params.bottomMargin = if (!isFullScreen) navBarHeight else 0
+                            container.layoutParams = params
+                            container.requestLayout()
+                        }
+                    }
+                }
+            }
+
+
+        }
+    }
+
+
+    // END loadBannerAdNewApi
 
 
     private val view: View?

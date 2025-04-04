@@ -21,6 +21,9 @@ exports.styleBannerAd = function (options, success, error) {
 exports.loadBannerAd = function (options, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'loadBannerAd', [options]);
 };
+exports.loadBannerAdNewApi = function (options, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'loadBannerAdNewApi', [options]);
+};
 exports.showBannerAd = function (success, error) {
     exec(success, error, 'emiAdmobPlugin', 'showBannerAd', []);
 };

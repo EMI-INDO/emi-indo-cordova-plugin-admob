@@ -1,4 +1,12 @@
+ ### The BETA release may be 2 to 3 times, before the stable release is published to NPM, so it is currently only available on github.
 
+### RELEASE GOALS
+- Migrate from Mobile Ads SDK (Android) v23 to v24
+- Migrate from Cordova Android 13.0.0 to 14.0.0
+- And maybe some APIs are re-signed, the old api will not be disturbed.
+- https://cordova.apache.org/announcements/2025/03/26/cordova-android-14.0.0.html
+- .
+- .
 
 
 ### emi-indo-cordova-plugin-admob
