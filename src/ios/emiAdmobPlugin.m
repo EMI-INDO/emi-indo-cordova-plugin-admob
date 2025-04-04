@@ -659,7 +659,25 @@ NSString *setKeyword = @"";
 
       GADAdSize siz = [self __AdSizeFromString:size];
       self.bannerView = [[GADBannerView alloc] initWithAdSize:siz];
-        
+
+
+    CGSize bannerSize = self.bannerView.bounds.size;
+    CGFloat screenWidth = parentView.bounds.size.width;
+    CGFloat screenHeight = parentView.bounds.size.height;
+
+    // Default to top-center
+    CGFloat originX = (screenWidth - bannerSize.width) / 2;
+    CGFloat originY = 0;
+
+    if ([setPosition isEqualToString:@"bottom-center"]) {
+        originY = screenHeight - bannerSize.height;
+    } else if ([setPosition isEqualToString:@"top-center"]) {
+        originY = 0;
+    }
+
+    self.bannerView.frame = CGRectMake(originX, originY, bannerSize.width, bannerSize.height);
+
+
       GADExtras *extras = [[GADExtras alloc] init];
 
       if (isCollapsible) {
@@ -706,7 +724,6 @@ NSString *setKeyword = @"";
         NSLog(@"[AdPlugin] Error in showBannerAd: %@", exception.reason);
     }
 }
-
 
 - (UIView*)findWebViewInView:(UIView*)view {
     if ([view isKindOfClass:NSClassFromString(@"WKWebView")] || [view isKindOfClass:NSClassFromString(@"UIWebView")]) {
@@ -1445,7 +1462,10 @@ NSString *setKeyword = @"";
     NSDictionary *options = [command.arguments objectAtIndex:0];
     NSString *adUnitId = [options valueForKey:@"adUnitId"];
     BOOL autoShow = [[options valueForKey:@"autoShow"] boolValue];
-    auto_Show = autoShow;
+    //auto_Show = autoShow;
+    
+    __block BOOL shouldAutoShow = autoShow;
+    
     adFormat = 3;
     [self setAdRequest];
     if (adFormat == 3) {
@@ -1489,7 +1509,7 @@ NSString *setKeyword = @"";
                 
                 
 
-                if (auto_Show) {
+                if (shouldAutoShow) {
                     NSError *presentError = nil;
                     if ([self.rewardedAd canPresentFromRootViewController:self.viewController error:&presentError]) {
                         [self.rewardedAd presentFromRootViewController:self.viewController userDidEarnRewardHandler:^{
@@ -1898,4 +1918,3 @@ NSString *setKeyword = @"";
               object:nil];
 }
 @end
-
