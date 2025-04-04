@@ -1445,7 +1445,10 @@ NSString *setKeyword = @"";
     NSDictionary *options = [command.arguments objectAtIndex:0];
     NSString *adUnitId = [options valueForKey:@"adUnitId"];
     BOOL autoShow = [[options valueForKey:@"autoShow"] boolValue];
-    auto_Show = autoShow;
+    //auto_Show = autoShow;
+    
+    __block BOOL shouldAutoShow = autoShow;
+    
     adFormat = 3;
     [self setAdRequest];
     if (adFormat == 3) {
@@ -1489,7 +1492,7 @@ NSString *setKeyword = @"";
                 
                 
 
-                if (auto_Show) {
+                if (shouldAutoShow) {
                     NSError *presentError = nil;
                     if ([self.rewardedAd canPresentFromRootViewController:self.viewController error:&presentError]) {
                         [self.rewardedAd presentFromRootViewController:self.viewController userDidEarnRewardHandler:^{
