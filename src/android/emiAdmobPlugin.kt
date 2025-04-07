@@ -154,7 +154,6 @@ class emiAdmobPlugin : CordovaPlugin() {
     private var loadBannerAdNew: Boolean = false
     private var bannerOverlapping: Boolean = false
 
-
     override fun pluginInitialize() {
         super.pluginInitialize()
 
@@ -186,7 +185,11 @@ class emiAdmobPlugin : CordovaPlugin() {
                 Configuration.ORIENTATION_UNDEFINED -> {
                     cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.orientation.undefined');")
                 }
+                else -> {
+                    cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.orientation.square');")
+                }
             }
+
         }
     }
 
@@ -203,7 +206,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         if (action == "initialize") {
             val options = args.getJSONObject(0)
             if (mActivity != null) {
-                mActivity!!.runOnUiThread {
+                mActivity?.runOnUiThread {
                     val setAdRequest = options.optBoolean("isUsingAdManagerRequest")
                     val responseInfo = options.optBoolean("isResponseInfo")
                     val setDebugGeography = options.optBoolean("isConsentDebug")
@@ -242,21 +245,16 @@ class emiAdmobPlugin : CordovaPlugin() {
                             params,
                             {
                                 cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.info.update');")
-                                when (consentInformation!!.getConsentStatus()) {
-                                    ConsentInformation.ConsentStatus.NOT_REQUIRED -> cWebView!!.loadUrl(
-                                        "javascript:cordova.fireDocumentEvent('on.consent.status.not_required');"
-                                    )
+                                when (consentInformation?.getConsentStatus()) {
+                                    ConsentInformation.ConsentStatus.NOT_REQUIRED -> cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.status.not_required');")
 
-                                    ConsentInformation.ConsentStatus.OBTAINED -> cWebView!!.loadUrl(
-                                        "javascript:cordova.fireDocumentEvent('on.consent.status.obtained');"
-                                    )
+                                    ConsentInformation.ConsentStatus.OBTAINED -> cWebView?.loadUrl( "javascript:cordova.fireDocumentEvent('on.consent.status.obtained');")
 
-                                    ConsentInformation.ConsentStatus.REQUIRED -> {
-                                        handleConsentForm()
-                                        cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.status.required');")
+                                    ConsentInformation.ConsentStatus.REQUIRED -> { handleConsentForm()
+                                        cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.status.required');")
                                     }
 
-                                    ConsentInformation.ConsentStatus.UNKNOWN -> cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.status.unknown');")
+                                    ConsentInformation.ConsentStatus.UNKNOWN -> cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.status.unknown');")
                                 }
                             },
                             { formError: FormError ->
@@ -287,7 +285,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                         targeting(childDirectedTreatment, underAgeOfConsent, contentRating)
                         callbackContext.success();
                     } catch (e: Exception) {
-                        callbackContext.error("Error: " + e.message)
+                        callbackContext.error("targeting Error: " + e.message)
                     }
                 }
             }
@@ -320,7 +318,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                         targetingAdRequest( customTargeting, categoryExclusions, ppId, ctURL, brandSafetyArr)
                         callbackContext.success()
                     } catch (e: Exception) {
-                        callbackContext.error(e.toString())
+                        callbackContext.error("targetingAdRequest Error: " + e.message)
                     }
                 }
             }
@@ -335,7 +333,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                         setPersonalizationState(setPPT)
                         callbackContext.success()
                     } catch (e: Exception) {
-                        callbackContext.error(e.toString())
+                        callbackContext.error("setPersonalizationState Error: " + e.message)
                     }
                 }
             }
@@ -354,7 +352,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                         setPublisherProvidedSignals(ppsArrValue)
                         callbackContext.success()
                     } catch (e: Exception) {
-                        callbackContext.error(e.toString())
+                        callbackContext.error("setPPS Error: " + e.message)
                     }
                 }
             }
@@ -370,7 +368,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                     try {
                         globalSettings(setAppMuted, setAppVolume, pubIdEnabled)
                     } catch (e: Exception) {
-                        callbackContext.error(e.toString())
+                        callbackContext.error("globalSettings Error: " + e.message)
                     }
                 }
             }
@@ -419,7 +417,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                                 cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.appOpenAd.revenue', ${result})")
 
                                             } catch (e: JSONException) {
-                                                callbackContext.error(e.message)
+                                                callbackContext.error("loadAppOpenAd Error: " + e.message)
                                             }
                                         }
 
@@ -435,7 +433,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                             result.put("getBundleExtra", mBundleExtra.toString())
                                             cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.appOpenAd.responseInfo', ${result})")
                                         } catch (e: JSONException) {
-                                            callbackContext.error(e.message)
+                                            callbackContext.error("loadAppOpenAd Error: " + e.message)
                                         }
 
 
@@ -454,7 +452,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                             }
                                         }
                                     } catch (e: Exception) {
-                                        PUBLIC_CALLBACKS?.error(e.toString())
+                                        PUBLIC_CALLBACKS?.error("loadAppOpenAd Error: " + e.message)
                                     }
                                 }
 
@@ -485,7 +483,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
                             })
                     } catch (e: Exception) {
-                        callbackContext.error(e.toString())
+                        callbackContext.error("loadAppOpenAd Error: " + e.message)
                     }
                 }
             }
@@ -501,7 +499,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                     callbackContext.error("The App Open Ad wasn't ready yet")
                 }
             } catch (e: Exception) {
-                PUBLIC_CALLBACKS!!.error(e.toString())
+                PUBLIC_CALLBACKS?.error("showAppOpenAd Error: " + e.message)
             }
 
             return true
@@ -539,12 +537,10 @@ class emiAdmobPlugin : CordovaPlugin() {
                                             result.put("getResponseExtras", responseInfo?.responseExtras)
                                             result.put("getMediationAdapterClassName", responseInfo?.mediationAdapterClassName)
                                             result.put("getBundleExtra", mBundleExtra.toString())
-                                            cWebView!!.loadUrl(
-                                                "javascript:cordova.fireDocumentEvent('on.interstitialAd.responseInfo', ${result});"
-                                            )
+                                            cWebView!!.loadUrl( "javascript:cordova.fireDocumentEvent('on.interstitialAd.responseInfo', ${result});")
 
                                         } catch (e: JSONException) {
-                                            callbackContext.error(e.message)
+                                            callbackContext.error("loadInterstitialAd Error: " + e.message)
                                         }
                                     }
                                     mInterstitialAd?.onPaidEventListener =
@@ -559,12 +555,10 @@ class emiAdmobPlugin : CordovaPlugin() {
                                                 result.put("currency", currencyCode)
                                                 result.put("precision", precision)
                                                 result.put("adUnitId", interstitialAdUnitId)
-                                                cWebView?.loadUrl(
-                                                    "javascript:cordova.fireDocumentEvent('on.interstitial.revenue', ${result});"
-                                                )
+                                                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.interstitial.revenue', ${result});")
 
                                             } catch (e: JSONException) {
-                                                callbackContext.error(e.message)
+                                                callbackContext.error("loadInterstitialAd Error: " + e.message)
                                             }
 
                                         }
@@ -604,14 +598,12 @@ class emiAdmobPlugin : CordovaPlugin() {
                                         put("responseInfoAdapterResponses", adapterResponses)
                                     }
 
-                                    cWebView?.loadUrl(
-                                        "javascript:cordova.fireDocumentEvent('on.interstitial.failed.load', ${errorData});"
-                                    )
+                                    cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.interstitial.failed.load', ${errorData});")
 
                                 }
                             })
                     } catch (e: Exception) {
-                        callbackContext.error(e.toString())
+                        callbackContext.error("loadInterstitialAd Error: " + e.message)
                     }
                 }
             }
@@ -662,9 +654,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
                                     }
 
-                                    cWebView?.loadUrl(
-                                        "javascript:cordova.fireDocumentEvent('on.rewarded.failed.load', ${errorData});"
-                                    )
+                                    cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.failed.load', ${errorData});")
 
                                 }
 
@@ -679,9 +669,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
                                     rewardedAdLoadCallback()
 
-                                    cWebView?.loadUrl(
-                                        "javascript:cordova.fireDocumentEvent('on.rewarded.loaded');"
-                                    )
+                                    cWebView?.loadUrl( "javascript:cordova.fireDocumentEvent('on.rewarded.loaded');")
 
                                     rewardedAd?.onPaidEventListener =
                                         OnPaidEventListener { adValue: AdValue ->
@@ -695,11 +683,9 @@ class emiAdmobPlugin : CordovaPlugin() {
                                                 result.put("currency", currencyCode)
                                                 result.put("precision", precision)
                                                 result.put("adUnitId", rewardedAdAdUnitId)
-                                                cWebView?.loadUrl(
-                                                    "javascript:cordova.fireDocumentEvent('on.rewarded.revenue', ${result});"
-                                                )
+                                                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.revenue', ${result});")
                                             } catch (e: JSONException) {
-                                                callbackContext.error(e.message)
+                                                callbackContext.error("loadRewardedAd Error: " + e.message)
                                             }
 
                                         }
@@ -717,7 +703,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                             result.put("getBundleExtra", mBundleExtra.toString())
                                             cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedAd.responseInfo', ${result})")
                                         } catch (e: JSONException) {
-                                            callbackContext.error(e.message)
+                                            callbackContext.error("loadRewardedAd Error: " + e.message)
                                         }
                                     }
 
@@ -738,11 +724,9 @@ class emiAdmobPlugin : CordovaPlugin() {
                                                         try {
                                                             result.put("rewardType", rewardType)
                                                             result.put("rewardAmount", rewardAmount)
-                                                            cWebView?.loadUrl(
-                                                                "javascript:cordova.fireDocumentEvent('on.reward.userEarnedReward', ${result});"
-                                                            )
+                                                            cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.reward.userEarnedReward', ${result});")
                                                         } catch (e: JSONException) {
-                                                            callbackContext.error(e.message)
+                                                            callbackContext.error("loadRewardedAd Error: " + e.message)
                                                         }
 
                                                     }
@@ -752,7 +736,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                     }
                             })
                     } catch (e: Exception) {
-                        callbackContext.error(e.toString())
+                        callbackContext.error("loadRewardedAd Error: " + e.message)
                     }
                 }
             }
@@ -772,7 +756,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                             result.put("rewardAmount", rewardAmount)
                             cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.reward.userEarnedReward', ${result});")
                         } catch (e: JSONException) {
-                            callbackContext.error(e.message)
+                            callbackContext.error("showRewardedAd Error: " + e.message)
                         }
 
                     }
@@ -801,9 +785,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                     isRewardedInterstitialLoad = true
                                     isAdSkip = 0
 
-                                    cWebView?.loadUrl(
-                                        "javascript:cordova.fireDocumentEvent('on.rewardedInt.loaded');"
-                                    )
+                                    cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.loaded');")
 
                                     if (rIntAutoShow) {
                                         isRIntAutoShow
@@ -823,11 +805,9 @@ class emiAdmobPlugin : CordovaPlugin() {
                                                 result.put("currency", currencyCode)
                                                 result.put("precision", precision)
                                                 result.put("adUnitId", rewardedIntAdUnitId)
-                                                cWebView!!.loadUrl(
-                                                    "javascript:cordova.fireDocumentEvent('on.rewardedInt.revenue', ${result});"
-                                                )
+                                                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.revenue', ${result});")
                                             } catch (e: JSONException) {
-                                                callbackContext.error(e.message)
+                                                callbackContext.error("loadRewardedInterstitialAd Error: " + e.message)
                                             }
 
                                         }
@@ -842,11 +822,9 @@ class emiAdmobPlugin : CordovaPlugin() {
                                             result.put("getResponseExtras", responseInfo?.responseExtras)
                                             result.put("getMediationAdapterClassName", responseInfo?.mediationAdapterClassName)
                                             result.put("getBundleExtra", mBundleExtra.toString())
-                                            cWebView?.loadUrl(
-                                                "javascript:cordova.fireDocumentEvent('on.rewardedIntAd.responseInfo', ${result});"
-                                            )
+                                            cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedIntAd.responseInfo', ${result});")
                                         } catch (e: JSONException) {
-                                            callbackContext.error(e.message)
+                                            callbackContext.error("loadRewardedInterstitialAd Error: " + e.message)
                                         }
                                     }
 
@@ -868,11 +846,9 @@ class emiAdmobPlugin : CordovaPlugin() {
                                                         try {
                                                             result.put("rewardType", rewardType)
                                                             result.put("rewardAmount", rewardAmount)
-                                                            cWebView?.loadUrl(
-                                                                "javascript:cordova.fireDocumentEvent('on.rewardedInt.userEarnedReward', ${result});"
-                                                            )
+                                                            cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.userEarnedReward', ${result});")
                                                         } catch (e: JSONException) {
-                                                            callbackContext.error(e.message)
+                                                            callbackContext.error("loadRewardedInterstitialAd Error: " + e.message)
                                                         }
 
                                                     }
@@ -902,14 +878,12 @@ class emiAdmobPlugin : CordovaPlugin() {
                                         put("responseInfoMediationAdapterClassName", mediationAdapterClassName)
                                         put("responseInfoAdapterResponses", adapterResponses)
                                     }
-                                    cWebView?.loadUrl(
-                                        "javascript:cordova.fireDocumentEvent('on.rewardedInt.failed.load', ${errorData});"
-                                    )
+                                    cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.failed.load', ${errorData});")
 
                                 }
                             })
                     } catch (e: Exception) {
-                        callbackContext.error(e.toString())
+                        callbackContext.error("loadRewardedInterstitialAd Error: " + e.message)
                     }
                 }
             }
@@ -928,11 +902,9 @@ class emiAdmobPlugin : CordovaPlugin() {
                             try {
                                 result.put("rewardType", rewardType)
                                 result.put("rewardAmount", rewardAmount)
-                                cWebView?.loadUrl(
-                                    "javascript:cordova.fireDocumentEvent('on.rewardedInt.userEarnedReward', ${result});"
-                                )
+                                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.userEarnedReward', ${result});")
                             } catch (e: JSONException) {
-                                callbackContext.error(e.message)
+                                callbackContext.error("loadRewardedInterstitialAd Error: " + e.message)
                             }
 
                         }
@@ -1004,7 +976,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                 })
                         }
                     } catch (e: Exception) {
-                        callbackContext.error(e.toString())
+                        callbackContext.error("showPrivacyOptionsForm Error: " + e.message)
                     }
                 }
             }
@@ -1016,7 +988,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                     try {
                         consentInformation?.reset()
                     } catch (e: Exception) {
-                        callbackContext.error(e.toString())
+                        callbackContext.error("consentReset Error: " + e.message)
                     }
                 }
             }
@@ -1043,7 +1015,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                         callbackContext.success(userInfoJson)
                         cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.getIabTfc');")
                     } catch (e: Exception) {
-                        callbackContext.error(e.toString())
+                        callbackContext.error("getIabTfc Error: " + e.message)
                         cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.getIabTfc.error');")
                     }
                 }
@@ -1070,7 +1042,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                     try {
                         loadBannerAd(adUnitId, position, size)
                     } catch (e: Exception) {
-                        callbackContext.error(e.toString())
+                        callbackContext.error("loadBannerAd Error: " + e.message)
                     }
                 }
             }
@@ -1090,11 +1062,14 @@ class emiAdmobPlugin : CordovaPlugin() {
                                 bannerOverlapping()
                             }
 
-                            bannerViewLayout?.requestFocus();
+                            if(loadBannerAdNew) {
+                                setBannerAdNewApi(adSize)
+                            }
 
+                            bannerViewLayout?.requestFocus()
 
                         } catch (e: Exception) {
-                            callbackContext.error(e.toString())
+                            callbackContext.error("showBannerAd Error: " + e.message)
                         }
                     }
                 }
@@ -1114,10 +1089,13 @@ class emiAdmobPlugin : CordovaPlugin() {
                     screenHeight = windowMetrics.bounds.height()
                     usableHeight = screenHeight - insets.bottom
                 } else {
+                    @Suppress("DEPRECATION")
                     val display = cordova.activity.windowManager.defaultDisplay
                     val size = Point()
                     val realSize = Point()
+                    @Suppress("DEPRECATION")
                     display.getSize(size)
+                    @Suppress("DEPRECATION")
                     display.getRealSize(realSize)
 
                     usableHeight = size.y
@@ -1154,9 +1132,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                     }
                 """.trimIndent()
 
-                        mActivity?.runOnUiThread {
-                            cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.style.banner.ad', $eventData)")
-                        }
+                        mActivity?.runOnUiThread { cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.style.banner.ad', $eventData)") }
                     } catch (e: Exception) {
                         callbackContext.error("Error in styleBannerAd: ${e.message}")
                     }
@@ -1187,7 +1163,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                             isBannerPause = 1
                             bannerOverlappingToZero()
                         } catch (e: Exception) {
-                            callbackContext.error(e.toString())
+                            callbackContext.error("hideBannerAd Error: " + e.message)
                         }
                     }
                 }
@@ -1210,7 +1186,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                             lock = true
                         }
                     } catch (e: Exception) {
-                        PUBLIC_CALLBACKS!!.error("Error removing banner: " + e.message)
+                        PUBLIC_CALLBACKS?.error("Error removing banner: " + e.message)
                     }
                 }
             }
@@ -1222,7 +1198,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                     try {
                         registerWebView(callbackContext)
                     } catch (e: Exception) {
-                        PUBLIC_CALLBACKS!!.error("Error register WebView: " + e.message)
+                        PUBLIC_CALLBACKS?.error("Error register WebView: " + e.message)
                     }
                 }
             }
@@ -1261,7 +1237,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                     try {
                         loadBannerAd(adUnitId, position, size)
                     } catch (e: Exception) {
-                        callbackContext.error(e.toString())
+                        callbackContext.error("loadBannerAdNewApi Error: " + e.message)
                     }
                 }
             }
@@ -1323,11 +1299,11 @@ class emiAdmobPlugin : CordovaPlugin() {
                 bannerView?.adListener = bannerAdListener
                 bannerView?.loadAd(buildAdRequest())
             } else {
-                Log.d(TAG, "Banner view layout already exists.")
+               // Log.d(TAG, "Banner view layout already exists.")
             }
         } catch (e: Exception) {
             PUBLIC_CALLBACKS?.error("Error showing banner: " + e.message)
-            Log.d(TAG, "Error showing banner: " + e.message)
+           // Log.d(TAG, "Error showing banner: " + e.message)
         }
     }
 
@@ -1390,7 +1366,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             }
         }
 
-        bannerViewLayout!!.layoutParams = bannerParams
+        bannerViewLayout?.layoutParams = bannerParams
     }
 
 
@@ -1432,7 +1408,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                     isBannerShow = true
                 } catch (e: Exception) {
                     lock = true
-                    PUBLIC_CALLBACKS?.error(e.toString())
+                    PUBLIC_CALLBACKS?.error("Error isShowBannerAds: ${e.message}")
                 }
             }
         }
@@ -1468,7 +1444,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 put("responseInfoAdapterResponses", adapterResponses)
             }
 
-            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.failed.load', ${errorData});")
+            cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.failed.load', ${errorData});")
 
             bannerOverlappingToZero()
 
@@ -1483,12 +1459,10 @@ class emiAdmobPlugin : CordovaPlugin() {
                 lock = true
             }
 
-
-
         }
 
         override fun onAdImpression() {
-            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.impression');")
+            cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.impression');")
         }
 
         private fun getAdHeightInDp(adSize: AdSize, context: Context): Int {
@@ -1499,7 +1473,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
 
         override fun onAdLoaded() {
-            // Log.d(TAG, "onAdLoaded: Ad finished loading successfully.");
+
             isBannerLoad = true
             isBannerPause = 0
 
@@ -1513,41 +1487,26 @@ class emiAdmobPlugin : CordovaPlugin() {
 
 
             val context = cordova.activity.applicationContext
-            //val adType="fluid";
-            // Get the AdSize object based on the type
             var currentAdSize = when (adType) {
                 "banner" -> AdSize.BANNER
                 "large_banner" -> AdSize.LARGE_BANNER
                 "medium_rectangle" -> AdSize.MEDIUM_RECTANGLE
                 "full_banner" -> AdSize.FULL_BANNER
                 "leaderboard" -> AdSize.LEADERBOARD
-
-                //"fluid" -> AdSize.FLUID
-                //"in_line_adaptive" -> AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(context, adWidth)
-
                 else -> adSize // Default fallback to the adaptive ad size
             }
 
             // Calculate the height in dp
             val bannerHeightDp = getAdHeightInDp(currentAdSize, context)
 
-            //bannerHeight=currentAdSize;
-
-            if (loadBannerAdNew && isPosition.equals("top-center", ignoreCase = true)){
-
-                loadBannerAdNewApiTop() // loadBannerAdNewApi
-
-            } else if (loadBannerAdNew && isPosition.equals("bottom-center", ignoreCase = true)) {
-
-                adjustWebViewHeight(currentAdSize) // loadBannerAdNewApi
-
+            if(loadBannerAdNew) {
+                setBannerAdNewApi(currentAdSize)
             }
-
 
             val bannerLoadEventData = String.format(Locale.US, "{\"height\": %d}", bannerHeightDp)
 
 
-            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.load', $bannerLoadEventData);")
+            cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.load', $bannerLoadEventData);")
 
             val eventData = String.format(
                 "{\"collapsible\": \"%s\"}",
@@ -1572,16 +1531,16 @@ class emiAdmobPlugin : CordovaPlugin() {
                     } else {
                         result.put("getBundleExtra", JSONObject.NULL)
                     }
-                    cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.bannerAd.responseInfo', ${result});")
+                    cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.bannerAd.responseInfo', ${result});")
                 } catch (e: JSONException) {
-                    PUBLIC_CALLBACKS!!.error(e.toString())
+                    PUBLIC_CALLBACKS?.error("Error isResponseInfo: ${e.message}")
                 }
             }
         }
 
 
         override fun onAdOpened() {
-            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.open');")
+            cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.open');")
             isBannerShows = false
         }
     }
@@ -1602,10 +1561,9 @@ class emiAdmobPlugin : CordovaPlugin() {
                         (cWebView?.view?.parent as? ViewGroup)?.setPadding(0, 0, 0, 0)
                         cWebView?.view?.requestLayout()
 
-                       // Log.d("BannerAdjustment", "WebView set to full height: $totalHeight")
                     }
                 } catch (e: Exception) {
-                   // Log.e("AdmobPlugin", "Error setting WebView to full height: ${e.message}")
+                    PUBLIC_CALLBACKS?.error("Error bannerOverlappingToZero: ${e.message}")
                 }
             }
         }
@@ -1617,6 +1575,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             mActivity?.runOnUiThread {
                 try {
                     val displayMetrics = DisplayMetrics()
+                    @Suppress("DEPRECATION")
                     mActivity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
                     val screenHeightInPx = displayMetrics.heightPixels
 
@@ -1629,9 +1588,8 @@ class emiAdmobPlugin : CordovaPlugin() {
                     layoutParams.height = webViewHeight
                     cWebView!!.view.layoutParams = layoutParams
 
-                    // Log.d("BannerAdjustment", "Adjusted WebView height: $webViewHeight")
                 } catch (e: Exception) {
-                    Log.e("AdmobPlugin", "Error adjusting WebView for banner: ${e.message}")
+                    PUBLIC_CALLBACKS?.error("Error bannerOverlapping: ${e.message}")
                 }
             }
         }
@@ -1655,9 +1613,9 @@ class emiAdmobPlugin : CordovaPlugin() {
                 result.put("adUnitId", adUnitId)
                 isBannerLoad = false
                 isBannerShow = true
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.revenue', ${result});")
+                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.banner.revenue', ${result});")
             } catch (e: JSONException) {
-                PUBLIC_CALLBACKS!!.error(e.message)
+                PUBLIC_CALLBACKS?.error("Error bannerPaidAdListener: ${e.message}")
             }
         }
 
@@ -1736,7 +1694,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                     val bounds = windowMetrics.bounds
                     val widthPixels = bounds.width() - insets.left - insets.right
                     outMetrics.widthPixels = widthPixels
-                    outMetrics.density = mActivity!!.resources.displayMetrics.density
+                    outMetrics.density = mActivity?.resources?.displayMetrics!!.density
                 }
             } else {
                 @Suppress("DEPRECATION")
@@ -1882,12 +1840,11 @@ class emiAdmobPlugin : CordovaPlugin() {
                 """.trimIndent()
 
                     mActivity?.runOnUiThread {
-                        // Log.d(TAG, "Google Mobile Ads SDK Initialization: $eventData")
                         cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.sdkInitialization', $eventData)")
                     }
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error during MobileAds initialization", e)
+                PUBLIC_CALLBACKS?.error("Error during MobileAds initialization: ${e.message}")
             }
           }
        }
@@ -2046,19 +2003,19 @@ class emiAdmobPlugin : CordovaPlugin() {
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastAccessTime > EXPIRATION_TIME) {
             removeKey(key)
-            cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.TCString.expired');")
+            cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.TCString.expired');")
         }
-        val editor = mPreferences!!.edit()
-        editor.putLong(key + LAST_ACCESS_SUFFIX, currentTime)
-        editor.apply()
+        val editor = mPreferences?.edit()
+        editor?.putLong(key + LAST_ACCESS_SUFFIX, currentTime)
+        editor?.apply()
     }
 
     private fun removeKey(key: String) {
-        val editor = mPreferences!!.edit()
-        editor.remove(key)
-        editor.remove(key + LAST_ACCESS_SUFFIX)
-        editor.apply()
-        cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.TCString.remove');")
+        val editor = mPreferences?.edit()
+        editor?.remove(key)
+        editor?.remove(key + LAST_ACCESS_SUFFIX)
+        editor?.apply()
+        cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.TCString.remove');")
     }
 
 
@@ -2069,7 +2026,7 @@ class emiAdmobPlugin : CordovaPlugin() {
     private fun appOpenAdLoadCallback() {
         appOpenAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.appOpenAd.dismissed');")
+                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.appOpenAd.dismissed');")
                 val mainView: View? = view
                 mainView?.requestFocus()
             }
@@ -2132,7 +2089,7 @@ class emiAdmobPlugin : CordovaPlugin() {
     private fun rewardedAdLoadCallback() {
         rewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdClicked() {
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.click');")
+                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.click');")
             }
 
             override fun onAdDismissedFullScreenContent() {
@@ -2145,7 +2102,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                 }
                 rewardedAd = null
                 isRewardedLoad = false
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.dismissed');")
+                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.dismissed');")
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
@@ -2157,16 +2114,16 @@ class emiAdmobPlugin : CordovaPlugin() {
                     put("domain", adError.domain)
                     put("cause", adError.cause?.toString() ?: "null")
                 }
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.failed.show', ${errorData});")
+                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.failed.show', ${errorData});")
             }
 
             override fun onAdImpression() {
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.impression');")
+                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.impression');")
             }
 
             override fun onAdShowedFullScreenContent() {
                 isAdSkip = 1
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.show');")
+                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewarded.show');")
             }
         }
     }
@@ -2174,20 +2131,20 @@ class emiAdmobPlugin : CordovaPlugin() {
     private fun rewardedInterstitialAdLoadCallback() {
         rewardedInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdClicked() {
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.click');")
+                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.click');")
             }
 
             override fun onAdDismissedFullScreenContent() {
                 if (isAdSkip != 2) {
                     rewardedInterstitialAd = null
                     isRewardedInterstitialLoad = false
-                    cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.ad.skip');")
+                    cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.ad.skip');")
                 }
                 rewardedInterstitialAd = null
                 isRewardedInterstitialLoad = false
                 val mainView: View? = view
                 mainView?.requestFocus()
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.dismissed');")
+                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.dismissed');")
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
@@ -2199,17 +2156,16 @@ class emiAdmobPlugin : CordovaPlugin() {
                     put("domain", adError.domain)
                     put("cause", adError.cause?.toString() ?: "null")
                 }
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.failed.show', ${errorData});")
+                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.failed.show', ${errorData});")
             }
 
             override fun onAdImpression() {
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.impression');")
+                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.impression');")
             }
 
             override fun onAdShowedFullScreenContent() {
                 isAdSkip = 1
-                Log.d(TAG, "Ad showed fullscreen content.")
-                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.showed');")
+                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.rewardedInt.showed');")
             }
         }
     }
@@ -2256,86 +2212,35 @@ class emiAdmobPlugin : CordovaPlugin() {
 
     // START loadBannerAdNewApi
 
+
+private fun setBannerAdNewApi(currentAdSize: AdSize) {
+
+    if (loadBannerAdNew && isPosition.equals("top-center", ignoreCase = true)) {
+
+        setBannerAdNewApiTop() // loadBannerAdNewApi
+
+    } else if (loadBannerAdNew && isPosition.equals("bottom-center", ignoreCase = true)) {
+
+        setBannerAdNewApiBottom(currentAdSize) // loadBannerAdNewApi
+
+    }
+}
+
+
+
+
     private fun isFullScreenMode(activity: Activity): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             activity.window.decorView.rootWindowInsets?.isVisible(WindowInsets.Type.statusBars()) == false
         } else {
+            @Suppress("DEPRECATION")
             (activity.window.attributes.flags and WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0
         }
     }
 
 
 
-    private fun loadBannerAdNewApiTop() {
-        mActivity?.let { activity ->
-            bannerView?.post {
-                val bannerHeightPx = bannerView?.height ?: 0
-                val statusBarHeight = getStatusBarHeight(activity)
 
-                if (isPosition.equals("top-center", ignoreCase = true)) {
-                    val bannerLp = bannerView?.layoutParams as? FrameLayout.LayoutParams
-                    bannerLp?.let { lp ->
-                        if (isOverlapping) {
-                            if (isFullScreen) {
-                                lp.topMargin = 0
-                                bannerView?.layoutParams = lp
-                            } else {
-                                lp.topMargin = 0 // bannerHeightPx // + statusBarHeight
-                                bannerView?.layoutParams = lp
-                            }
-                        } else {
-                            if (isFullScreen) {
-                                lp.topMargin = 0
-                                bannerView?.layoutParams = lp
-                            } else {
-                                lp.topMargin = statusBarHeight
-                                bannerView?.layoutParams = lp
-                            }
-                        }
-
-                    }
-                }
-
-                cWebView?.let { webView ->
-                    val webLp = webView.view.layoutParams as FrameLayout.LayoutParams
-                    if (isPosition.equals("top-center", ignoreCase = true)) {
-
-                        if (isOverlapping) {
-                            if (isFullScreen) {
-                                webLp.topMargin = 0 //+ statusBarHeight
-                            } else {
-                                webLp.topMargin = 0 //bannerHeightPx // + statusBarHeight
-                            }
-                        } else {
-                            if (isFullScreen) {
-                                webLp.topMargin = bannerHeightPx
-                            } else {
-                                webLp.topMargin = bannerHeightPx
-                            }
-                        }
-
-
-                    }
-
-                    webView.view.layoutParams = webLp
-                    webView.view.requestLayout()
-                }
-            }}
-    }
-
-
-
-
-
-    @SuppressLint("InternalInsetResource")
-    private fun getStatusBarHeight(context: Context): Int {
-        var result = 0
-        val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
-        if (resourceId > 0) {
-            result = context.resources.getDimensionPixelSize(resourceId)
-        }
-        return result
-    }
 
 
     @SuppressLint("DiscouragedApi", "InternalInsetResource")
@@ -2382,7 +2287,7 @@ class emiAdmobPlugin : CordovaPlugin() {
     }
 
 
-    private fun adjustWebViewHeight(adSize: AdSize) {
+    private fun setBannerAdNewApiBottom(adSize: AdSize) {
 
         mActivity?.let { activity ->
 
@@ -2407,8 +2312,6 @@ class emiAdmobPlugin : CordovaPlugin() {
                     usableHeight - navBarHeight - bannerHeightPx + adjustment
                 }
             }
-
-
 
             if (!bannerOverlapping) {
                 cWebView?.let { webView ->
@@ -2439,6 +2342,82 @@ class emiAdmobPlugin : CordovaPlugin() {
     }
 
 
+
+
+
+
+    private fun setBannerAdNewApiTop() {
+        mActivity?.let { activity ->
+            bannerView?.post {
+                val bannerHeightPx = bannerView?.height ?: 0
+                val statusBarHeight = getStatusBarHeight(activity)
+
+                if (isPosition.equals("top-center", ignoreCase = true)) {
+                    val bannerLp = bannerView?.layoutParams as? FrameLayout.LayoutParams
+                    bannerLp?.let { lp ->
+                        if (bannerOverlapping) {
+                            if (isFullScreen) {
+                                lp.topMargin = 0
+                                bannerView?.layoutParams = lp
+                            } else {
+                                lp.topMargin = 0 // bannerHeightPx // + statusBarHeight
+                                bannerView?.layoutParams = lp
+                            }
+                        } else {
+                            if (isFullScreen) {
+                                lp.topMargin = 0
+                                bannerView?.layoutParams = lp
+                            } else {
+                                lp.topMargin = statusBarHeight
+                                bannerView?.layoutParams = lp
+                            }
+                        }
+
+                    }
+                }
+
+                cWebView?.let { webView ->
+                    val webLp = webView.view.layoutParams as FrameLayout.LayoutParams
+                    if (isPosition.equals("top-center", ignoreCase = true)) {
+
+                        if (bannerOverlapping) {
+                            if (isFullScreen) {
+                                webLp.topMargin = 0 //+ statusBarHeight
+                            } else {
+                                webLp.topMargin = 0 //bannerHeightPx // + statusBarHeight
+                            }
+                        } else {
+                            if (isFullScreen) {
+                                webLp.topMargin = bannerHeightPx
+                            } else {
+                                webLp.topMargin = bannerHeightPx
+                            }
+                        }
+
+
+                    }
+
+                    webView.view.layoutParams = webLp
+                    webView.view.requestLayout()
+                }
+            }}
+    }
+
+
+
+
+
+    @SuppressLint("InternalInsetResource")
+    private fun getStatusBarHeight(context: Context): Int {
+        var result = 0
+        val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = context.resources.getDimensionPixelSize(resourceId)
+        }
+        return result
+    }
+
+
     // END loadBannerAdNewApi
 
 
@@ -2447,12 +2426,12 @@ class emiAdmobPlugin : CordovaPlugin() {
             if (View::class.java.isAssignableFrom(CordovaWebView::class.java)) {
                 return cWebView as View?
             }
-            return mActivity!!.window.decorView.findViewById(View.generateViewId())
+            return mActivity?.window?.decorView?.findViewById(View.generateViewId())
         }
 
     override fun onPause(multitasking: Boolean) {
         if (bannerView != null) {
-            bannerView!!.pause()
+            bannerView?.pause()
         }
 
         super.onPause(multitasking)
@@ -2461,7 +2440,7 @@ class emiAdmobPlugin : CordovaPlugin() {
     override fun onResume(multitasking: Boolean) {
         super.onResume(multitasking)
         if (bannerView != null) {
-            bannerView!!.resume()
+            bannerView?.resume()
         }
     }
 
@@ -2471,11 +2450,11 @@ class emiAdmobPlugin : CordovaPlugin() {
 
     override fun onDestroy() {
         if (bannerView != null) {
-            bannerView!!.destroy()
+            bannerView?.destroy()
             bannerView = null
         }
         if (bannerViewLayout != null) {
-            val parentView = bannerViewLayout!!.parent as ViewGroup
+            val parentView = bannerViewLayout?.parent as ViewGroup
             parentView.removeView(bannerViewLayout)
             bannerViewLayout = null
         }
