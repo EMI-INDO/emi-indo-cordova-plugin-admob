@@ -1,6 +1,6 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  id="emi-indo-cordova-plugin-admob" version="2.0.7-beta.2">
+  id="emi-indo-cordova-plugin-admob" version="2.0.7-beta.3">
 
   <name>emiAdmobPlugin</name>
   <description>Cordova/Quasar/Capacitor Plugin Admob Android IOS</description>
@@ -18,7 +18,6 @@
       version=">=11.0.0" />
     <engine name="cordova-ios"
       version=">=5.0.0" />
-
   </engines>
 
 
@@ -64,7 +63,7 @@
 
     <framework src="com.google.android.gms:play-services-ads:$PLAY_SERVICES_VERSION" />
 
-    <preference name="UMP" default="3.1.0" />
+    <preference name="UMP" default="3.2.0" />
     <framework src="com.google.android.ump:user-messaging-platform:$UMP" />
 
     <!-- Dependency Consent status will automatically reset after 12 months -->
@@ -301,9 +300,9 @@
         <source url="https://cdn.cocoapods.org/" />
       </config>
       <pods use-frameworks="true">
-		<!--minimum macOS 14.4 > Xcode 15.3 -->
-		 <pod name="GoogleUserMessagingPlatform" spec="~> 2.7.0" />
-     <pod name="Google-Mobile-Ads-SDK" spec="~> 11.13.0" />
+		<!--minimum macOS 14.4 > Xcode 16.0 -->
+		 <pod name="GoogleUserMessagingPlatform" spec="~> 3.0.0" />
+     <pod name="Google-Mobile-Ads-SDK" spec="~> 12.2.0" />
 		
       </pods>
     </podspec>

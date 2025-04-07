@@ -2,6 +2,7 @@
 
 ### RELEASE GOALS
 - Migrate from Mobile Ads SDK (Android) v23 to v24
+- Migrate from Mobile Ads SDK (iOS) SDK version v11 to v12
 - Migrate from Cordova Android 13.0.0 to 14.0.0
 - And maybe some APIs are re-signed, the old api will not be disturbed.
 - https://cordova.apache.org/announcements/2025/03/26/cordova-android-14.0.0.html
@@ -31,12 +32,12 @@
 ##  [Check all release notes:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/)
 
 
-### Mobile Ads SDK (Android: 23.6.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
-### User Messaging Platform (UMP Android: 3.1.0) [Release Notes:](https://developers.google.com/admob/android/privacy/release-notes)
+### Mobile Ads SDK (Android: 24.1.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
+### User Messaging Platform (UMP Android: 3.2.0) [Release Notes:](https://developers.google.com/admob/android/privacy/release-notes)
 
-### Mobile Ads SDK (IOS: 11.13.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
+### Mobile Ads SDK (IOS: 12.2.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
 
-### User Messaging Platform (UMP IOS: 2.7.0) [Release Notes:](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/privacy/download)
+### User Messaging Platform (UMP IOS: 3.0.0) [Release Notes:](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/privacy/download)
 ### IAB Europe Transparency & Consent Framework (CMP: 2.2.0)
 
 
