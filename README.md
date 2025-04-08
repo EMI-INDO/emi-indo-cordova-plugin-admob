@@ -37,6 +37,8 @@ config.xml
 
 <h3>Screenshots banner ad no overlapping</h3>
 
+VIDEO: https://www.youtube.com/watch?v=qqxxa2gi7OU
+
 <table>
   <tr>
     <td align="left"><strong>Banner Ad</strong></td>
