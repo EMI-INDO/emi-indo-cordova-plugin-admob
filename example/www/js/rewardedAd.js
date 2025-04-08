@@ -32,8 +32,6 @@ on.rewarded.show
 on.reward.userEarnedReward
 on.rewarded.ad.skip
 
-// New event plugin v1.5.5 or higher
-
 on.rewarded.revenue
 on.rewardedAd.responseInfo
 

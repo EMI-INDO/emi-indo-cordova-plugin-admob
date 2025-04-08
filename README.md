@@ -1,13 +1,130 @@
- ### The BETA release may be 2 to 3 times, before the stable release is published to NPM, so it is currently only available on github.
+### emi-indo-cordova-plugin-admob@2.0.7
 
-### RELEASE GOALS
+
+## Features/method
+- initialize
+- targeting
+- globalSettings
+- AppTrackingTransparency (ATT)
+- CMP SDK
+- UMP SDK
+- CustomConsentManager
+- App Open Ads
+- Banner Ads including (Collapsible)
+- Interstitial Ads
+- Rewarded Ads
+- Adsense
+- Mediation
+- impression-level-ad-revenue
+- targetingAdRequest
+- setPersonalizationState
+- setPPS
+
+## new version of the plugin @2.0.7 or higher
 - Migrate from Mobile Ads SDK (Android) v23 to v24
 - Migrate from Mobile Ads SDK (iOS) SDK version v11 to v12
 - Migrate from Cordova Android 13.0.0 to 14.0.0
 - And maybe some APIs are re-signed, the old api will not be disturbed.
 - https://cordova.apache.org/announcements/2025/03/26/cordova-android-14.0.0.html
-- .
-- .
+- Full of simple examples: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/www/js
+- Check all release notes: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/
+ ```
+config.xml
+<preference name="fullscreen" value="false" />
+<preference name="android-minSdkVersion" value="23" />
+<preference name="android-targetSdkVersion" value="35" />
+  ```
+
+<h3>Screenshots banner ad no overlapping</h3>
+
+<table>
+  <tr>
+    <td align="left"><strong>Banner Ad</strong></td>
+    <td align="center"><strong>Collapsible, no overlapping, non full-screen</strong></td>
+    <td align="center"><strong>Collapsible close, no overlapping, non full-screen</strong></td>
+    <td align="center"><strong>Collapsible, no overlapping, full-screen</strong></td>
+    <td align="center"><strong>Collapsible close, no overlapping, full-screen</strong></td>
+  </tr>
+ 
+  The height of the body is reduced by the height of the banner, || Auto-detect whether it is in full-screen mode or not.
+  
+  <tr>
+    <td></td>
+    <td align="center">
+      <img width="200" src="https://github.com/user-attachments/assets/53b832d2-8d15-4450-919b-9833569d0ffb" alt="Banner Ad" />
+    </td>
+   <td align="center">
+      <img width="200" src="https://github.com/user-attachments/assets/80ebf83f-b8fd-4a4c-8121-e2088005399d" alt="Banner Ad" />
+    </td>
+    <td align="center">
+      <img width="200" src="https://github.com/user-attachments/assets/13c3333f-b612-426e-8c3a-1e31695dc548" alt="Banner Ad" />
+    </td>
+    <td align="center">
+      <img width="200" src="https://github.com/user-attachments/assets/f4583d93-5764-4d24-a11c-ffdf623cb50a" alt="Banner Ad" />
+    </td>
+  </tr>
+</table>
+
+
+<h3>Screenshots banner ad overlapping</h3>
+
+<table>
+  <tr>
+    <td align="left"><strong>Banner Ad</strong></td>
+    <td align="center"><strong>Collapsible, overlapping, full-screen</strong></td>
+    <td align="center"><strong>Collapsible close, overlapping, full-screen</strong></td>
+    <td align="center"><strong>Collapsible, overlapping, non full-screen</strong></td>
+    <td align="center"><strong>Collapsible close, overlapping, full-screen</strong></td>
+  </tr>
+ 
+  The body height is not reduced, the banner overlaps on top of the body, || Auto-detect whether it is in full-screen mode or not.
+  
+  <tr>
+    <td></td>
+    <td align="center">
+      <img width="200" src="https://github.com/user-attachments/assets/14646090-bbc8-4c31-812b-f945faaadd06" alt="Banner Ad" />
+    </td>
+   <td align="center">
+      <img width="200" src="https://github.com/user-attachments/assets/c78e7879-cab6-4963-ad72-4a68316d7181" alt="Banner Ad" />
+    </td>
+    <td align="center">
+      <img width="200" src="https://github.com/user-attachments/assets/840ce3ef-60bb-4f74-9705-61d511d964f0" alt="Banner Ad" />
+    </td>
+    <td align="center">
+      <img width="200" src="https://github.com/user-attachments/assets/9342fb3b-bb38-4681-a794-44e25d6b9bd8" alt="Banner Ad" />
+    </td>
+  </tr>
+</table>
+
+
+<h3>Screenshots</h3>
+
+<table>
+  <tr>
+    <td align="left"><strong>Non banner</strong></td>
+    <td align="center"><strong>App Open Ad</strong></td>
+    <td align="center"><strong>Interstitial Ad</strong></td>
+    <td align="center"><strong>Rewarded video or Rewarded Interstitial</strong></td>
+    <td align="center"><strong>Adsense</strong></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td align="center">
+      <img width="200" src="https://github.com/user-attachments/assets/fc641c56-5219-4f02-8122-6a42a51f0853" alt="App Open Ad" />
+    </td>
+    <td align="center">
+      <img width="200" src="https://github.com/user-attachments/assets/7a5c68f2-18f9-4e23-9464-4a4c307f06ae" alt="Interstitial Ad" />
+    </td>
+    <td align="center">
+      <img width="200" src="https://github.com/user-attachments/assets/2d87f85e-5fb7-4bf4-8b86-c2411c35fdcf" alt="Rewarded Ad" />
+    </td>
+    <td align="center">
+      <img width="200" src="https://github.com/user-attachments/assets/14b289c4-74f7-45a7-9a8a-52df8859afec" alt="AdSense" />
+    </td>
+  </tr>
+</table>
+
+
 
 
 ### emi-indo-cordova-plugin-admob
@@ -20,6 +137,9 @@
  ## Support framework
  - Quasar: https://github.com/quasarframework/quasar/discussions/17706
  - Capacitor: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/discussions/29
+ - Jquery mobile: https://jquerymobile.com/
+
+
 
 > [!NOTE]  
 > - To maintain this plugin in the long run, 
@@ -29,7 +149,8 @@
  ## 💰Sponsor this project
   [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/emiindo)  
   [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F16NI8H)
-##  [Check all release notes:](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/)
+  
+### Check all release notes: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/
 
 
 ### Mobile Ads SDK (Android: 24.1.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
@@ -45,109 +166,11 @@
 ## Documentation Capacitor example
 -  [Documentation Capacitor example: ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/discussions/29)
 
-### This is not a dependency, it's a separate plugin but highly recommended.
-https://github.com/EMI-INDO/emi-indo-cordova-plugin-fanalytics
+
 
 ## New example 
 - https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/www
 
-
-## Minimum Cordova Engines
-- cordova-android version = 12.0.0
-- cordova-ios version = 7.0.0
-
-
-## IOS Ad Support IOS 18 *
-- Fix error build IOS: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/discussions/42
-- Mobile Ads SDK (IOS: 11.12.0)
-- emi-indo-cordova-plugin-admob@1.6.3 or higher requires cocoapods 1.16.2 or higher
-> [!WARNING]
-> - Mobile Ads SDK (IOS: 11.10.0)
-> - emi-indo-cordova-plugin-admob@1.5.2 or higher
-> - Minimum supported Xcode version up to 15.3 or higher
-> - minimum deployment-target: 12.2
-## Minimum macOS | Xcode, and others
-- minimum macOS 14.4 or higher
-- Xcode min 15.3 > or higher
-- Command Line Tools 15.3 or higher
-- minimum SwiftVersion: 5.10 or higher
-- [Everything is included in plugin.xml](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/plugin.xml)
-- [SKAdNetworkIdentifier Deprecated](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v1.5.1)
-- Dependency: pod MerchantKit (not needed)
-
-
-## IOS
-> [!WARNING]
-> - emi-indo-cordova-plugin-admob@1.5.1
-> - Minimum supported Xcode version to 14.3
-> - Maximum supported Xcode version up to 15.2
-## Minimum macOS | Xcode, and others
-- Monterey
-- Xcode min 14.3 > max 15.2
-- Command Line Tools 14.1 or higher
-https://developers.google.com/admob/ios/quick-start
-
-<details>
-<summary>Guaranteed income using this plugin #14</summary>
-
-  > __Note__
-> - ## It's Not a fork, it's purely rewritten, clean of 3rd party code.
-
- > __Note__
-> - ### No Ad-Sharing
-> - ### No Remote Control
-> - ### I guarantee 100% revenue for you.
-> - [Code source:](https://github.com/googleads/googleads-mobile-android-examples) - Admob:
-> - 
-</details>
-
-## VIDEO Test Collapsible banner ads
-- Test Plugin with construct 3
-  
-[![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjqRuVXfAVO7-FbCOxzdKfYuo1d38Sl53IdbE3X3o90_Lb_uUBCWq1RWVb3zQV666DfSoeiYt3L9xJjJmumGKXPxtsWNA9KcE8BMeKKlMXyXUT-D2CSmpBInCqdbRW-3bhUuap0V5LbijgLnAYXyOgtVhTHNX-wbNWBnYr3V6nIh0XSVvk1KPOQNy14Wsoj/s320/mq2%20%281%29.webp)](https://youtu.be/uUivVBC0cqs)
-
-## VIDEO Test UMP or CMP SDK Android
-- Test Plugin with construct 3
-  
-[![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgV7bX3Xs_l4O3DFvF4mWjL2VgbpGObIhSUN4dVY9Q_TSAD2_gZYlMKXcd1ZfyQ_I8utF2nOHOKRAg0E3q20n77o7nd6Zcd9bX9YfQcf4J7j3jeCeG0K4CkkHEF3rieRhvxaCb0cseRi4v3yoYzb4MTJ60C3cjjiaS-JCPGXqc8iVKXcTBpXV58I7DnN3_N/s320/mq3.webp)](https://youtu.be/lELJRKDrkNk)
-
-## VIDEO Test UMP or CMP SDK IOS
-- Test Plugin with construct 3
-  
-[![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjFtHnWLmECsTePul7q6s9oC2QGPtVxrrBAgl6h_tN-IGR_lNqQ6-q3-1Qpv9hyphenhyphenpRoBx1BLx0TZdEd6QXVfXLv3mRadVJZNrd5hP1_tqj1j8YMmPXX-8_i8IxFX2iZw61VDjUvrupA4cbdqFXR36DZsvTfeMu372S65K_UVNzbbfU_0kiyvm02aKJZmlQHS/s320/mq2.webp)](https://youtu.be/d2dSn4LBvro)
-
-## VIDEO Test Ad Type with Xcode/IOS
-- Test Plugin with construct 3
-  
-[![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiCMj8HrgSvO8WYm8wjv5KsM1CCmcX-w472iRZ0ynW715Pj0hMrTlCDLYxhLHme3oFowVW9ap7pQZqosXBDWWQ_SMuqw2g_Beh1CX0igO7jY7KCvBCXbQCqyFekgI9bKIl92opoucOkXbqsgRhBTeB41ho5l_0tx-YVfKt9jrbONt_nv080beeaYOmoN4w7/s320/mq3%20%281%29.webp)](https://youtu.be/YYMJuf7gIsg)
-
-
-## VIDEO Test Collapsible banner autoResize with Xcode/IOS
-
-[![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhLhjgjUkLSlagAcfz_0KwNXLLfvZnkrs8YG4PAUo9y5e0kyTDwUYAHATmWzyF0ZkJ7EWCsvsJIhP-rIDPnAMrrQKkmuZxM38lW4JIzzfb0LZWTh0q9FCbEPEZBjbgkZbzsFlI23Y30uTPR-TEiVpt9w5gFUQXrep0_Tlyj_koRJUhc66zxE2UUJPsejEE/s320/mq2.webp)](https://youtu.be/sLXHKdU6DAg)
-
-
-
-
-
-## Features
-<details>
-<summary>Features #1</summary>
-<ul>
-<li> initialize</li>
-<li> targeting</li>
-<li> globalSettings</li>
-<li> AppTrackingTransparency (ATT)</li>
-<li> CMP SDK</li>
-<li> UMP SDK</li>
-<li> App Open Ads</li>
-<li> Banner Ads</li>
-<li> Interstitial Ads</li>
-<li> Rewarded Ads</li>
-<li> Mediation</li>
-<li> impression-level-ad-revenue</li>
-</ul>
-</details>
 ## Version locking the plugin during production is highly recommended.
 
 - Example cordova plugin add emi-indo-cordova-plugin-admob@1.6.0 --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx
@@ -187,6 +210,120 @@ cordova plugin rm emi-indo-cordova-plugin-admob
 ### Then from the command line run:
 - pod install --repo-update
 
+
+### This is not a dependency, it's a separate plugin but highly recommended.
+https://github.com/EMI-INDO/emi-indo-cordova-plugin-fanalytics
+
+
+## Older versions of plugins
+
+<details>
+<summary>Older versions of plugins</summary>
+
+
+### Minimum Cordova Engines
+- cordova-android version = 13.0.0
+- cordova-ios version = 7.0.0
+
+
+### IOS Ad Support IOS 18 *
+- Fix error build IOS: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/discussions/42
+- Mobile Ads SDK (IOS: 11.12.0)
+- emi-indo-cordova-plugin-admob@1.6.3 or higher requires cocoapods 1.16.2 or higher
+> [!WARNING]
+> - Mobile Ads SDK (IOS: 11.10.0)
+> - emi-indo-cordova-plugin-admob@1.5.2 or higher
+> - Minimum supported Xcode version up to 15.3 or higher
+> - minimum deployment-target: 12.2
+### Minimum macOS | Xcode, and others
+- minimum macOS 14.4 or higher
+- Xcode min 15.3 > or higher
+- Command Line Tools 15.3 or higher
+- minimum SwiftVersion: 5.10 or higher
+- [Everything is included in plugin.xml](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/plugin.xml)
+- [SKAdNetworkIdentifier Deprecated](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v1.5.1)
+- Dependency: pod MerchantKit (not needed)
+
+
+### IOS
+> [!WARNING]
+> - emi-indo-cordova-plugin-admob@1.5.1
+> - Minimum supported Xcode version to 14.3
+> - Maximum supported Xcode version up to 15.2
+## Minimum macOS | Xcode, and others
+- Monterey
+- Xcode min 14.3 > max 15.2
+- Command Line Tools 14.1 or higher
+https://developers.google.com/admob/ios/quick-start
+
+</details>
+
+<details>
+<summary>Guaranteed income using this plugin #14</summary>
+
+  > __Note__
+> - ## It's Not a fork, it's purely rewritten, clean of 3rd party code.
+
+ > __Note__
+> - ### No Ad-Sharing
+> - ### No Remote Control
+> - ### I guarantee 100% revenue for you.
+> - [Code source:](https://github.com/googleads/googleads-mobile-android-examples) - Admob:
+> - 
+</details>
+
+
+## Video test of the old version of the plugin
+<details>
+<summary>Video test of the old version of the plugin</summary>
+
+## VIDEO Test Collapsible banner ads
+- Test Plugin with construct 3
+  
+[![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjqRuVXfAVO7-FbCOxzdKfYuo1d38Sl53IdbE3X3o90_Lb_uUBCWq1RWVb3zQV666DfSoeiYt3L9xJjJmumGKXPxtsWNA9KcE8BMeKKlMXyXUT-D2CSmpBInCqdbRW-3bhUuap0V5LbijgLnAYXyOgtVhTHNX-wbNWBnYr3V6nIh0XSVvk1KPOQNy14Wsoj/s320/mq2%20%281%29.webp)](https://youtu.be/uUivVBC0cqs)
+
+## VIDEO Test UMP or CMP SDK Android
+- Test Plugin with construct 3
+  
+[![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgV7bX3Xs_l4O3DFvF4mWjL2VgbpGObIhSUN4dVY9Q_TSAD2_gZYlMKXcd1ZfyQ_I8utF2nOHOKRAg0E3q20n77o7nd6Zcd9bX9YfQcf4J7j3jeCeG0K4CkkHEF3rieRhvxaCb0cseRi4v3yoYzb4MTJ60C3cjjiaS-JCPGXqc8iVKXcTBpXV58I7DnN3_N/s320/mq3.webp)](https://youtu.be/lELJRKDrkNk)
+
+## VIDEO Test UMP or CMP SDK IOS
+- Test Plugin with construct 3
+  
+[![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjFtHnWLmECsTePul7q6s9oC2QGPtVxrrBAgl6h_tN-IGR_lNqQ6-q3-1Qpv9hyphenhyphenpRoBx1BLx0TZdEd6QXVfXLv3mRadVJZNrd5hP1_tqj1j8YMmPXX-8_i8IxFX2iZw61VDjUvrupA4cbdqFXR36DZsvTfeMu372S65K_UVNzbbfU_0kiyvm02aKJZmlQHS/s320/mq2.webp)](https://youtu.be/d2dSn4LBvro)
+
+## VIDEO Test Ad Type with Xcode/IOS
+- Test Plugin with construct 3
+  
+[![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiCMj8HrgSvO8WYm8wjv5KsM1CCmcX-w472iRZ0ynW715Pj0hMrTlCDLYxhLHme3oFowVW9ap7pQZqosXBDWWQ_SMuqw2g_Beh1CX0igO7jY7KCvBCXbQCqyFekgI9bKIl92opoucOkXbqsgRhBTeB41ho5l_0tx-YVfKt9jrbONt_nv080beeaYOmoN4w7/s320/mq3%20%281%29.webp)](https://youtu.be/YYMJuf7gIsg)
+
+
+## VIDEO Test Collapsible banner autoResize with Xcode/IOS
+
+[![Video](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhLhjgjUkLSlagAcfz_0KwNXLLfvZnkrs8YG4PAUo9y5e0kyTDwUYAHATmWzyF0ZkJ7EWCsvsJIhP-rIDPnAMrrQKkmuZxM38lW4JIzzfb0LZWTh0q9FCbEPEZBjbgkZbzsFlI23Y30uTPR-TEiVpt9w5gFUQXrep0_Tlyj_koRJUhc66zxE2UUJPsejEE/s320/mq2.webp)](https://youtu.be/sLXHKdU6DAg)
+
+</details>
+
+
+
+## Features
+<details>
+<summary>Features #1</summary>
+<ul>
+<li> initialize</li>
+<li> targeting</li>
+<li> globalSettings</li>
+<li> AppTrackingTransparency (ATT)</li>
+<li> CMP SDK</li>
+<li> UMP SDK</li>
+<li> App Open Ads</li>
+<li> Banner Ads</li>
+<li> Interstitial Ads</li>
+<li> Rewarded Ads</li>
+<li> Mediation</li>
+<li> impression-level-ad-revenue</li>
+</ul>
+</details>
 
 
 ## >>> Device Ready <<<
