@@ -1,5 +1,8 @@
 ### emi-indo-cordova-plugin-admob@2.0.8-beta.1
 
+Beta releases are just tests, in some tests, not 100% will be fully added to NPM, and beta releases may be canceled.
+Stick with the stable release of NPM in production.
+
 
 ## Features/method
 - initialize
