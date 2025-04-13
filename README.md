@@ -1,4 +1,4 @@
-### emi-indo-cordova-plugin-admob@2.0.7
+### emi-indo-cordova-plugin-admob@2.0.8-beta.1
 
 
 ## Features/method
@@ -36,8 +36,8 @@ config.xml
   ```
 
 <h3>Screenshots banner ad no overlapping</h3>
-
-VIDEO: https://www.youtube.com/watch?v=qqxxa2gi7OU
+VIDEO top-center: https://www.youtube.com/watch?v=uQrC0k3-VU8
+VIDEO bottom-center: https://www.youtube.com/watch?v=qqxxa2gi7OU
 
 <table>
   <tr>

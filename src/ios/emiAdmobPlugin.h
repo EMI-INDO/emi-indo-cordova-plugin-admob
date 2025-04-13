@@ -30,7 +30,7 @@
 - (void)loadAppOpenAd:(CDVInvokedUrlCommand *)command;
 - (void)showAppOpenAd:(CDVInvokedUrlCommand *)command;
 - (void)styleBannerAd:(CDVInvokedUrlCommand *)command;
-- (void)loadBannerAd:(CDVInvokedUrlCommand *)command;
+- (void)loadBannerCordova:(CDVInvokedUrlCommand *)command;
 - (void)showBannerAd:(CDVInvokedUrlCommand *)command;
 - (void)hideBannerAd:(CDVInvokedUrlCommand *)command;
 - (void)removeBannerAd:(CDVInvokedUrlCommand *)command;

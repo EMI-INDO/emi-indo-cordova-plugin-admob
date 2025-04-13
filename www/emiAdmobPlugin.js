@@ -16,13 +16,13 @@ exports.showAppOpenAd = function (success, error) {
     exec(success, error, 'emiAdmobPlugin', 'showAppOpenAd', []);
 };
 exports.styleBannerAd = function (options, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'styleBannerAd', [options]); // ( only Android )
+    exec(success, error, 'emiAdmobPlugin', 'styleBannerAd', [options]); 
 };
-exports.loadBannerAd = function (options, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'loadBannerAd', [options]);
+exports.loadBannerCapacitor = function (options, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'loadBannerCapacitor', [options]);
 };
-exports.loadBannerAdNewApi = function (options, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'loadBannerAdNewApi', [options]);
+exports.loadBannerCordova = function (options, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'loadBannerCordova', [options]);
 };
 exports.showBannerAd = function (success, error) {
     exec(success, error, 'emiAdmobPlugin', 'showBannerAd', []);
