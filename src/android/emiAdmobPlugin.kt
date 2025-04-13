@@ -1572,7 +1572,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
 
 
-        private fun bannerOverlapping() {
+    private fun bannerOverlapping() {
         if (bannerView != null && mActivity != null && cWebView != null) {
             mActivity?.runOnUiThread {
                 bannerView?.post {
@@ -1624,11 +1624,20 @@ class emiAdmobPlugin : CordovaPlugin() {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                                 val windowMetrics = mActivity!!.windowManager.currentWindowMetrics
                                 val insets = windowMetrics.windowInsets.getInsets(WindowInsets.Type.systemBars())
-                                val usableHeight = windowMetrics.bounds.height()// - insets.top - insets.bottom
-                                layoutParams.height = usableHeight - getNavigationBarHeight(mActivity!!) - adSize.getHeightInPixels(mActivity!!)
-                                //layoutParams.height = windowMetrics.bounds.height() - getNavigationBarHeight(mActivity!!) - adSize.getHeightInPixels(mActivity!!)
+                                val usableHeight = windowMetrics.bounds.height()
+
+                                layoutParams.height = if (isFullScreen) {
+                                    // In fullscreen, do NOT subtract nav bar height
+                                    usableHeight - adSize.getHeightInPixels(mActivity!!)
+                                } else {
+                                    usableHeight - getNavigationBarHeight(mActivity!!) - adSize.getHeightInPixels(mActivity!!)
+                                }
                             } else {
-                                layoutParams.height = webViewHeight-adSize.getHeightInPixels(mActivity!!)
+                                layoutParams.height = if (isFullScreen) {
+                                    webViewHeight - adSize.getHeightInPixels(mActivity!!)
+                                } else {
+                                    webViewHeight - getNavigationBarHeight(mActivity!!) - adSize.getHeightInPixels(mActivity!!)
+                                }
                             }
 
                             cWebView!!.view.layoutParams = layoutParams
@@ -1649,6 +1658,7 @@ class emiAdmobPlugin : CordovaPlugin() {
             }
         }
     }
+
 
 
     private fun bannerOverlapping_Old() {
