@@ -96,7 +96,6 @@ class emiAdmobPlugin : CordovaPlugin() {
     private var isStatusBarShow: Boolean = true
 
     var adType = ""
-    // var bannerHeightDps: Int = 50
 
     var isBannerLoad: Boolean = false
     var isBannerShow: Boolean = false
