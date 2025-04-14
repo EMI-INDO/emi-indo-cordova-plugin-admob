@@ -1,5 +1,6 @@
-### emi-indo-cordova-plugin-admob@2.0.8-beta.1
+### NPM relase emi-indo-cordova-plugin-admob@2.0.8
 
+## only github https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/v2.0.8-beta.1
 
 ## Features/method
 - initialize
@@ -20,7 +21,7 @@
 - setPersonalizationState
 - setPPS
 
-## new version of the plugin @2.0.7 or higher
+## NPM new version of the plugin @2.0.8 or higher
 - Migrate from Mobile Ads SDK (Android) v23 to v24
 - Migrate from Mobile Ads SDK (iOS) SDK version v11 to v12
 - Migrate from Cordova Android 13.0.0 to 14.0.0
@@ -30,14 +31,16 @@
 - Check all release notes: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/
  ```
 config.xml
-<preference name="fullscreen" value="false" />
+<preference name="fullscreen" value="false | true" />
 <preference name="android-minSdkVersion" value="23" />
 <preference name="android-targetSdkVersion" value="35" />
   ```
 
+- VIDEO banner top-center: https://www.youtube.com/watch?v=uQrC0k3-VU8
+- VIDEO banner bottom-center: https://www.youtube.com/watch?v=qqxxa2gi7OU
+
 <h3>Screenshots banner ad no overlapping</h3>
-VIDEO top-center: https://www.youtube.com/watch?v=uQrC0k3-VU8
-VIDEO bottom-center: https://www.youtube.com/watch?v=qqxxa2gi7OU
+
 
 <table>
   <tr>

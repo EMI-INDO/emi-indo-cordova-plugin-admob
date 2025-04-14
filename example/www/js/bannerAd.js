@@ -18,39 +18,15 @@ function loadBanner() {
             
         }
 
-        /* NOTE
-
-        Actually, these two methods loadBannerCapacitor and loadBannerCordova are only located in the params isOverlapping: false
-
-        If isOverlapping: true there is no difference, which means loadBannerCapacitor and loadBannerCordova are the same.
-
-        */
-        
-        // loadBannerCordova | including IOS
-        cordova.plugins.emiAdmobPlugin.loadBannerCordova({
+        cordova.plugins.emiAdmobPlugin.loadBannerAd({
             adUnitId: Banner_ID, //Banner_ID,
-            position: "bottom-center", // "bottom-center" | "top-center"
+            position: "bottom-center", //  bottom-center | top-center
             size: "banner",
             collapsible: "", // position: top | bottom (disable, empty string)
             autoShow: true, // default false
             isOverlapping: false // The height of the body is reduced by the height of the banner.
-           // isOverlapping: true // The body height is not reduced, the banner overlaps on top of the body
+         // isOverlapping: true // The body height is not reduced, the banner overlaps on top of the body
         });
-
-
-        /*
-        cordova.plugins.emiAdmobPlugin.loadBannerCapacitor({
-            adUnitId: Banner_ID, //Banner_ID,
-            position: "bottom-center", // "bottom-center" | "top-center"
-            size: "banner",
-            collapsible: "", // position: top | bottom (disable, empty string)
-            autoShow: true, // default false
-            isOverlapping: false // The height of the body is reduced by the height of the banner.
-           // isOverlapping: true // The body height is not reduced, the banner overlaps on top of the body
-        });
-         */
-        
-
 
 }
 
