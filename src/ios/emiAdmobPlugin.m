@@ -606,7 +606,7 @@ NSString *setKeyword = @"";
 
 
 
-- (void)loadBannerCordova:(CDVInvokedUrlCommand *)command {
+- (void)loadBannerAd:(CDVInvokedUrlCommand *)command {
   CDVPluginResult *pluginResult;
   NSString *callbackId = command.callbackId;
   NSDictionary *options = [command.arguments objectAtIndex:0];

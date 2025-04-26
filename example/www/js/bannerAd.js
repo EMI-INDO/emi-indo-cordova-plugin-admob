@@ -1,6 +1,5 @@
 // cordova.plugins.emiAdmobPlugin.styleBannerAd({isOverlapping: true, overlappingHeight: 0, padding: 0, margins: 0 });  // ( only android)
-//cordova.plugins.emiAdmobPlugin.loadBannerCordova({config});
-//cordova.plugins.emiAdmobPlugin.loadBannerCapacitor({config});
+//cordova.plugins.emiAdmobPlugin.loadBannerAd({config});
 //cordova.plugins.emiAdmobPlugin.showBannerAd(); // default
 //cordova.plugins.emiAdmobPlugin.hideBannerAd(); // default
 //cordova.plugins.emiAdmobPlugin.removeBannerAd(); // default
@@ -18,6 +17,8 @@ function loadBanner() {
             
         }
 
+        
+        // default: Android | IOS
         cordova.plugins.emiAdmobPlugin.loadBannerAd({
             adUnitId: Banner_ID, //Banner_ID,
             position: "bottom-center", //  bottom-center | top-center
@@ -27,6 +28,26 @@ function loadBanner() {
             isOverlapping: false // The height of the body is reduced by the height of the banner.
          // isOverlapping: true // The body height is not reduced, the banner overlaps on top of the body
         });
+
+
+
+
+
+        // NOTE: Do not use loadBannerAd and loadBannerCapacitor together.
+
+        /*
+        // Only Android
+        cordova.plugins.emiAdmobPlugin.loadBannerCapacitor({
+            adUnitId: Banner_ID, //Banner_ID,
+            position: "bottom-center", //  bottom-center | top-center
+            size: "banner",
+            collapsible: "", // position: top | bottom (disable, empty string)
+            autoShow: true, // default false
+            isOverlapping: false // The height of the body is reduced by the height of the banner.
+         // isOverlapping: true // The body height is not reduced, the banner overlaps on top of the body
+        });
+        */
+
 
 }
 

@@ -1,6 +1,6 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  id="emi-indo-cordova-plugin-admob" version="2.0.8-beta.1">
+  id="emi-indo-cordova-plugin-admob" version="2.1.9">
 
   <name>emiAdmobPlugin</name>
   <description>Cordova/Quasar/Capacitor Plugin Admob Android IOS</description>
@@ -59,7 +59,7 @@
     <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
 
     <preference name="APP_ID_ANDROID" default="ca-app-pub-3940256099942544~3347511713" />
-    <preference name="PLAY_SERVICES_VERSION" default="24.1.0" />
+    <preference name="PLAY_SERVICES_VERSION" default="24.2.0" />
 
     <framework src="com.google.android.gms:play-services-ads:$PLAY_SERVICES_VERSION" />
 
@@ -75,8 +75,6 @@
     <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application/activity[@android:name='MainActivity']">
             <activity android:resizeableActivity="$MULTI_WINDOW" />
     </edit-config>
-
-
 
     <config-file parent="/*" target="AndroidManifest.xml" />
     <source-file src="src/android/emiAdmobPlugin.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />

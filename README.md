@@ -1,6 +1,5 @@
-### NPM relase emi-indo-cordova-plugin-admob@2.0.8
+### emi-indo-cordova-plugin-admob@2.1.9
 
-## only github https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/v2.0.8-beta.1
 
 ## Features/method
 - initialize
@@ -21,7 +20,7 @@
 - setPersonalizationState
 - setPPS
 
-## NPM new version of the plugin @2.0.8 or higher
+## new version of the plugin @2.0.8 or higher
 - Migrate from Mobile Ads SDK (Android) v23 to v24
 - Migrate from Mobile Ads SDK (iOS) SDK version v11 to v12
 - Migrate from Cordova Android 13.0.0 to 14.0.0
@@ -40,7 +39,6 @@ config.xml
 - VIDEO banner bottom-center: https://www.youtube.com/watch?v=qqxxa2gi7OU
 
 <h3>Screenshots banner ad no overlapping</h3>
-
 
 <table>
   <tr>
@@ -158,7 +156,7 @@ config.xml
 ### Check all release notes: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/
 
 
-### Mobile Ads SDK (Android: 24.1.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
+### Mobile Ads SDK (Android: 24.2.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
 ### User Messaging Platform (UMP Android: 3.2.0) [Release Notes:](https://developers.google.com/admob/android/privacy/release-notes)
 
 ### Mobile Ads SDK (IOS: 12.2.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
