@@ -8,16 +8,6 @@
 
 function loadBanner() {
 
-        // Optional Only IOS
-        if (isPlatformIOS){
-            cordova.plugins.emiAdmobPlugin.styleBannerAd({
-                isOverlapping: true, // default false 
-                paddingWebView: 1.0 
-            });
-            
-        }
-
-        
         // default: Android | IOS
         cordova.plugins.emiAdmobPlugin.loadBannerAd({
             adUnitId: Banner_ID, //Banner_ID,

@@ -1,4 +1,4 @@
-### emi-indo-cordova-plugin-admob@2.1.9
+### emi-indo-cordova-plugin-admob@2.2.9
 
 
 ## Features/method

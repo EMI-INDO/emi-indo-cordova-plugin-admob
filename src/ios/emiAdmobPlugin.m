@@ -7,6 +7,7 @@
 #import <Cordova/CDVViewController.h>
 
 @implementation emiAdmobPlugin
+
 @synthesize appOpenAd;
 @synthesize bannerView;
 @synthesize interstitial;
@@ -15,25 +16,20 @@
 @synthesize command;
 @synthesize responseInfo;
 @synthesize isPrivacyOptionsRequired;
+
 int attStatus = 0;
-// int fromStatus = 0; // Deprecated
+
 int Consent_Status = 0;
 int adFormat = 0;
 int adWidth = 320; // Default
 
-BOOL auto_Show = NO;
 // NSString *Npa = @"1"; // Deprecated
 NSString *setPosition = @"bottom-center"; // Default
 NSString *bannerSaveAdUnitId = @""; // autoResize dependency = true
 
-
-
-BOOL isCollapsible = NO;
 BOOL isAutoResize = NO;
 
-
 CGFloat paddingWebView = 0; // Default
-BOOL isSetOverlapping = NO; // Default
 CGFloat bannerHeightFinal = 50; // Default
 
 int isAdSkip = 0;
@@ -60,10 +56,10 @@ NSString *setKeyword = @"";
 - (void)setAdRequest {
     if (isUsingAdManagerRequest) {
         self.globalRequest = [GAMRequest request];
-        NSLog(@"Using AdManager request");
+       // NSLog(@"Using AdManager request");
     } else {
         self.globalRequest = [GADRequest request];
-        NSLog(@"Using AdMob request");
+      //  NSLog(@"Using AdMob request");
     }
     
     if (isEnabledKeyword && setKeyword.length > 0) {
@@ -71,7 +67,7 @@ NSString *setKeyword = @"";
             for (NSString *keyword in keywords) {
                 NSString *trimmedKeyword = [keyword stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
                 if (trimmedKeyword.length > 0) {
-                    NSLog(@"Adding keyword: %@", trimmedKeyword);
+                   // NSLog(@"Adding keyword: %@", trimmedKeyword);
                     [self.globalRequest setKeywords:[self.globalRequest.keywords arrayByAddingObject:trimmedKeyword]];
                 }
             }
@@ -81,17 +77,9 @@ NSString *setKeyword = @"";
 
 
 
+- (void)isResponseInfo:(BOOL)value { isResponseInfo = value; }
+- (void)isDebugGeography:(BOOL)value { isDebugGeography = value; }
 
-
-
-
-
-- (void)isResponseInfo:(BOOL)value {
-  isResponseInfo = value;
-}
-- (void)isDebugGeography:(BOOL)value {
-  isDebugGeography = value;
-}
 - (void)initialize:(CDVInvokedUrlCommand *)command {
 
   NSDictionary *options = [command.arguments objectAtIndex:0];
@@ -154,11 +142,11 @@ NSString *setKeyword = @"";
               [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
             }];
           }
-
   
           if (UMPConsentInformation.sharedInstance.canRequestAds) {
             [self startGoogleMobileAdsSDK];
           }
+            
         }];
       } else if (status == UMPConsentStatusNotRequired || status == UMPConsentStatusObtained) {
         if (UMPConsentInformation.sharedInstance.canRequestAds) {
@@ -183,8 +171,6 @@ NSString *setKeyword = @"";
     
     if (@available(iOS 14, *)) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            // Added a 1-second pause before performing a tracking authorization request
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                 
                 [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
                     if (status == ATTrackingManagerAuthorizationStatusDenied) {
@@ -200,7 +186,6 @@ NSString *setKeyword = @"";
                     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:attStatus];
                     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
                 }];
-            });
         });
     } else {
         [self fireEvent:@"" event:@"on.getIDFA.error" withData:nil];
@@ -254,26 +239,15 @@ NSString *setKeyword = @"";
       result[@"TCString"] = TCString;
       result[@"additionalConsent"] = additionalConsent;
 
-      // NSLog(@"Result dictionary: %@", result);consentStatus
-
       NSError *error;
-      NSData *jsonData = [NSJSONSerialization dataWithJSONObject:result
-                                                         options:0
-                                                           error:&error];
+      NSData *jsonData = [NSJSONSerialization dataWithJSONObject:result options:0 error:&error];
 
       if (!jsonData) {
-        NSLog(@"Error converting result to JSON: %@",
-              error.localizedDescription);
+        NSLog(@"Error converting result to JSON: %@", error.localizedDescription);
       } else {
-        NSString *jsonString =
-            [[NSString alloc] initWithData:jsonData
-                                  encoding:NSUTF8StringEncoding];
-
-        // NSLog(@"JSON String: %@", jsonString);
-
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         [self fireEvent:@"" event:@"on.sdkInitialization" withData:jsonString];
       }
-
       [prefs synchronize];
     }];
   });
@@ -315,6 +289,8 @@ NSString *setKeyword = @"";
         }];
     });
 }
+
+
 
 - (void)showPrivacyOptionsForm:(CDVInvokedUrlCommand *)command {
     NSString *deviceId = [self __getAdMobDeviceId];
@@ -370,10 +346,6 @@ NSString *setKeyword = @"";
 
 
 
-
-
-
-
 - (BOOL)isPrivacyOptionsRequired {
   UMPPrivacyOptionsRequirementStatus status = UMPConsentInformation.sharedInstance.privacyOptionsRequirementStatus;
 
@@ -399,10 +371,8 @@ NSString *setKeyword = @"";
     }
 
     CDVPluginResult *pluginResult =
-        [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                             messageAsInt:Consent_Status];
-    [self.commandDelegate sendPluginResult:pluginResult
-                                callbackId:command.callbackId];
+        [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:Consent_Status];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
   }];
 }
 
@@ -462,8 +432,7 @@ NSString *setKeyword = @"";
         setPublisherFirstPartyIDEnabled:pubIdEnabled];
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
   } @catch (NSException *exception) {
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                     messageAsString:exception.reason];
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
   }
   [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
@@ -531,14 +500,11 @@ NSString *setKeyword = @"";
     result[@"IABTCF_PurposeConsents"] = PurposeConsents;
     result[@"IABTCF_TCString"] = TCString;
     
-    // NSLog(@"%@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
-    
     [prefs synchronize];
 }
 
 
 - (void)orientationDidChange:(NSNotification *)notification {
-  // NSLog(@"Orientation changed");
   [self fireEvent:@"" event:@"on.screen.rotated" withData:nil];
   if (isAutoResize) {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -584,18 +550,15 @@ NSString *setKeyword = @"";
 
         [self.bannerViewLayout addSubview:self.bannerView];
         [self.bannerViewLayout bringSubviewToFront:self.bannerView];
-          
-          if (isSetOverlapping) {
-              
-              if (auto_Show && self.bannerView) {
-                  if (isSetOverlapping){
+       
+              if (self.isAutoShowBanner && self.bannerView) {
+                  if (!self.isOverlapping){
                       self.bannerView.hidden = NO;
                       [self setBodyHeight:self.command];
-                 }
+                  } else {
+                      self.bannerView.hidden = NO;
+                  }
               }
-
-              
-          }
 
       } @catch (NSException *exception) {
           NSLog(@"Exception: %@", exception.reason);
@@ -615,12 +578,11 @@ NSString *setKeyword = @"";
   NSString *collapsible = [options valueForKey:@"collapsible"];
   BOOL autoResize = [[options valueForKey:@"autoResize"] boolValue];
   NSString *size = [options valueForKey:@"size"];
-  BOOL autoShow = [[options valueForKey:@"autoShow"] boolValue];
+  self.isAutoShowBanner = [[options valueForKey:@"autoShow"] boolValue];
+  self.isOverlapping = [[options valueForKey:@"isOverlapping"] boolValue];
 
   bannerSaveAdUnitId = adUnitId;
-
   setPosition = position;
-    
   adFormat = 5;
 
   if (adUnitId == nil || [adUnitId length] == 0) {
@@ -630,10 +592,10 @@ NSString *setKeyword = @"";
     return;
   }
 
-  if (collapsible != nil && [collapsible length] > 0) {
-    isCollapsible = YES;
+ if (collapsible != nil && [collapsible length] > 0) {
+    self.isCollapsible = YES;
   } else {
-    isCollapsible = NO;
+    self.isCollapsible = NO;
   }
 
   if (autoResize) {
@@ -653,19 +615,16 @@ NSString *setKeyword = @"";
       }
 
       self.viewWidth = frame.size.width;
-        
-      auto_Show = autoShow;
+      
       adWidth = self.viewWidth;
 
       GADAdSize siz = [self __AdSizeFromString:size];
       self.bannerView = [[GADBannerView alloc] initWithAdSize:siz];
 
-
     CGSize bannerSize = self.bannerView.bounds.size;
     CGFloat screenWidth = parentView.bounds.size.width;
     CGFloat screenHeight = parentView.bounds.size.height;
 
-    // Default to top-center
     CGFloat originX = (screenWidth - bannerSize.width) / 2;
     CGFloat originY = 0;
 
@@ -680,9 +639,9 @@ NSString *setKeyword = @"";
 
       GADExtras *extras = [[GADExtras alloc] init];
 
-      if (isCollapsible) {
+      if (self.isCollapsible) {
         extras.additionalParameters = @{@"collapsible" : collapsible};
-          
+   
         [self.globalRequest registerAdNetworkExtras:extras];
           
       }
@@ -700,7 +659,7 @@ NSString *setKeyword = @"";
 
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
   } else {
-    //  NSLog(@"Admob Option invalid for banner");
+
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
   }
 
@@ -711,11 +670,14 @@ NSString *setKeyword = @"";
 - (void)showBannerAd:(CDVInvokedUrlCommand *)command {
     @try {
         if (self.bannerView) {
-            self.bannerView.hidden = NO;
-            if (isSetOverlapping){
+            
+            if (!self.isOverlapping){
+                self.bannerView.hidden = NO;
                 [self setBodyHeight:command];
+            } else {
+                self.bannerView.hidden = NO;
             }
-   
+            
         } else {
             [self fireEvent:@"" event:@"on.banner.failed.show" withData:nil];
         }
@@ -828,7 +790,7 @@ NSString *setKeyword = @"";
             rootViewController.view.frame = contentFrame;
 
             }
-
+                
                 [self.bannerView setNeedsLayout];
                 [self.bannerView layoutIfNeeded];
                 [rootViewController.view setNeedsLayout];
@@ -860,10 +822,9 @@ NSString *setKeyword = @"";
 
 - (void)styleBannerAd:(CDVInvokedUrlCommand *)command {
     NSDictionary *options = [command.arguments objectAtIndex:0];
-    BOOL isOverlapping = [[options valueForKey:@"isOverlapping"] boolValue];
+    self.isOverlapping = [[options valueForKey:@"isOverlapping"] boolValue];
     CGFloat paddingContainer = [[options valueForKey:@"paddingWebView"] floatValue];
 
-    isSetOverlapping = isOverlapping;
     paddingWebView = paddingContainer;
 
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1022,15 +983,16 @@ NSString *setKeyword = @"";
   }
   [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
+
+
 - (void)loadAppOpenAd:(CDVInvokedUrlCommand *)command {
     CDVPluginResult *pluginResult;
     NSString *callbackId = command.callbackId;
     
     NSDictionary *options = [command.arguments objectAtIndex:0];
     NSString *adUnitId = [options valueForKey:@"adUnitId"];
-    BOOL autoShow = [[options valueForKey:@"autoShow"] boolValue];
+    self.isAutoShowAppOpen = [[options valueForKey:@"autoShow"] boolValue];
     
-    auto_Show = autoShow;
     adFormat = 1;
     self.appOpenAd = nil;
     
@@ -1084,7 +1046,7 @@ NSString *setKeyword = @"";
                 };
                 
                 
-                if (auto_Show) {
+                if (self.isAutoShowAppOpen) {
                     NSError *presentError = nil;
                     if ([self.appOpenAd canPresentFromRootViewController:self.viewController error:&presentError]) {
                         [self.appOpenAd presentFromRootViewController:self.viewController];
@@ -1146,9 +1108,7 @@ NSString *setKeyword = @"";
 - (void)showAppOpenAd:(CDVInvokedUrlCommand *)command {
   CDVPluginResult *pluginResult;
   NSString *callbackId = command.callbackId;
-  if (self.appOpenAd &&
-      [self.appOpenAd canPresentFromRootViewController:self.viewController
-                                                 error:nil]) {
+  if (self.appOpenAd && [self.appOpenAd canPresentFromRootViewController:self.viewController error:nil]) {
     [self.appOpenAd presentFromRootViewController:self.viewController];
     adFormat = 1;
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
@@ -1158,15 +1118,16 @@ NSString *setKeyword = @"";
   }
   [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
+
+
 - (void)loadInterstitialAd:(CDVInvokedUrlCommand *)command {
     CDVPluginResult *pluginResult;
     NSString *callbackId = command.callbackId;
     
     NSDictionary *options = [command.arguments objectAtIndex:0];
     NSString *adUnitId = [options valueForKey:@"adUnitId"];
-    BOOL autoShow = [[options valueForKey:@"autoShow"] boolValue];
+    self.isAutoShowInterstitial = [[options valueForKey:@"autoShow"] boolValue];
     
-    auto_Show = autoShow;
     adFormat = 2;
     [self setAdRequest];
     if (adFormat == 2) {
@@ -1213,7 +1174,7 @@ NSString *setKeyword = @"";
                 };
                 
                 
-                if (auto_Show) {
+                if (self.isAutoShowInterstitial) {
                     NSError *presentError = nil;
                     if ([self.interstitial canPresentFromRootViewController:self.viewController error:&presentError]) {
                         [self.interstitial presentFromRootViewController:self.viewController];
@@ -1300,9 +1261,8 @@ NSString *setKeyword = @"";
     
     NSDictionary *options = [command.arguments objectAtIndex:0];
     NSString *adUnitId = [options valueForKey:@"adUnitId"];
-    BOOL autoShow = [[options valueForKey:@"autoShow"] boolValue];
+    self.isAutoShowRewardedInt = [[options valueForKey:@"autoShow"] boolValue];
     
-    auto_Show = autoShow;
     adFormat = 4;
     [self setAdRequest];
     if (adFormat == 4) {
@@ -1348,7 +1308,7 @@ NSString *setKeyword = @"";
                 };
                 
                 
-                if (auto_Show) {
+                if (self.isAutoShowRewardedInt) {
                     NSError *presentError = nil;
                     if ([self.rewardedInterstitialAd canPresentFromRootViewController:self.viewController error:&presentError]) {
                         [self.rewardedInterstitialAd presentFromRootViewController:self.viewController userDidEarnRewardHandler:^{
@@ -1461,10 +1421,7 @@ NSString *setKeyword = @"";
     NSString *callbackId = command.callbackId;
     NSDictionary *options = [command.arguments objectAtIndex:0];
     NSString *adUnitId = [options valueForKey:@"adUnitId"];
-    BOOL autoShow = [[options valueForKey:@"autoShow"] boolValue];
-    //auto_Show = autoShow;
-    
-    __block BOOL shouldAutoShow = autoShow;
+    self.isAutoShowRewardedAds = [[options valueForKey:@"autoShow"] boolValue];
     
     adFormat = 3;
     [self setAdRequest];
@@ -1509,7 +1466,7 @@ NSString *setKeyword = @"";
                 
                 
 
-                if (shouldAutoShow) {
+                if (self.isAutoShowRewardedAds) {
                     NSError *presentError = nil;
                     if ([self.rewardedAd canPresentFromRootViewController:self.viewController error:&presentError]) {
                         [self.rewardedAd presentFromRootViewController:self.viewController userDidEarnRewardHandler:^{
@@ -1712,7 +1669,7 @@ NSString *setKeyword = @"";
  #pragma mark GADBannerViewDelegate implementation
 
 - (void)bannerViewDidReceiveAd:(GADBannerView *)bannerView {
-   // NSLog(@"The last loaded banner is %@collapsible.", (bannerView.isCollapsible ? @"" : @"not "));
+
     NSString *collapsibleStatus = bannerView.isCollapsible ? @"collapsible" : @"not collapsible";
     NSDictionary *eventData = @{@"collapsible" : collapsibleStatus};
     NSError *error;
@@ -1723,28 +1680,23 @@ NSString *setKeyword = @"";
         [self fireEvent:@"" event:@"on.is.collapsible" withData:jsonString];
     }
     
-    // Get the banner height
     CGFloat bannerHeight = bannerView.bounds.size.height;
     bannerHeightFinal = bannerHeight;
 
-
-    // Prepare height data for banner load event
     NSDictionary *bannerLoadData = @{@"height" : @(bannerHeight)};
     NSData *bannerLoadJsonData = [NSJSONSerialization dataWithJSONObject:bannerLoadData options:0 error:&error];
     NSString *bannerLoadJsonString = [[NSString alloc] initWithData:bannerLoadJsonData encoding:NSUTF8StringEncoding];
     
-    // Fire the banner load event with the height data
     [self fireEvent:@"" event:@"on.banner.load" withData:bannerLoadJsonString];
     
-    if (auto_Show && self.bannerView) {
-        if (isSetOverlapping){
+    if (self.isAutoShowBanner && self.bannerView) {
+        if (!self.isOverlapping){
             self.bannerView.hidden = NO;
             [self setBodyHeight:command];
-       }
-    } else {
-        [self fireEvent:@"" event:@"on.banner.failed.show" withData:nil];
+        } else {
+            self.bannerView.hidden = NO;
+        }
     }
-    
     
     __weak __typeof(self) weakSelf = self;
     self.bannerView.paidEventHandler = ^(GADAdValue *_Nonnull value) {
