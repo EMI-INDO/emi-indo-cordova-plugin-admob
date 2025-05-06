@@ -262,7 +262,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                 if (consentInformation!!.canRequestAds()) {
                                     initializeMobileAdsSdk()
                                 }
-                                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.info.update.failed', { message: '" + formError.message + "' });")
+                                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.consent.info.update.failed', ${formError.message});") 
                             })
                     }
                     if (consentInformation?.canRequestAds()!!) {
