@@ -1,4 +1,4 @@
-### emi-indo-cordova-plugin-admob@2.2.9
+### emi-indo-cordova-plugin-admob@2.3.9
 
 
 ## Features/method
@@ -159,7 +159,7 @@ config.xml
 ### Mobile Ads SDK (Android: 24.2.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
 ### User Messaging Platform (UMP Android: 3.2.0) [Release Notes:](https://developers.google.com/admob/android/privacy/release-notes)
 
-### Mobile Ads SDK (IOS: 12.2.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
+### Mobile Ads SDK (IOS: 12.5.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
 
 ### User Messaging Platform (UMP IOS: 3.0.0) [Release Notes:](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/privacy/download)
 ### IAB Europe Transparency & Consent Framework (CMP: 2.2.0)
