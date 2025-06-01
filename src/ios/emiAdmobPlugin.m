@@ -504,7 +504,9 @@ NSString *setKeyword = @"";
 }
 
 
+
 - (void)orientationDidChange:(NSNotification *)notification {
+    /*
   [self fireEvent:@"" event:@"on.screen.rotated" withData:nil];
   if (isAutoResize) {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -565,6 +567,7 @@ NSString *setKeyword = @"";
       }
     });
   }
+ */
 }
 
 
@@ -604,8 +607,10 @@ NSString *setKeyword = @"";
     
   [self setAdRequest];
 
-  if (adFormat == 5) {
+    if (adFormat == 5 && !self.isBannerOpen) {
     dispatch_async(dispatch_get_main_queue(), ^{
+    
+        
       UIView *parentView = self.viewController.view;
       CGRect frame = self.bannerView.frame;
 
@@ -669,7 +674,17 @@ NSString *setKeyword = @"";
 
 - (void)showBannerAd:(CDVInvokedUrlCommand *)command {
     @try {
-        if (self.bannerView) {
+        
+        if (self.bannerView && self.isBannerOpen) {
+            
+            if (!self.isOverlapping){
+                self.bannerView.hidden = NO;
+                [self setBodyHeight:command];
+            } else {
+                self.bannerView.hidden = NO;
+            }
+            
+        } else if (self.bannerView && !self.isAutoShowBanner) {
             
             if (!self.isOverlapping){
                 self.bannerView.hidden = NO;
@@ -681,6 +696,7 @@ NSString *setKeyword = @"";
         } else {
             [self fireEvent:@"" event:@"on.banner.failed.show" withData:nil];
         }
+      
     }
     @catch (NSException *exception) {
         NSLog(@"[AdPlugin] Error in showBannerAd: %@", exception.reason);
@@ -704,105 +720,109 @@ NSString *setKeyword = @"";
 
 
 - (void)setBodyHeight:(CDVInvokedUrlCommand*)command {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        @try {
-
-            UIWindow *keyWindow = [UIApplication sharedApplication].delegate.window;
-            UIViewController* rootViewController = keyWindow.rootViewController;
-
-            if (!rootViewController) {
-                CDVPluginResult* errorResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Root ViewController not found"];
-                [self.commandDelegate sendPluginResult:errorResult callbackId:command.callbackId];
-                return;
-            }
+    if(!self.isBannerOpen){
+        dispatch_async(dispatch_get_main_queue(), ^{
             
-           
-            [rootViewController.view setNeedsLayout];
-            [rootViewController.view layoutIfNeeded];
-
-            UIEdgeInsets safeAreaInsets = rootViewController.view.safeAreaInsets;
-
-            if (safeAreaInsets.bottom == 0) {
-                safeAreaInsets = keyWindow.safeAreaInsets;
-            }
-
-            CGFloat screenHeight = UIScreen.mainScreen.bounds.size.height;
-            CGFloat screenWidth = UIScreen.mainScreen.bounds.size.width;
-            CGFloat bannerHeight = bannerHeightFinal;
-            CGFloat newHeight = screenHeight - bannerHeight;
-           
-
-            if (newHeight <= 0) {
-           
-                CDVPluginResult* errorResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Invalid new height"];
-                [self.commandDelegate sendPluginResult:errorResult callbackId:command.callbackId];
-                return;
-            }
-
-            UIView *webView = [self findWebViewInView:rootViewController.view];
-            if (webView) {
-                CGRect webViewFrame = webView.frame;
-                webViewFrame.size.height = newHeight;
-                webView.frame = webViewFrame;
-            } else {
-                NSLog(@"[CordovaBodyHeight] WebView not found");
-            }
-
-            if ([setPosition isEqualToString:@"top-center"]) {
-                            CGRect currentBannerFrame = self.bannerView.frame;
-                            CGFloat expectedYPosition = safeAreaInsets.top;
-
-                            if (fabs(currentBannerFrame.origin.y - expectedYPosition) > 0.1) {
-                                CGRect bannerFrame = CGRectMake(0, expectedYPosition, screenWidth, bannerHeight);
-                                self.bannerView.frame = bannerFrame;
-                                CGRect contentFrame = rootViewController.view.frame;
-                                contentFrame.origin.y = bannerHeight + safeAreaInsets.top;
-                                contentFrame.size.height = screenHeight - (bannerHeight + safeAreaInsets.top);
-                                rootViewController.view.frame = contentFrame;
-             }
-            } else if ([setPosition isEqualToString:@"bottom-center"]) {
-
-                CGRect bannerFrame = CGRectMake(
-                    0,
-                    screenHeight - bannerHeight - safeAreaInsets.bottom + paddingWebView,
-                    screenWidth,
-                    bannerHeight
-                );
-                self.bannerView.frame = bannerFrame;
-
-                CGRect contentFrame = rootViewController.view.frame;
-                contentFrame.origin.y = 0;
-                contentFrame.size.height = screenHeight - (bannerHeight + safeAreaInsets.bottom);
-                rootViewController.view.frame = contentFrame;
-
-            } else {
-                CGRect bannerFrame = CGRectMake(
-                0,
-                screenHeight - bannerHeight - safeAreaInsets.bottom + paddingWebView,
-                screenWidth,
-                bannerHeight
-            );
-            self.bannerView.frame = bannerFrame;
-
-            CGRect contentFrame = rootViewController.view.frame;
-            contentFrame.origin.y = 0;
-            contentFrame.size.height = screenHeight - (bannerHeight + safeAreaInsets.bottom);
-            rootViewController.view.frame = contentFrame;
-
-            }
+            @try {
+                
+                UIWindow *keyWindow = [UIApplication sharedApplication].delegate.window;
+                UIViewController* rootViewController = keyWindow.rootViewController;
+                
+                if (!rootViewController) {
+                    CDVPluginResult* errorResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Root ViewController not found"];
+                    [self.commandDelegate sendPluginResult:errorResult callbackId:command.callbackId];
+                    return;
+                }
+                
+                
+                [rootViewController.view setNeedsLayout];
+                [rootViewController.view layoutIfNeeded];
+                
+                UIEdgeInsets safeAreaInsets = rootViewController.view.safeAreaInsets;
+                
+                if (safeAreaInsets.bottom == 0) {
+                    safeAreaInsets = keyWindow.safeAreaInsets;
+                }
+                
+                CGFloat screenHeight = UIScreen.mainScreen.bounds.size.height;
+                CGFloat screenWidth = UIScreen.mainScreen.bounds.size.width;
+                CGFloat bannerHeight = bannerHeightFinal;
+                CGFloat newHeight = screenHeight - bannerHeight;
+                
+                
+                if (newHeight <= 0) {
+                    
+                    CDVPluginResult* errorResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Invalid new height"];
+                    [self.commandDelegate sendPluginResult:errorResult callbackId:command.callbackId];
+                    return;
+                }
+                
+                UIView *webView = [self findWebViewInView:rootViewController.view];
+                if (webView) {
+                    CGRect webViewFrame = webView.frame;
+                    webViewFrame.size.height = newHeight;
+                    webView.frame = webViewFrame;
+                } else {
+                    NSLog(@"[CordovaBodyHeight] WebView not found");
+                }
+                
+                if ([setPosition isEqualToString:@"top-center"]) {
+                    CGRect currentBannerFrame = self.bannerView.frame;
+                    CGFloat expectedYPosition = safeAreaInsets.top;
+                    
+                    if (fabs(currentBannerFrame.origin.y - expectedYPosition) > 0.1) {
+                        CGRect bannerFrame = CGRectMake(0, expectedYPosition, screenWidth, bannerHeight);
+                        self.bannerView.frame = bannerFrame;
+                        CGRect contentFrame = rootViewController.view.frame;
+                        contentFrame.origin.y = bannerHeight + safeAreaInsets.top;
+                        contentFrame.size.height = screenHeight - (bannerHeight + safeAreaInsets.top);
+                        rootViewController.view.frame = contentFrame;
+                    }
+                } else if ([setPosition isEqualToString:@"bottom-center"]) {
+                    
+                    CGRect bannerFrame = CGRectMake(
+                                                    0,
+                                                    screenHeight - bannerHeight - safeAreaInsets.bottom + paddingWebView,
+                                                    screenWidth,
+                                                    bannerHeight
+                                                    );
+                    self.bannerView.frame = bannerFrame;
+                    
+                    CGRect contentFrame = rootViewController.view.frame;
+                    contentFrame.origin.y = 0;
+                    contentFrame.size.height = screenHeight - (bannerHeight + safeAreaInsets.bottom);
+                    rootViewController.view.frame = contentFrame;
+                    
+                } else {
+                    CGRect bannerFrame = CGRectMake(
+                                                    0,
+                                                    screenHeight - bannerHeight - safeAreaInsets.bottom + paddingWebView,
+                                                    screenWidth,
+                                                    bannerHeight
+                                                    );
+                    self.bannerView.frame = bannerFrame;
+                    
+                    CGRect contentFrame = rootViewController.view.frame;
+                    contentFrame.origin.y = 0;
+                    contentFrame.size.height = screenHeight - (bannerHeight + safeAreaInsets.bottom);
+                    rootViewController.view.frame = contentFrame;
+                    
+                }
                 
                 [self.bannerView setNeedsLayout];
                 [self.bannerView layoutIfNeeded];
                 [rootViewController.view setNeedsLayout];
                 [rootViewController.view layoutIfNeeded];
-
-            CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDouble:newHeight];
-            [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
-        }
-        @catch (NSException* exception) {
-            NSLog(@"[CordovaBodyHeight] Exception: %@", exception.reason);
-        }
-    });
+                
+                CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDouble:newHeight];
+                [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+            }
+            @catch (NSException* exception) {
+                NSLog(@"[CordovaBodyHeight] Exception: %@", exception.reason);
+            }
+            
+        });
+    }
 }
 
 
@@ -951,7 +971,7 @@ NSString *setKeyword = @"";
 - (void)hideBannerAd:(CDVInvokedUrlCommand *)command {
   CDVPluginResult *pluginResult;
   NSString *callbackId = command.callbackId;
-  if (self.bannerView) {
+  if (self.bannerView && self.isBannerOpen) {
     dispatch_async(dispatch_get_main_queue(), ^{
       self.bannerView.hidden = YES;
       [self resetWebViewHeight];
@@ -973,6 +993,7 @@ NSString *setKeyword = @"";
     dispatch_async(dispatch_get_main_queue(), ^{
       self.bannerView.hidden = YES;
       [self.bannerView removeFromSuperview];
+      self.isBannerOpen = NO;
       self.bannerView = nil;
      [self resetWebViewHeight];
      [self fireEvent:@"" event:@"on.banner.remove" withData:nil];
@@ -1688,15 +1709,18 @@ NSString *setKeyword = @"";
     NSString *bannerLoadJsonString = [[NSString alloc] initWithData:bannerLoadJsonData encoding:NSUTF8StringEncoding];
     
     [self fireEvent:@"" event:@"on.banner.load" withData:bannerLoadJsonString];
+   
     
-    if (self.isAutoShowBanner && self.bannerView) {
-        if (!self.isOverlapping){
-            self.bannerView.hidden = NO;
-            [self setBodyHeight:command];
-        } else {
-            self.bannerView.hidden = NO;
-        }
+    
+    if (self.isAutoShowBanner && self.bannerView && !self.isBannerOpen) {
+            if (!self.isOverlapping){
+                self.bannerView.hidden = NO;
+                [self setBodyHeight:command];
+            } else {
+                self.bannerView.hidden = NO;
+            }
     }
+    
     
     __weak __typeof(self) weakSelf = self;
     self.bannerView.paidEventHandler = ^(GADAdValue *_Nonnull value) {
@@ -1771,18 +1795,23 @@ NSString *setKeyword = @"";
     if (jsonData) {
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         [self fireEvent:@"" event:@"on.banner.failed.load" withData:jsonString];
+        self.isBannerOpen = NO;
     } else {
         // Fallback in case of JSON serialization failure
+        self.isBannerOpen = NO;
         [self fireEvent:@"" event:@"on.banner.failed.load" withData:error.localizedDescription];
     }
 }
 
 - (void)bannerViewDidRecordImpression:(GADBannerView *)bannerView {
     [self fireEvent:@"" event:@"on.banner.impression" withData:nil];
+    self.isBannerOpen = YES;
 }
 
 - (void)bannerViewWillPresentScreen:(GADBannerView *)bannerView {
     [self fireEvent:@"" event:@"on.banner.open" withData:nil];
+    self.isBannerOpen = YES;
+   
 }
 
 - (void)bannerViewWillDismissScreen:(GADBannerView *)bannerView {

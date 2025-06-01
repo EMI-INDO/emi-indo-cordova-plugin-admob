@@ -1,6 +1,6 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  id="emi-indo-cordova-plugin-admob" version="2.3.9-beta.1">
+  id="emi-indo-cordova-plugin-admob" version="2.3.9-beta.2">
 
   <name>emiAdmobPlugin</name>
   <description>Cordova/Quasar/Capacitor Plugin Admob Android IOS</description>
@@ -298,9 +298,9 @@
         <source url="https://cdn.cocoapods.org/" />
       </config>
       <pods use-frameworks="true">
-		<!--minimum macOS 14.4 > Xcode 16.0 -->
+		 <!--minimum macOS 14.4 > Xcode 16.0 -->
 		 <pod name="GoogleUserMessagingPlatform" spec="~> 3.0.0" />
-     <pod name="Google-Mobile-Ads-SDK" spec="~> 12.2.0" />
+     <pod name="Google-Mobile-Ads-SDK" spec="~> 12.5.0" />
 		
       </pods>
     </podspec>
