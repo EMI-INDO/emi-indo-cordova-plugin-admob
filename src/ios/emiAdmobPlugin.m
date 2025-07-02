@@ -672,6 +672,71 @@ NSString *setKeyword = @"";
 }
 
 
+
+
+
+- (void)showBannerAd:(CDVInvokedUrlCommand *)command {
+    @try {
+        if (self.bannerView) {
+            
+            
+            UIWindow *keyWindow = [UIApplication sharedApplication].delegate.window;
+            UIViewController* rootViewController = keyWindow.rootViewController;
+            
+            if (!rootViewController) {
+                NSLog(@"[showBannerAd] Root ViewController not found");
+                return;
+            }
+            
+            [rootViewController.view setNeedsLayout];
+            [rootViewController.view layoutIfNeeded];
+            
+            CGFloat screenWidth = UIScreen.mainScreen.bounds.size.width;
+            CGFloat screenHeight = UIScreen.mainScreen.bounds.size.height;
+            
+            
+            //UIWindow *keyWindow = UIApplication.sharedApplication.delegate.window;
+            UIEdgeInsets safeAreaInsets = keyWindow.safeAreaInsets;
+            
+            
+            CGFloat bannerHeight = bannerHeightFinal; // reuse
+            CGFloat originX = (screenWidth - self.bannerView.bounds.size.width) / 2;
+            CGFloat originY = 0;
+            
+            if ([setPosition isEqualToString:@"bottom-center"]) {
+                originY = screenHeight - bannerHeight - safeAreaInsets.bottom + paddingWebView;
+            } else if ([setPosition isEqualToString:@"top-center"]) {
+                originY = safeAreaInsets.top;
+            }
+            
+            
+            self.bannerView.frame = CGRectMake(originX, originY, self.bannerView.bounds.size.width, bannerHeight);
+            
+            if (!self.isOverlapping) {
+                [self setBodyHeight:command];
+            }
+            
+            [self.bannerView setNeedsLayout];
+            [self.bannerView layoutIfNeeded];
+            [rootViewController.view setNeedsLayout];
+            [rootViewController.view layoutIfNeeded];
+            
+            self.bannerView.hidden = NO;
+            self.isBannerOpen=true;
+            
+        } else {
+            [self fireEvent:@"" event:@"on.banner.failed.show" withData:nil];
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"[AdPlugin] Error in showBannerAd: %@", exception.reason);
+    }
+}
+
+
+
+
+/*
 - (void)showBannerAd:(CDVInvokedUrlCommand *)command {
     @try {
         
@@ -702,6 +767,9 @@ NSString *setKeyword = @"";
         NSLog(@"[AdPlugin] Error in showBannerAd: %@", exception.reason);
     }
 }
+*/
+
+
 
 - (UIView*)findWebViewInView:(UIView*)view {
     if ([view isKindOfClass:NSClassFromString(@"WKWebView")] || [view isKindOfClass:NSClassFromString(@"UIWebView")]) {
@@ -974,6 +1042,7 @@ NSString *setKeyword = @"";
   if (self.bannerView && self.isBannerOpen) {
     dispatch_async(dispatch_get_main_queue(), ^{
       self.bannerView.hidden = YES;
+      self.isBannerOpen=false;
       [self resetWebViewHeight];
       [self fireEvent:@"" event:@"on.banner.hide" withData:nil];
     });
