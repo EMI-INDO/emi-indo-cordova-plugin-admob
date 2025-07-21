@@ -1,10 +1,6 @@
 {
   "name": "emi-indo-cordova-plugin-admob",
-<<<<<<< HEAD
-  "version": "2.4.9.beta.1",
-=======
-  "version": "2.3.9",
->>>>>>> 49c6d699ffe7591db2081148ba8040ace1571355
+  "version": "2.4.9.beta.2",
   "description": "Cordova/Quasar/Capacitor Plugin Admob Android IOS",
   "cordova": {
     "id": "emi-indo-cordova-plugin-admob",
