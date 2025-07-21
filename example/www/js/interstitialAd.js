@@ -33,8 +33,6 @@ on.interstitial.failed.show
 on.interstitial.impression
 on.interstitial.show
 
-// New event plugin v1.5.5 or higher
-
 on.interstitial.revenue
 on.interstitialAd.responseInfo
 

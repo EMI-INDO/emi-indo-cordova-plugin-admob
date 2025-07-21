@@ -67,7 +67,7 @@ document.addEventListener("deviceready", function () {
 
 
 
-    // globalSettings 
+    // globalSettings Optional
     cordova.plugins.emiAdmobPlugin.globalSettings({
         setAppMuted: false, // Type Boolean default: false
         setAppVolume: 1.0, // Type float

@@ -16,16 +16,19 @@ exports.showAppOpenAd = function (success, error) {
     exec(success, error, 'emiAdmobPlugin', 'showAppOpenAd', []);
 };
 exports.styleBannerAd = function (options, success, error) {
-    exec(success, error, 'emiAdmobPlugin', 'styleBannerAd', [options]); // ( only Android )
+    exec(success, error, 'emiAdmobPlugin', 'styleBannerAd', [options]);
 };
 exports.loadBannerAd = function (options, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'loadBannerAd', [options]);
+};
+exports.loadBannerCapacitor = function (options, success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'loadBannerCapacitor', [options]);
 };
 exports.showBannerAd = function (success, error) {
     exec(success, error, 'emiAdmobPlugin', 'showBannerAd', []);
 };
 exports.hideBannerAd = function (success, error) {
-        exec(success, error, 'emiAdmobPlugin', 'hideBannerAd', []);
+    exec(success, error, 'emiAdmobPlugin', 'hideBannerAd', []);
 };
 exports.removeBannerAd = function (success, error) {
     exec(success, error, 'emiAdmobPlugin', 'removeBannerAd', []);
@@ -70,13 +73,13 @@ exports.globalSettings = function (options, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'globalSettings', [options]);
 };
 exports.forceDisplayPrivacyForm = function (success, error) {
-        exec(success, error, 'emiAdmobPlugin', 'forceDisplayPrivacyForm', []); // only IOS
+    exec(success, error, 'emiAdmobPlugin', 'forceDisplayPrivacyForm', []); 
 };
 
 exports.metaData = function (options, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'metaData', [options]);
 };
-    
+
 // ( only Android )
 // only isUsingAdManagerRequest: true
 // AdManagerAdRequest.Builder

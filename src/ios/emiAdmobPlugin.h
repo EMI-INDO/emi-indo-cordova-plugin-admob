@@ -16,9 +16,17 @@
 @property(nonatomic, readonly) BOOL canRequestAds;
 @property (nonatomic, assign) BOOL isUsingAdManagerRequest;
 @property (nonatomic, assign) CGFloat viewWidth;
+@property(nonatomic, assign) BOOL isOverlapping;
+@property(nonatomic, assign) BOOL isCollapsible;
+@property(nonatomic, assign) BOOL isBannerOpen;
 @property (nonatomic, strong) UIView *bannerViewLayout;
 @property (nonatomic, strong) UIView *bannerContainer;
 @property (nonatomic, strong) UIView *webViewContainer;
+@property(nonatomic, assign) BOOL isAutoShowAppOpen;
+@property(nonatomic, assign) BOOL isAutoShowBanner;
+@property(nonatomic, assign) BOOL isAutoShowInterstitial;
+@property(nonatomic, assign) BOOL isAutoShowRewardedAds;
+@property(nonatomic, assign) BOOL isAutoShowRewardedInt;
 
 - (void)initialize:(CDVInvokedUrlCommand *)command;
 - (void)requestIDFA:(CDVInvokedUrlCommand *)command;
