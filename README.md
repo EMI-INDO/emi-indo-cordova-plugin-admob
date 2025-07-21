@@ -1,4 +1,4 @@
-### emi-indo-cordova-plugin-admob@2.3.9
+### emi-indo-cordova-plugin-admob@2.4.9
 
 
 ## Features/method
@@ -23,7 +23,7 @@
 ## new version of the plugin @2.0.8 or higher
 - Migrate from Mobile Ads SDK (Android) v23 to v24
 - Migrate from Mobile Ads SDK (iOS) SDK version v11 to v12
-- Migrate from Cordova Android 13.0.0 to 14.0.0
+- Migrate from Cordova Android 13.0.0 to 14.0.1
 - And maybe some APIs are re-signed, the old api will not be disturbed.
 - https://cordova.apache.org/announcements/2025/03/26/cordova-android-14.0.0.html
 - Full of simple examples: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/www/js
@@ -156,7 +156,7 @@ config.xml
 ### Check all release notes: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/
 
 
-### Mobile Ads SDK (Android: 24.2.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
+### Mobile Ads SDK (Android: 24.4.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
 ### User Messaging Platform (UMP Android: 3.2.0) [Release Notes:](https://developers.google.com/admob/android/privacy/release-notes)
 
 ### Mobile Ads SDK (IOS: 12.5.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)

@@ -217,7 +217,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
                     // If the user uses a custom CMP
                     if (this.isCustomConsentManager) {
-                        cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.custom.consent.manager.used');")
+                        cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.custom.consent.manager.used');")
                         initializeMobileAdsSdk()
                         return@runOnUiThread
                     }
@@ -275,7 +275,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         } else if (action == "targeting") {
             val options = args.getJSONObject(0)
             if (mActivity != null) {
-                mActivity!!.runOnUiThread {
+                mActivity?.runOnUiThread {
                     try {
                         val childDirectedTreatment = options.optBoolean("childDirectedTreatment")
                         val underAgeOfConsent = options.optBoolean("underAgeOfConsent")
@@ -295,7 +295,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         } else if (action == "targetingAdRequest") {
             val options = args.getJSONObject(0)
             if (mActivity != null) {
-                mActivity!!.runOnUiThread {
+                mActivity?.runOnUiThread {
                     val customTargetingEnabled = options.optBoolean("customTargetingEnabled")
                     val categoryExclusionsEnabled = options.optBoolean("categoryExclusionsEnabled")
                     val ppIdEnabled = options.optBoolean("ppIdEnabled")
@@ -328,7 +328,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         } else if (action == "setPersonalizationState") {
             val options = args.getJSONObject(0)
             if (mActivity != null) {
-                mActivity!!.runOnUiThread {
+                mActivity?.runOnUiThread {
                     val setPPT = options.optString("setPersonalizationState")
                     try {
                         setPersonalizationState(setPPT)
@@ -343,7 +343,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         } else if (action == "setPPS") {
             val options = args.getJSONObject(0)
             if (mActivity != null) {
-                mActivity!!.runOnUiThread {
+                mActivity?.runOnUiThread {
                     val ppsEnabled = options.optBoolean("ppsEnabled")
                     val iabContent = options.optString("iabContent")
                     val ppsArrValue = options.optJSONArray("ppsArrValue")
@@ -362,7 +362,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         } else if (action == "globalSettings") {
             val options = args.getJSONObject(0)
             if (mActivity != null) {
-                mActivity!!.runOnUiThread {
+                mActivity?.runOnUiThread {
                     val setAppMuted = options.optBoolean("setAppMuted")
                     val setAppVolume = options.optInt("setAppVolume").toFloat()
                     val pubIdEnabled = options.optBoolean("pubIdEnabled")
@@ -415,7 +415,7 @@ class emiAdmobPlugin : CordovaPlugin() {
                                                 result.put("precision", precision)
                                                 result.put("adUnitId", appOpenAdAdUnitId)
 
-                                                cWebView!!.loadUrl("javascript:cordova.fireDocumentEvent('on.appOpenAd.revenue', ${result})")
+                                                cWebView?.loadUrl("javascript:cordova.fireDocumentEvent('on.appOpenAd.revenue', ${result})")
 
                                             } catch (e: JSONException) {
                                                 callbackContext.error("loadAppOpenAd Error: " + e.message)
@@ -613,7 +613,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         } else if (action == "showInterstitialAd") {
 
             if (mActivity != null && isInterstitialLoad && mInterstitialAd != null) {
-                mActivity?.runOnUiThread { mInterstitialAd?.show(mActivity!!)  ?: callbackContext.error("Failed to show Interstitial Ad") }
+                mActivity?.runOnUiThread { mInterstitialAd?.show(mActivity!!) ?: callbackContext.error("Failed to show Interstitial Ad") }
                 interstitialAdLoadCallback()
             } else {
                 callbackContext.error("The Interstitial ad wasn't ready yet")
@@ -640,7 +640,6 @@ class emiAdmobPlugin : CordovaPlugin() {
                                         put("domain", loadAdError.domain)
                                         put("cause", loadAdError.cause?.toString() ?: "null")
 
-
                                         val responseId = loadAdError.responseInfo?.responseId.toString()
                                         val responseExtras = loadAdError.responseInfo?.responseExtras.toString()
                                         val loadedAdapterResponseInfo = loadAdError.responseInfo?.loadedAdapterResponseInfo.toString()
@@ -666,7 +665,6 @@ class emiAdmobPlugin : CordovaPlugin() {
                                     if (rewardedAutoShow) {
                                         isRewardedAutoShow
                                     }
-
 
                                     rewardedAdLoadCallback()
 
