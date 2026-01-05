@@ -9,6 +9,15 @@
 	    "ios"
     ]
   },
+  "files": [
+    "www/",
+    "src/",
+    "plugin.xml",
+    "README.md",
+    "package.json",
+    "LICENSE",
+    "capacitor-hook-admob-ids.js"
+  ],
   "keywords": [
     "ecosystem:cordova",
     "cordova-android",
