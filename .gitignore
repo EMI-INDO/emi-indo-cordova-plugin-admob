@@ -1,6 +1,7 @@
 # OS files
+**/.DS_Store
+**/Thumbs.db
 .DS_Store
-Thumbs.db
 
 # Node.js
 node_modules/

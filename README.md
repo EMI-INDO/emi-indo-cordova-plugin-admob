@@ -32,7 +32,7 @@
 config.xml
 <preference name="fullscreen" value="false | true" />
 <preference name="android-minSdkVersion" value="23" />
-<preference name="android-targetSdkVersion" value="35" />
+<preference name="android-targetSdkVersion" value="36" />
   ```
 
 - VIDEO banner top-center: https://www.youtube.com/watch?v=uQrC0k3-VU8
@@ -156,12 +156,12 @@ config.xml
 ### Check all release notes: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/
 
 
-### Mobile Ads SDK (Android: 24.4.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
-### User Messaging Platform (UMP Android: 3.2.0) [Release Notes:](https://developers.google.com/admob/android/privacy/release-notes)
+### Mobile Ads SDK (Android: 24.9.0) [Release Notes:](https://developers.google.com/admob/android/rel-notes)
+### User Messaging Platform (UMP Android: 4.0.0) [Release Notes:](https://developers.google.com/admob/android/privacy/release-notes)
 
-### Mobile Ads SDK (IOS: 12.5.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
+### Mobile Ads SDK (IOS: 12.14.0) [Release Notes:](https://developers.google.com/admob/ios/rel-notes)
 
-### User Messaging Platform (UMP IOS: 3.0.0) [Release Notes:](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/privacy/download)
+### User Messaging Platform (UMP IOS: 3.2.0) [Release Notes:](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/privacy/download)
 ### IAB Europe Transparency & Consent Framework (CMP: 2.2.0)
 
 
@@ -176,7 +176,7 @@ config.xml
 
 ## Version locking the plugin during production is highly recommended.
 
-- Example cordova plugin add emi-indo-cordova-plugin-admob@1.6.0 --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx
+- Example cordova plugin add emi-indo-cordova-plugin-admob@2.5.0 --save --variable APP_ID_ANDROID=ca-app-pub-xxx~xxx
 - View plugin version: https://www.npmjs.com/package/emi-indo-cordova-plugin-admob?activeTab=versions
 - Release notes: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases
 
@@ -225,7 +225,7 @@ https://github.com/EMI-INDO/emi-indo-cordova-plugin-fanalytics
 
 
 ### Minimum Cordova Engines
-- cordova-android version = 13.0.0
+- cordova-android version = 12.0.0
 - cordova-ios version = 7.0.0
 
 
