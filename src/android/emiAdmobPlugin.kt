@@ -15,6 +15,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
+import android.view.WindowInsetsController
 import android.view.WindowManager
 import android.webkit.WebView
 import android.widget.FrameLayout
@@ -164,6 +165,8 @@ class emiAdmobPlugin : CordovaPlugin() {
         if (mActivity != null) {
             mContext = mActivity?.applicationContext
             mPreferences = mContext?.let { PreferenceManager.getDefaultSharedPreferences(it) }
+            // Register workaround for Android 15+
+            applyAdMobAPI35WorkaroundIfNeeded(mActivity?.application as android.app.Application)
         } else {
             Log.e("PluginCordova", "Activity is null during initialization")
         }
@@ -2540,6 +2543,49 @@ class emiAdmobPlugin : CordovaPlugin() {
     }
 
 
+    // --- ADD THIS WORKAROUND CODE IN THE CLASS: https://groups.google.com/g/google-admob-ads-sdk/c/WyGsRV--EoE?pli=1 ---
+    private fun applyAdMobAPI35WorkaroundIfNeeded(application: android.app.Application) {
+        // Only runs on Android 15 (API 35) or later
+        if (Build.VERSION.SDK_INT < 35) {
+            return
+        }
+
+        application.registerActivityLifecycleCallbacks(object : android.app.Application.ActivityLifecycleCallbacks {
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+
+            override fun onActivityStarted(activity: Activity) {
+                applyAPI35WorkaroundToActivity(activity)
+            }
+
+            override fun onActivityResumed(activity: Activity) {
+                applyAPI35WorkaroundToActivity(activity)
+            }
+
+            override fun onActivityPaused(activity: Activity) {}
+
+            override fun onActivityStopped(activity: Activity) {}
+
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+
+            override fun onActivityDestroyed(activity: Activity) {}
+        })
+    }
+
+    private fun applyAPI35WorkaroundToActivity(activity: Activity) {
+        if (activity.javaClass.name != "com.google.android.gms.ads.AdActivity") {
+            return
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val controller = activity.window.insetsController
+            if (controller != null) {
+                controller.hide(WindowInsets.Type.systemBars())
+                controller.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        }
+    }
+
+
     companion object {
        // private const val TAG = "emiAdmobPlugin"
 
@@ -2548,4 +2594,7 @@ class emiAdmobPlugin : CordovaPlugin() {
         private const val LAST_ACCESS_SUFFIX = "_last_access"
         private const val EXPIRATION_TIME = 360L * 24 * 60 * 60 * 1000
     }
+
+
+
 }

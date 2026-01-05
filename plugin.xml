@@ -1,6 +1,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  id="emi-indo-cordova-plugin-admob" version="2.4.9">
+  xmlns:tools="http://schemas.android.com/tools"
+  id="emi-indo-cordova-plugin-admob" version="2.5.9-beta.1">
 
   <name>emiAdmobPlugin</name>
   <description>Cordova/Quasar/Capacitor Plugin Admob Android IOS</description>
@@ -22,6 +23,9 @@
 
 
   <platform name="android">
+
+  <hook type="after_prepare" src="src/android/hooks/add-tools-namespace.js" />
+    
     <config-file parent="/*" target="res/xml/config.xml">
       <feature name="emiAdmobPlugin">
         <param name="android-package" value="emi.indo.cordova.plugin.admob.emiAdmobPlugin" />
@@ -29,11 +33,9 @@
       </feature>
     </config-file>
 
-    <config-file parent="/*" target="config.xml">
-      <preference name="AndroidXEnabled" value="true" />
-      <preference name="GradlePluginKotlinEnabled" value="true" />
-      <preference name="GradlePluginKotlinVersion" value="2.1.0" />
-    </config-file>
+    <preference name="GradlePluginKotlinEnabled" default="true" />
+    <preference name="GradlePluginKotlinVersion" default="2.1.0" />
+    <preference name="AndroidXEnabled" default="true" />
 
     <config-file parent="/*" target="AndroidManifest.xml">
       <uses-permission android:name="android.permission.INTERNET" />
@@ -41,10 +43,12 @@
 
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
       <activity
-        android:launchMode="singleTask"
-        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-        android:excludeFromRecents="true" android:name="com.google.android.gms.ads.AdActivity"
-        android:noHistory="true" />
+        android:name="com.google.android.gms.ads.AdActivity"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|density|fontScale"
+        tools:replace="android:configChanges"
+        android:theme="@android:style/Theme.Translucent"
+        android:hardwareAccelerated="true" />
+
       <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
         android:value="$APP_ID_ANDROID" />
       <meta-data android:name="com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT"
@@ -53,17 +57,17 @@
         android:value="true" />
       <meta-data
         android:name="com.google.android.gms.ads.INTEGRATION_MANAGER"
-            android:value="webview"/>
+        android:value="webview" />
     </config-file>
 
     <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
 
     <preference name="APP_ID_ANDROID" default="ca-app-pub-3940256099942544~3347511713" />
-    <preference name="PLAY_SERVICES_VERSION" default="24.4.0" />
+    <preference name="PLAY_SERVICES_VERSION" default="24.9.0" />
 
     <framework src="com.google.android.gms:play-services-ads:$PLAY_SERVICES_VERSION" />
 
-    <preference name="UMP" default="3.2.0" />
+    <preference name="UMP" default="4.0.0" />
     <framework src="com.google.android.ump:user-messaging-platform:$UMP" />
 
     <!-- Dependency Consent status will automatically reset after 12 months -->
@@ -72,18 +76,20 @@
 
     <preference name="MULTI_WINDOW" default="false" />
 
-    <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application/activity[@android:name='MainActivity']">
-            <activity android:resizeableActivity="$MULTI_WINDOW" />
+    <edit-config file="AndroidManifest.xml" mode="merge"
+      target="/manifest/application/activity[@android:name='MainActivity']">
+      <activity android:resizeableActivity="$MULTI_WINDOW" />
     </edit-config>
 
-    <config-file parent="/*" target="AndroidManifest.xml" />
-    <source-file src="src/android/emiAdmobPlugin.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
+    <source-file src="src/android/emiAdmobPlugin.kt"
+      target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
 
   </platform>
 
 
   <platform name="ios">
-    <!--minimum macOS 14.4 > Xcode 15.3 -->
+    <!--minimum
+    macOS 14.4 > Xcode 15.3 -->
     <config-file target="config.xml" parent="/*">
       <feature name="emiAdmobPlugin">
         <param name="ios-package" value="emiAdmobPlugin" />
@@ -92,10 +98,11 @@
     </config-file>
 
     <config-file parent="/*" target="config.xml">
-    <!--minimum deployment-target: 12.2  -->
-		<preference name="deployment-target" value="13.0" />
-		<preference name="SwiftVersion" value="5.10" />
-	</config-file>
+      <!--minimum
+      deployment-target: 12.2  -->
+      <preference name="deployment-target" value="13.0" />
+      <preference name="SwiftVersion" value="5.10" />
+    </config-file>
 
     <preference name="USAGE"
       default="This identifier will be used to deliver personalized ads to you." />
@@ -298,10 +305,11 @@
         <source url="https://cdn.cocoapods.org/" />
       </config>
       <pods use-frameworks="true">
-		 <!--minimum macOS 14.4 > Xcode 16.0 -->
-		 <pod name="GoogleUserMessagingPlatform" spec="~> 3.0.0" />
-     <pod name="Google-Mobile-Ads-SDK" spec="~> 12.5.0" />
-		
+        <!--minimum
+        macOS 14.4 > Xcode 16.0 -->
+        <pod name="GoogleUserMessagingPlatform" spec="~> 3.1.0" />
+        <pod name="Google-Mobile-Ads-SDK" spec="~> 12.14.0" />
+
       </pods>
     </podspec>
 
