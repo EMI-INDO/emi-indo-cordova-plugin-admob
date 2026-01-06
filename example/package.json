@@ -5,8 +5,6 @@
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "update-admob": "node node_modules/emi-indo-cordova-plugin-admob/capacitor-hook-admob-ids.js"
   },
   "keywords": [
     "ecosystem:cordova"
@@ -22,9 +20,6 @@
     }
   },
   "dependencies": {
-    "@capacitor/android": "^6.2.0",
-    "@capacitor/ios": "^6.2.0",
-    "@capacitor/cli": "^6.2.0",
-    "@capacitor/core": "^6.2.0"
+
   }
 }
