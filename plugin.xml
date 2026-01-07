@@ -74,13 +74,6 @@
     <preference name="ANDROID_X" default="1.2.0" />
     <framework src="androidx.preference:preference:$ANDROID_X" />
 
-    <preference name="MULTI_WINDOW" default="false" />
-
-    <edit-config file="AndroidManifest.xml" mode="merge"
-      target="/manifest/application/activity[@android:name='MainActivity']">
-      <activity android:resizeableActivity="$MULTI_WINDOW" />
-    </edit-config>
-
     <source-file src="src/android/emiAdmobPlugin.kt"
       target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
 
