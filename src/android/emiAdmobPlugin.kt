@@ -67,7 +67,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 /**
  * Created by EMI INDO So on Apr 2, 2023
  */
-class emiAdmobPlugin : CordovaPlugin() {
+class EmiAdmobPlugin : CordovaPlugin() {
     private var PUBLIC_CALLBACKS: CallbackContext? = null
 
     private var rewardedAd: RewardedAd? = null
@@ -2587,7 +2587,7 @@ class emiAdmobPlugin : CordovaPlugin() {
 
 
     companion object {
-       // private const val TAG = "emiAdmobPlugin"
+        private const val TAG = "EmiAdmobPlugin"
 
         // Consent status will automatically reset after 12 months
         // https://support.google.com/admanager/answer/9999955?hl=en

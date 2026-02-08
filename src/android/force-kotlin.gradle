@@ -1,0 +1,44 @@
+// Cordova's default Kotlin version is 1.9.24
+// New AdMob SDK. Minimum Kotlin version is now 2.1.0 > https://developers.google.com/admob/android/rel-notes
+// Force Cordova Kotlin 2.1.0
+
+buildscript {
+    ext.kotlin_version = '2.1.0'
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'kotlin-android'
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+
+
+ext.postBuildExtras = {
+
+    android {
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_17
+            targetCompatibility JavaVersion.VERSION_17
+        }
+    }
+
+    def kotlinExtension = project.extensions.findByName("kotlin")
+    if (kotlinExtension != null) {
+        kotlinExtension.jvmToolchain(17)
+    }
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        compilerOptions {
+            // Use Enum JvmTarget for Kotlin 2.1.0
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+    }
+    
+}

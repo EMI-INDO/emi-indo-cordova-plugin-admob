@@ -1,7 +1,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  id="emi-indo-cordova-plugin-admob" version="2.5.9">
+  id="emi-indo-cordova-plugin-admob" version="2.6.9">
 
   <name>emiAdmobPlugin</name>
   <description>Cordova/Quasar/Capacitor Plugin Admob Android IOS</description>
@@ -21,21 +21,18 @@
       version=">=7.1.0" />
   </engines>
 
-
   <platform name="android">
 
+  <hook type="after_plugin_install" src="src/android/hooks/add-tools-namespace.js" />
   <hook type="after_prepare" src="src/android/hooks/add-tools-namespace.js" />
+  <framework src="src/android/force-kotlin.gradle" custom="true" type="gradleReference" />
     
     <config-file parent="/*" target="res/xml/config.xml">
       <feature name="emiAdmobPlugin">
-        <param name="android-package" value="emi.indo.cordova.plugin.admob.emiAdmobPlugin" />
+        <param name="android-package" value="emi.indo.cordova.plugin.admob.EmiAdmobPlugin" />
         <param name="onload" value="true" />
       </feature>
     </config-file>
-
-    <preference name="GradlePluginKotlinEnabled" default="true" />
-    <preference name="GradlePluginKotlinVersion" default="2.1.0" />
-    <preference name="AndroidXEnabled" default="true" />
 
     <config-file parent="/*" target="AndroidManifest.xml">
       <uses-permission android:name="android.permission.INTERNET" />
@@ -49,15 +46,11 @@
         android:theme="@android:style/Theme.Translucent"
         android:hardwareAccelerated="true" />
 
-      <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
-        android:value="$APP_ID_ANDROID" />
-      <meta-data android:name="com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT"
-        android:value="true" />
-      <meta-data android:name="com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING"
-        android:value="true" />
+      <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="$APP_ID_ANDROID" />
+      <meta-data android:name="com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT" android:value="true" />
+      <meta-data android:name="com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING" android:value="true" />
       <meta-data
-        android:name="com.google.android.gms.ads.INTEGRATION_MANAGER"
-        android:value="webview" />
+        android:name="com.google.android.gms.ads.INTEGRATION_MANAGER" android:value="webview" />
     </config-file>
 
     <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
@@ -74,8 +67,7 @@
     <preference name="ANDROID_X" default="1.2.0" />
     <framework src="androidx.preference:preference:$ANDROID_X" />
 
-    <source-file src="src/android/emiAdmobPlugin.kt"
-      target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
+    <source-file src="src/android/EmiAdmobPlugin.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
 
   </platform>
 
