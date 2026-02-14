@@ -5,10 +5,14 @@
 [![License](https://img.shields.io/npm/l/emi-indo-cordova-plugin-admob.svg)](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/LICENSE)
 
 
-> [!TIP]
-> **🚀 Cloud Build Ready:** > Tired of local environment errors? This plugin is fully tested and 100% compatible with **[SwapLab Public Build](https://public.swaplab.net/)**. 
+> [!IMPORTANT]
+> **🔮 The Future is Here: AdMob Next Gen**
 >
-> Build your Android/iOS apps instantly in the cloud without setting up Android Studio or Xcode. Supports **Cordova, Framework7, and Capacitor** stacks.
+> While this plugin (**emi-indo**) remains **actively maintained and supported** for existing users, we are developing the next evolution of AdMob integration at **[SwapLab Engine](https://github.com/swaplab-engine/cordova-plugin-admob-nextgen)**.
+>
+> 👉 **[Check out cordova-plugin-admob-nextgen](https://github.com/swaplab-engine/cordova-plugin-admob-nextgen)**
+> * **New Projects:** We highly recommend using the **Next Gen** plugin for modern architecture and long-term stability.
+> * **Existing Projects:** You are safe to stay here, updates will continue as usual.
 
 
 **Cordova/Quasar/Capacitor Plugin for AdMob (Android & iOS)**
@@ -524,9 +528,15 @@ cordova plugin add emi-indo-cordova-plugin-mediation-meta --save --variable META
 
 ---
 
-## ❤️ Sponsor & Support
+## ❤️ Support the Project
 
-To maintain this plugin for the long run and ensure regular updates, please consider supporting the project.
+This plugin is developed and maintained in my free time. If it saved you hours of work, consider supporting the development!
+
+<a href="https://www.buymeacoffee.com/emi.indo" target="_blank">
+  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >
+</a>
+
+Your support helps me keep the dependencies updated and the cleaner script running smoothly.
 
 
 
