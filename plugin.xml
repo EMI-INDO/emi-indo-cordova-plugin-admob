@@ -280,6 +280,26 @@
     <header-file src="src/ios/emiAdmobPlugin.h" />
     <source-file src="src/ios/emiAdmobPlugin.m" />
 
+    <header-file src="src/ios/EmiAdPluginProtocol.h" />
+
+    <header-file src="src/ios/EmiBannerManager.h" />
+    <source-file src="src/ios/EmiBannerManager.m" />
+
+    <header-file src="src/ios/EmiAppOpenManager.h" />
+    <source-file src="src/ios/EmiAppOpenManager.m" />
+
+    <header-file src="src/ios/EmiInterstitialManager.h" />
+    <source-file src="src/ios/EmiInterstitialManager.m" />
+
+    <header-file src="src/ios/EmiRewardedManager.h" />
+    <source-file src="src/ios/EmiRewardedManager.m" />
+
+    <header-file src="src/ios/EmiRewardedInterstitialManager.h" />
+    <source-file src="src/ios/EmiRewardedInterstitialManager.m" />
+
+    <framework src="AdSupport.framework" weak="true" />
+    <framework src="AppTrackingTransparency.framework" weak="true" />
+
     <framework src="AdSupport.framework" weak="true" />
     <framework src="AppTrackingTransparency.framework" weak="true" />
 
