@@ -7,7 +7,11 @@ function loadInterstitial() {
 
     if (typeof cordova !== 'undefined') {
 
-        cordova.plugins.emiAdmobPlugin.loadInterstitialAd({ adUnitId: Interstitial_ID, autoShow: false });
+        cordova.plugins.emiAdmobPlugin.loadInterstitialAd({ 
+            adUnitId: Interstitial_ID, 
+            autoShow: false,
+         // loadInterval: 5 // Opsional: Anti Spam, Default interval 5 seconds, disable 0 
+        });
 
     }
 }

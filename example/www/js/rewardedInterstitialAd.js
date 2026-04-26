@@ -5,7 +5,11 @@ let isRewardedIntLoad = false;
 function loadRewardedInt() {
 
     if (typeof cordova !== 'undefined') {
-        cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd({ adUnitId: Rewarded_Interstitial_ID, autoShow: false });
+        cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd({ 
+            adUnitId: Rewarded_Interstitial_ID, 
+            autoShow: false,
+        // loadInterval: 5 // Opsional: Anti Spam, Default interval 5 seconds, disable 0
+        });
     }
 
 }

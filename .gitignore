@@ -1,21 +1,14 @@
-# OS files
-**/.DS_Store
-**/Thumbs.db
+# Android
+*.iml
+.gradle
+/local.properties
+/.idea
 .DS_Store
+*.DS_Store
+/build
 
-# Node.js
-node_modules/
-npm-debug.log*
 
-# Cordova/Capacitor
-platforms/
-plugins/
-www/
-derived_data/
-*.keystore
-!/project.properties
-*.apk
-*.ipa
-
-# Security & Env
-.env
+# Node/Cordova
+/node_modules
+/platforms
+/plugins

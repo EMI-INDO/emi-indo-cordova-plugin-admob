@@ -3,30 +3,27 @@
 #import <GoogleMobileAds/GoogleMobileAds.h>
 #import <UserMessagingPlatform/UserMessagingPlatform.h>
 #import <CommonCrypto/CommonDigest.h>
-@interface emiAdmobPlugin : CDVPlugin<GADBannerViewDelegate, GADFullScreenContentDelegate>{}
-@property(nonatomic, strong) GADRequest *globalRequest;
-@property(nonatomic, strong) GADAppOpenAd *appOpenAd;
-@property(nonatomic, strong) GADBannerView *bannerView;
-@property(nonatomic, strong) GADInterstitialAd *interstitial;
-@property(nonatomic, strong) GADRewardedInterstitialAd* rewardedInterstitialAd;
-@property(nonatomic, strong) GADRewardedAd *rewardedAd;
-@property(nonatomic, readonly) BOOL isPrivacyOptionsRequired;
-@property(nonatomic, strong) CDVInvokedUrlCommand *command;
-@property(nonatomic, strong) GADResponseInfo *responseInfo;
-@property(nonatomic, readonly) BOOL canRequestAds;
-@property (nonatomic, assign) BOOL isUsingAdManagerRequest;
-@property (nonatomic, assign) CGFloat viewWidth;
-@property(nonatomic, assign) BOOL isOverlapping;
-@property(nonatomic, assign) BOOL isCollapsible;
-@property(nonatomic, assign) BOOL isBannerOpen;
-@property (nonatomic, strong) UIView *bannerViewLayout;
-@property (nonatomic, strong) UIView *bannerContainer;
-@property (nonatomic, strong) UIView *webViewContainer;
-@property(nonatomic, assign) BOOL isAutoShowAppOpen;
-@property(nonatomic, assign) BOOL isAutoShowBanner;
-@property(nonatomic, assign) BOOL isAutoShowInterstitial;
-@property(nonatomic, assign) BOOL isAutoShowRewardedAds;
-@property(nonatomic, assign) BOOL isAutoShowRewardedInt;
+
+#import "EmiAdPluginProtocol.h"
+#import "EmiBannerManager.h"
+#import "EmiAppOpenManager.h"
+#import "EmiInterstitialManager.h"
+#import "EmiRewardedManager.h"
+#import "EmiRewardedInterstitialManager.h"
+
+@interface emiAdmobPlugin : CDVPlugin <EmiAdPluginProtocol>
+
+@property (nonatomic, strong) GADRequest *globalRequest;
+@property (nonatomic, strong) CDVInvokedUrlCommand *command;
+@property (nonatomic, strong) GADResponseInfo *responseInfo;
+@property (nonatomic, readonly) BOOL isPrivacyOptionsRequired;
+@property (nonatomic, readonly) BOOL canRequestAds;
+
+@property (nonatomic, strong) EmiBannerManager *bannerManager;
+@property (nonatomic, strong) EmiAppOpenManager *appOpenManager;
+@property (nonatomic, strong) EmiInterstitialManager *interstitialManager;
+@property (nonatomic, strong) EmiRewardedManager *rewardedManager;
+@property (nonatomic, strong) EmiRewardedInterstitialManager *rewardedInterstitialManager;
 
 - (void)initialize:(CDVInvokedUrlCommand *)command;
 - (void)requestIDFA:(CDVInvokedUrlCommand *)command;
@@ -35,6 +32,10 @@
 - (void)consentReset:(CDVInvokedUrlCommand *)command;
 - (void)metaData:(CDVInvokedUrlCommand *)command;
 - (void)getIabTfc:(CDVInvokedUrlCommand *)command;
+- (void)readStatus:(CDVInvokedUrlCommand *)command;
+- (void)globalSettings:(CDVInvokedUrlCommand *)command;
+- (void)targeting:(CDVInvokedUrlCommand *)command;
+
 - (void)loadAppOpenAd:(CDVInvokedUrlCommand *)command;
 - (void)showAppOpenAd:(CDVInvokedUrlCommand *)command;
 - (void)styleBannerAd:(CDVInvokedUrlCommand *)command;
@@ -48,6 +49,7 @@
 - (void)showRewardedInterstitialAd:(CDVInvokedUrlCommand *)command;
 - (void)loadRewardedAd:(CDVInvokedUrlCommand *)command;
 - (void)showRewardedAd:(CDVInvokedUrlCommand *)command;
-- (void) fireEvent:(NSString *)obj event:(NSString *)eventName withData:(NSString *)jsonStr;
-@end
 
+- (void)fireEvent:(NSString *)obj event:(NSString *)eventName withData:(NSString *)jsonStr;
+
+@end

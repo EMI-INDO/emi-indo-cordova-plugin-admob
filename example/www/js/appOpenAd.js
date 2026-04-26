@@ -26,7 +26,11 @@ let isAppOpenAdLoad = false;
 function loadAppOpen() {
 
     if (typeof cordova !== 'undefined') {
-        cordova.plugins.emiAdmobPlugin.loadAppOpenAd({ adUnitId: App_Open_ID, autoShow: true });
+        cordova.plugins.emiAdmobPlugin.loadAppOpenAd({ 
+            adUnitId: App_Open_ID, 
+            autoShow: true,
+         // loadInterval: 5 // Opsional: Anti Spam, Default interval 5 seconds, disable 0
+        });
     }
 
 }

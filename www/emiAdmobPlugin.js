@@ -80,9 +80,6 @@ exports.metaData = function (options, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'metaData', [options]);
 };
 
-// ( only Android )
-// only isUsingAdManagerRequest: true
-// AdManagerAdRequest.Builder
 exports.targetingAdRequest = function (options, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'targetingAdRequest', [options]);
 };

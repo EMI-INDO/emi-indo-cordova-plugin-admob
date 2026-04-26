@@ -253,11 +253,12 @@ document.addEventListener('on.TCString.expired', () => {
 ```javascript
 const bannerConfig = {
    adUnitId: "ca-app-pub-xxx/xxx", 
-   position: "bottom-center",       // top-center, bottom-center, etc.
-   size: "responsive_adaptive",     // responsive_adaptive, anchored_adaptive, banner, medium_rectangle...
-   collapsible: "bottom",           // 'top' | 'bottom' | '' (disable)
-   autoShow: true,                  // Show immediately
-   isOverlapping: false
+   size: "adaptive", // banner 
+   collapsible: false, // default false
+   autoShow: true, // default false
+   isOverlapping: false, // The height of the body is reduced by the height of the banner.
+// padding: 0, // Optional: only isOverlapping: false, Extra 20px distance between WebView and Banner
+// loadInterval: 5 // Opsional: Anti-Flicker/Spam, Default interval 5 seconds, disable 0
 }
 
 // Load
@@ -268,8 +269,6 @@ cordova.plugins.emiAdmobPlugin.showBannerAd();
 cordova.plugins.emiAdmobPlugin.hideBannerAd();
 cordova.plugins.emiAdmobPlugin.removeBannerAd();
 
-// Styling (Android Only)
-cordova.plugins.emiAdmobPlugin.styleBannerAd({ padding: 50, margins: 50 });
 ```
 
 <details>
@@ -302,7 +301,8 @@ document.addEventListener('on.is.collapsible', function(event) {
 // Load
 cordova.plugins.emiAdmobPlugin.loadInterstitialAd({ 
     adUnitId: "ca-app-pub-xxx/xxx", 
-    autoShow: true 
+    autoShow: true,
+ // loadInterval: 5 // Opsional: Anti Spam, Default interval 5 seconds, disable 0 
 });
 
 // Show manually (if autoShow is false)
@@ -370,7 +370,8 @@ on.rewardedAd.responseInfo
 // Load
 cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd({ 
     adUnitId: "ca-app-pub-xxx/xxx", 
-    autoShow: true 
+    autoShow: true,
+// loadInterval: 5 // Opsional: Anti Spam, Default interval 5 seconds, disable 0 
 });
 ```
 *Supports similar events to Rewarded Ads (replace `rewarded` with `rewardedInt`).*
@@ -381,7 +382,8 @@ cordova.plugins.emiAdmobPlugin.loadRewardedInterstitialAd({
 ```javascript
 cordova.plugins.emiAdmobPlugin.loadAppOpenAd({ 
     adUnitId: "ca-app-pub-xxx/xxx", 
-    autoShow: true 
+    autoShow: true,
+// loadInterval: 5 // Opsional: Anti Spam, Default interval 5 seconds, disable 0 
 });
 ```
 

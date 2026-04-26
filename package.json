@@ -1,6 +1,6 @@
 {
   "name": "emi-indo-cordova-plugin-admob",
-  "version": "2.6.9",
+  "version": "2.7.9-beta.1",
   "description": "Cordova/Quasar/Capacitor Plugin Admob Android IOS",
   "cordova": {
     "id": "emi-indo-cordova-plugin-admob",
@@ -42,7 +42,7 @@
   ],
   "author": "EMI INDO",
   "email": "cordova.c3addon@gmail.com",
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob.git"

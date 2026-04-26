@@ -1,0 +1,38 @@
+name: Publish to NPM
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'NPM Tag (Select beta for testing, latest for official release)'
+        required: true
+        default: 'latest'
+        type: choice
+        options:
+          - latest
+          - beta
+
+permissions:
+  contents: read
+  id-token: write 
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Publish to NPM
+        run: npm publish --access public --tag ${{ inputs.release_tag }} --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
