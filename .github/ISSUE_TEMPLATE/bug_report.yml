@@ -1,0 +1,114 @@
+name: 🐛 Bug Report
+description: Create a report to help us improve the plugin
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+        
+        **Before proceeding**, please ensure you have checked the [simple-example implementation](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/www/js) to verify your code matches the latest recommended usage.
+        
+        **Please fill in all fields.** Reports without logs or reproduction steps may be closed immediately.
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Target Platform
+      description: Which platform(s) does this bug affect?
+      multiple: true
+      options:
+        - Android
+        - iOS
+    validations:
+      required: true
+
+  - type: dropdown
+    id: framework
+    attributes:
+      label: Framework
+      description: Which framework are you using?
+      options:
+        - Cordova CLI
+        - Capacitor (v5/v6/v7/v8)
+        - Ionic / Angular
+        - Ionic / React or Vue
+        - Framework7
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: plugin_version
+    attributes:
+      label: Plugin Version
+      description: e.g. 1.0.0 (Check your package.json)
+      placeholder: "1.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment Details
+      description: OS version and build tools (e.g., Android 13 + Gradle 8.0, or iOS 16)
+      placeholder: "Android 13 / Gradle 8.0 / Xcode 15"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: Current Behavior
+      description: Tell us what happens vs what you expected to happen.
+      placeholder: "When I call showInterstitial(), the app crashes..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Install plugin version X
+        2. Run app on Android/iOS device
+        3. Click button 'Show Ad'
+        4. See error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error Log / Stack Trace
+      description: |
+        Paste the full crash log from Android Studio (Logcat) or Xcode. 
+        ⚠️ Reports without logs are very hard to fix.
+      render: shell
+      placeholder: |
+        Caused by: java.lang.NullPointerException... OR EXC_BAD_ACCESS...
+        at emi.indo.cordova.plugin.admob...
+    validations:
+      required: true
+
+  - type: textarea
+    id: config_content
+    attributes:
+      label: Config File (Optional)
+      description: Please paste your `config.xml` (Cordova) or `capacitor.config.json` content (remove secrets/keys!).
+      render: json
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct & Checks
+      description: By submitting this issue, you agree to the following
+      options:
+        - label: I have reviewed the [simple-example](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/www/js) and confirmed my issue is not caused by incorrect implementation.
+          required: true
+        - label: I have searched the existing issues and this is not a duplicate.
+          required: true
+        - label: I have provided the error logs and environment details.
+          required: true

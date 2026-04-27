@@ -3,6 +3,9 @@ var exec = require('cordova/exec');
 exports.initialize = function (options, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'initialize', [options]);
 };
+exports.getPersonalizationState = function (success, error) {
+    exec(success, error, 'emiAdmobPlugin', 'getPersonalizationState', []);
+};
 exports.registerWebView = function (success, error) {
     exec(success, error, 'emiAdmobPlugin', 'registerWebView', []);
 };
@@ -75,11 +78,9 @@ exports.globalSettings = function (options, success, error) {
 exports.forceDisplayPrivacyForm = function (success, error) {
     exec(success, error, 'emiAdmobPlugin', 'forceDisplayPrivacyForm', []); 
 };
-
 exports.metaData = function (options, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'metaData', [options]);
 };
-
 exports.targetingAdRequest = function (options, success, error) {
     exec(success, error, 'emiAdmobPlugin', 'targetingAdRequest', [options]);
 };

@@ -27,7 +27,10 @@ This plugin supports the latest Mobile Ads SDK, User Messaging Platform (UMP), C
 
 
 ### 🎉 New Milestone 2026
-We are starting the year strong! **Version 2.5.9-beta.1** is now available with significant improvements.
+We are starting the year strong! **Version 2.5.9-beta.1, 2.7.9-beta.1+** is now available with significant improvements.
+👉 [**Check out the Release Notes (v2.7.9-beta.2)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/2.7.9-beta.2)
+👉 [**Check out the Release Notes (v2.7.9-beta.1)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/2.7.9-beta.1)
+
 👉 [**Check out the Release Notes (v2.5.9-beta.1)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/2.5.9-beta.1)
 
 ---
@@ -58,8 +61,6 @@ We are starting the year strong! **Version 2.5.9-beta.1** is now available with 
 
 * **Android Migration:** Mobile Ads SDK updated from v23 to **v24**.
 * **iOS Migration:** Mobile Ads SDK updated from v11 to **v12**.
-* **Cordova:** Migrated from Android 13.0.0 to **14.0.1**.
-* **Announcement:** [Cordova Android 14.0.0](https://cordova.apache.org/announcements/2025/03/26/cordova-android-14.0.0.html)
 * **Release Notes:** [Check all release notes here](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/)
 * **Examples:** [Full Source Code Examples](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/www/js)
 
@@ -77,7 +78,7 @@ This plugin is regularly updated to support the latest standards.
 ### Recommended `config.xml` Setup
 
 ```xml
-<preference name="fullscreen" value="false" /> <preference name="android-minSdkVersion" value="23" />
+<preference name="android-minSdkVersion" value="24" />
 <preference name="android-targetSdkVersion" value="36" />
 ```
 
@@ -201,9 +202,9 @@ document.addEventListener("deviceready", function(){
 
     // 1. Initialize
     cordova.plugins.emiAdmobPlugin.initialize({
-        isUsingAdManagerRequest: true, // true = AdManager | false = AdMob (Default true)
-        isResponseInfo: true,          // Default false (Debug true)
-        isConsentDebug: true,          // Default false (Debug true)
+        isUsingAdManagerRequest: false, // true = AdManager | false = AdMob (Default true)
+        isResponseInfo: false,          // Default false (Debug true)
+        isConsentDebug: false,          // Default false (Debug true)
     });
 
     // 2. Listen for SDK Ready
@@ -212,6 +213,38 @@ document.addEventListener("deviceready", function(){
         console.log("On Sdk Initialization version: " + data.version);
         console.log("On Consent Status: " + data.consentStatus);
     });
+
+
+     
+     /*
+          If you want to experiment,
+          you can use the development method cordova.plugins.emiAdmobPlugin.consentReset()
+          or option cordova.plugins.emiAdmobPlugin.showPrivacyOptionsForm()
+     */
+     // Optional New version 2.7.9+
+     document.addEventListener('on.personalization.state', (data) => {
+          // https://developers.google.com/admob/android/privacy/ad-serving-modes
+          /*
+          const personalizationState = data.personalizationState;
+          const purposeConsents = data.purposeConsents;
+          const gdprApplies = data.gdprApplies;
+          */
+         //  [INFO:CONSOLE:140] "on personalization state: {"isTrusted":false,"personalizationState":"PERSONALIZED","purposeConsents":"11111111111","gdprApplies":1}"
+         console.log("on personalization state: " + JSON.stringify(data))
+
+         if (data.personalizationState === "PERSONALIZED"){
+            console.log("PERSONALIZED")
+         } else if (data.personalizationState === "NON_PERSONALIZED"){
+            console.log("NON_PERSONALIZED")
+         } if (data.personalizationState === "LIMITED_OR_NO_ADS"){
+           console.log("LIMITED_OR_NO_ADS")
+        } else {
+          console.log("UNKNOWN")
+        }
+
+ });
+
+
 
 }, false);
 ```
@@ -228,6 +261,7 @@ cordova.plugins.emiAdmobPlugin.consentReset();
 cordova.plugins.emiAdmobPlugin.requestIDFA();
 
 // CMP SDK 2.2 (Get Data)
+// Optional
 cordova.plugins.emiAdmobPlugin.getIabTfc((IABTFC) => { 
     console.log(JSON.stringify(IABTFC)); 
 });
@@ -236,10 +270,11 @@ cordova.plugins.emiAdmobPlugin.getIabTfc((IABTFC) => {
 <summary>View Consent Events</summary>
 
 ```javascript
+// Optional
 document.addEventListener('on.get.consent.status', () => {
    console.log("on get consent status");
 });
-
+// Optional
 document.addEventListener('on.TCString.expired', () => {
    console.log("on TCString expires 360 days");
    cordova.plugins.emiAdmobPlugin.consentReset();
@@ -338,7 +373,8 @@ document.addEventListener('on.interstitial.dismissed', () => {
 // Load
 cordova.plugins.emiAdmobPlugin.loadRewardedAd({ 
     adUnitId: "ca-app-pub-xxx/xxx", 
-    autoShow: true 
+    autoShow: true,
+// loadInterval: 5 // Opsional: Anti Spam, Default interval 5 seconds, disable 0  
 });
 
 // Show
@@ -392,6 +428,7 @@ cordova.plugins.emiAdmobPlugin.loadAppOpenAd({
 
 **Targeting & PPS:**
 ```javascript
+// Optional
 // 1. Targeting Request
 const configAdRequest = {
     customTargetingEnabled: false,
@@ -407,11 +444,13 @@ const configAdRequest = {
 cordova.plugins.emiAdmobPlugin.targetingAdRequest(configAdRequest);
 
 // 2. Personalization State
+// Optional
 cordova.plugins.emiAdmobPlugin.setPersonalizationState({
     setPersonalizationState: "disabled" // "disabled" | "enabled"
 });
 
 // 3. PPS
+// Optional
 cordova.plugins.emiAdmobPlugin.setPPS({
     ppsEnabled: true,
     iabContent: "IAB_AUDIENCE_1_1", 
@@ -424,6 +463,7 @@ cordova.plugins.emiAdmobPlugin.setPPS({
 **Force Privacy Form Display:**
 Useful if `TCString` is null due to ATT status.
 ```javascript
+// Optional
 document.addEventListener('on.sdkInitialization', (data) => {
     let userGdpr = data.gdprApplies;
     let userTCString = data.consentTCString;

@@ -62,6 +62,7 @@ top-center
 responsive_adaptive
 anchored_adaptive
 full_width_adaptive
+full_width
 in_line_adaptive
 banner
 large_banner

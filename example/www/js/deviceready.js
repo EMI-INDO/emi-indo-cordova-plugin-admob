@@ -25,7 +25,7 @@ let isPlatformIOS = false;
 if (window.cordova.platformId === 'ios') {
 
     App_Open_ID = 'ca-app-pub-3940256099942544/5575463023';
-    Banner_ID = 'ca-app-pub-3940256099942544/2934735716';
+    Banner_ID = 'ca-app-pub-3940256099942544/2435281174';
     Interstitial_ID = 'ca-app-pub-3940256099942544/4411468910';
     Rewarded_ID = 'ca-app-pub-3940256099942544/1712485313';
     Rewarded_Interstitial_ID = 'ca-app-pub-3940256099942544/6978759866';
@@ -60,9 +60,9 @@ document.addEventListener("deviceready", function () {
 
     // targeting
     cordova.plugins.emiAdmobPlugin.targeting({
-        childDirectedTreatment: false, // default: false
-        underAgeOfConsent: false, // default: false
-        contentRating: "MA", // value: G | MA | PG | T | ""
+        childDirectedTreatment: null, // true|false default: null
+        underAgeOfConsent: null, // true || false default: null
+        contentRating: "", // value: G | MA | PG | T | default ""
     });
 
 
@@ -99,7 +99,7 @@ document.addEventListener("deviceready", function () {
     
     cordova.plugins.emiAdmobPlugin.initialize({
 
-        isUsingAdManagerRequest: true, // true = AdManager | false = AdMob (Default true)
+        isUsingAdManagerRequest: false, // true = AdManager | false = AdMob (Default true)
         isResponseInfo: false, // debug true | Production false
         isConsentDebug: false, // debug true | Production false
 
@@ -130,6 +130,39 @@ document.addEventListener("deviceready", function () {
         loadBanner(); // auto show
 
     });
+
+
+     
+     // Optional
+     /*
+          If you want to experiment,
+          you can use the development method cordova.plugins.emiAdmobPlugin.consentReset()
+          or option cordova.plugins.emiAdmobPlugin.showPrivacyOptionsForm()
+     */
+
+     document.addEventListener('on.personalization.state', (data) => {
+          // https://developers.google.com/admob/android/privacy/ad-serving-modes
+          /*
+          const personalizationState = data.personalizationState;
+          const purposeConsents = data.purposeConsents;
+          const gdprApplies = data.gdprApplies;
+          */
+
+          console.log("on personalization state: " + JSON.stringify(data))
+         //  [INFO:CONSOLE:140] "on personalization state: {"isTrusted":false,"personalizationState":"PERSONALIZED","purposeConsents":"11111111111","gdprApplies":1}"
+         
+
+         if (data.personalizationState === "PERSONALIZED"){
+            console.log("PERSONALIZED")
+         } else if (data.personalizationState === "NON_PERSONALIZED"){
+            console.log("NON_PERSONALIZED")
+         } if (data.personalizationState === "LIMITED_OR_NO_ADS"){
+           console.log("LIMITED_OR_NO_ADS")
+        } else {
+          console.log("UNKNOWN")
+        }
+
+ });
 
 
 

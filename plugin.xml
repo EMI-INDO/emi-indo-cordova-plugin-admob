@@ -1,12 +1,12 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  id="emi-indo-cordova-plugin-admob" version="2.7.9-beta.1">
+  id="emi-indo-cordova-plugin-admob" version="2.7.9-beta.2">
 
   <name>emiAdmobPlugin</name>
   <description>Cordova/Quasar/Capacitor Plugin Admob Android IOS</description>
   <author>EMI INDO</author>
-  <license>ISC</license>
+  <license>MIT</license>
 
   <js-module src="www/emiAdmobPlugin.js" name="emiAdmobPlugin">
     <clobbers target="cordova.plugins.emiAdmobPlugin" />
@@ -16,7 +16,7 @@
     <engine name="cordova"
       version=">=12.0.0" />
     <engine name="cordova-android"
-      version=">=11.0.0" />
+      version=">=14.0.0" />
     <engine name="cordova-ios"
       version=">=7.1.0" />
   </engines>
@@ -25,7 +25,6 @@
 
   <hook type="after_plugin_install" src="src/android/hooks/add-tools-namespace.js" />
   <hook type="after_prepare" src="src/android/hooks/add-tools-namespace.js" />
-  <framework src="src/android/force-kotlin.gradle" custom="true" type="gradleReference" />
     
     <config-file parent="/*" target="res/xml/config.xml">
       <feature name="emiAdmobPlugin">
@@ -45,7 +44,6 @@
         tools:replace="android:configChanges"
         android:theme="@android:style/Theme.Translucent"
         android:hardwareAccelerated="true" />
-
       <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="$APP_ID_ANDROID" />
       <meta-data android:name="com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT" android:value="true" />
       <meta-data android:name="com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING" android:value="true" />
@@ -68,6 +66,12 @@
     <framework src="androidx.preference:preference:$ANDROID_X" />
 
     <source-file src="src/android/EmiAdmobPlugin.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
+    <source-file src="src/android/EmiAdPluginProtocol.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
+    <source-file src="src/android/EmiAppOpenManager.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
+    <source-file src="src/android/EmiBannerManager.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
+    <source-file src="src/android/EmiInterstitialManager.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
+    <source-file src="src/android/EmiRewardedManager.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
+    <source-file src="src/android/EmiRewardedInterstitialManager.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
 
   </platform>
 
