@@ -12,7 +12,7 @@
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "devDependencies": {
-    "emi-indo-cordova-plugin-admob": "^2.2.9"
+    "emi-indo-cordova-plugin-admob": "2.7.9-beta.2"
   },
   "cordova": {
     "plugins": {

@@ -1,4 +1,3 @@
-// src/android/EmiAdmobPlugin.kt
 package emi.indo.cordova.plugin.admob
 
 import android.annotation.SuppressLint
@@ -37,7 +36,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
 
-    // --- PROTOCOL IMPLEMENTATION ---
     override val pluginActivity: Activity
         get() = cordova.activity
 
@@ -61,16 +59,13 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
             pluginWebView.loadUrl(js)
         }
     }
-    // -------------------------------
 
-    // --- MANAGERS ---
     private lateinit var bannerManager: EmiBannerManager
     private lateinit var appOpenManager: EmiAppOpenManager
     private lateinit var interstitialManager: EmiInterstitialManager
     private lateinit var rewardedManager: EmiRewardedManager
     private lateinit var rewardedInterstitialManager: EmiRewardedInterstitialManager
 
-    // --- GLOBALS & TARGETING ---
     private var PUBLIC_CALLBACKS: CallbackContext? = null
     private var mPreferences: SharedPreferences? = null
     private var consentInformation: ConsentInformation? = null
@@ -78,11 +73,9 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
     private var isResponseInfo: Boolean = false
     private var isOrientation: Int = 1
 
-    // State Trackers for AdMob Initialization
     private val isMobileAdsInitializeCalled = AtomicBoolean(false)
     private var isAdMobInitialized = false
 
-    // Queue for Global Settings
     private var queuedAppMuted: Boolean? = null
     private var queuedAppVolume: Float? = null
     private var queuedPubIdEnabled: Boolean? = null
@@ -90,7 +83,6 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
     private var setDebugGeography: Boolean = false
     private var isCustomConsentManager = false
 
-    // Targeting Variables
     private var isUsingAdManagerRequest = false
     private var customTargetingEnabled = false
     private var customTargetingList: MutableList<String>? = null
@@ -142,7 +134,7 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
             "showPrivacyOptionsForm" -> handleShowPrivacyOptionsForm(callbackContext)
             "consentReset" -> handleConsentReset(callbackContext)
             "getIabTfc" -> handleGetIabTfc(callbackContext)
-            "getPersonalizationState" -> handleGetPersonalizationState(callbackContext) // --- NEW FEATURE ---
+            "getPersonalizationState" -> handleGetPersonalizationState(callbackContext) 
 
             "registerWebView" -> registerWebView(callbackContext)
             "loadUrl" -> loadUrl(args, callbackContext)
@@ -169,10 +161,6 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
         }
         return true
     }
-
-    // =========================================================================
-    // ROUTER HANDLERS
-    // =========================================================================
 
     private fun handleInitialize(args: JSONArray, callbackContext: CallbackContext) {
         val options = args.optJSONObject(0) ?: return
@@ -364,10 +352,6 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
         }
     }
 
-    // =========================================================================
-    // CORE ADMOB & UMP INITIALIZATION
-    // =========================================================================
-
     @SuppressLint("DefaultLocale")
     private fun initializeMobileAdsSdk() {
         if (isMobileAdsInitializeCalled.getAndSet(true)) return
@@ -408,7 +392,6 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
 
                     fireEvent("on.sdkInitialization", result.toString())
 
-                    // Trigger Personalization State automatically upon successful initialization
                     evaluateAndSendPersonalizationState()
                 }
             } catch (e: Exception) {
@@ -424,7 +407,7 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
                     if (formError != null) {
                         fireEvent("on.consent.failed.show", "{\"message\":\"${formError.message}\"}")
                     }
-                    // Evaluate state again after form closes
+
                     evaluateAndSendPersonalizationState()
                 }
             }, { formError ->
@@ -473,7 +456,6 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
         }
     }
 
-    // --- NEW FEATURE: ANALYZE AND SEND PERSONALIZATION STATE ---
     private fun handleGetPersonalizationState(callbackContext: CallbackContext) {
         pluginActivity.runOnUiThread {
             val result = evaluateAndSendPersonalizationState()
@@ -488,21 +470,21 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
         var adState = "UNKNOWN"
 
         if (gdprApplies == 0 || gdprApplies == -1) {
-            // Jika pengguna berada di luar wilayah GDPR atau belum ditentukan, biasanya diizinkan Personalized
+
             adState = "PERSONALIZED"
         } else if (gdprApplies == 1) {
-            // Evaluasi String IAB TCF (Zero-indexed: Purpose 1 = index 0, Purpose 3 = index 2, Purpose 4 = index 3)
+
             if (purposeConsents.isNotEmpty()) {
-                val purpose1 = purposeConsents.getOrNull(0) == '1' // Izin menyimpan cookie/info di perangkat
-                val purpose3 = purposeConsents.getOrNull(2) == '1' // Izin membuat profil iklan personal
-                val purpose4 = purposeConsents.getOrNull(3) == '1' // Izin memilih iklan personal
+                val purpose1 = purposeConsents.getOrNull(0) == '1' 
+                val purpose3 = purposeConsents.getOrNull(2) == '1' 
+                val purpose4 = purposeConsents.getOrNull(3) == '1' 
 
                 adState = if (purpose1 && purpose3 && purpose4) {
                     "PERSONALIZED"
                 } else if (purpose1) {
                     "NON_PERSONALIZED"
                 } else {
-                    "LIMITED_OR_NO_ADS" // Jika tidak ada izin Purpose 1, AdMob menolak tayang iklan
+                    "LIMITED_OR_NO_ADS" 
                 }
             } else {
                 adState = "UNKNOWN"
@@ -519,9 +501,6 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
         return result
     }
 
-    // =========================================================================
-    // BUILD AD REQUEST GLOBAL
-    // =========================================================================
     private fun buildAdRequest(extras: android.os.Bundle? = null): AdRequest {
         val bundleExtra = Bundle()
 
@@ -554,10 +533,6 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
             return builder.build()
         }
     }
-
-    // =========================================================================
-    // UTILS & LIFECYCLE
-    // =========================================================================
 
     private fun registerWebView(callbackContext: CallbackContext) {
         pluginActivity.runOnUiThread {

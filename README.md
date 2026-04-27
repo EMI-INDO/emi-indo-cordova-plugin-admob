@@ -585,5 +585,4 @@ Your support helps me keep the dependencies updated and the cleaner script runni
 ### Other Plugins by EMI-INDO
 * [Facebook Audience Network](https://github.com/EMI-INDO/emi-indo-cordova-plugin-fan)
 * [Unity Ads](https://github.com/EMI-INDO/emi-indo-cordova-plugin-unityads)
-* [Open AI](https://github.com/EMI-INDO/emi-indo-cordova-plugin-open-ai)
 * [Firebase Analytics](https://github.com/EMI-INDO/emi-indo-cordova-plugin-fanalytics)

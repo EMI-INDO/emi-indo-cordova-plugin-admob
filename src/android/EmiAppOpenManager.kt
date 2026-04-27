@@ -1,4 +1,3 @@
-// src/android/EmiAppOpenManager.kt
 package emi.indo.cordova.plugin.admob
 
 import com.google.android.gms.ads.AdError
@@ -17,14 +16,13 @@ class EmiAppOpenManager(private val plugin: EmiAdPluginProtocol) {
     private var appOpenAd: AppOpenAd? = null
     private var appOpenAutoShow: Boolean = false
 
-    // Security & Throttle Guards (Anti-Flicker)
     private var isLoading: Boolean = false
     private var lastLoadTime: Long = 0
-    private var minLoadInterval: Long = 5000 // Default 5 detik (dalam milidetik)
+    private var minLoadInterval: Long = 5000 
     private var lastAdUnitId: String = ""
 
     fun loadAppOpenAd(args: JSONArray, callbackContext: CallbackContext) {
-        // 1. Pengaman Anti-Double Request
+
         if (isLoading) {
             return
         }
@@ -33,13 +31,11 @@ class EmiAppOpenManager(private val plugin: EmiAdPluginProtocol) {
         val adUnitId = options.optString("adUnitId", "")
         appOpenAutoShow = options.optBoolean("autoShow", false)
 
-        // 2. Baca interval kustom dari pengguna
         val loadIntervalSec = options.optDouble("loadInterval", 5.0)
         minLoadInterval = (loadIntervalSec * 1000).toLong()
 
         val now = System.currentTimeMillis()
 
-        // 3. Pengaman Same Ad Unit
         if (adUnitId == lastAdUnitId && appOpenAd != null) {
             if (appOpenAutoShow) {
                 showAppOpenAd(null)
@@ -50,12 +46,10 @@ class EmiAppOpenManager(private val plugin: EmiAdPluginProtocol) {
             return
         }
 
-        // 4. Pengaman Throttle
         if (now - lastLoadTime < minLoadInterval) {
             return
         }
 
-        // Kunci status loading
         isLoading = true
         lastLoadTime = now
         lastAdUnitId = adUnitId
@@ -127,9 +121,8 @@ class EmiAppOpenManager(private val plugin: EmiAdPluginProtocol) {
             override fun onAdDismissedFullScreenContent() {
                 plugin.fireEvent("on.appOpenAd.dismissed", null)
                 appOpenAd = null
-                lastAdUnitId = "" // Bersihkan cache agar siap di-load lagi
+                lastAdUnitId = "" 
 
-                // Kembalikan fokus ke WebView Cordova
                 plugin.pluginWebView.view.requestFocus()
             }
 

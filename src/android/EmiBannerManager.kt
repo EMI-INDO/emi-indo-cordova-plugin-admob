@@ -1,4 +1,3 @@
-// src/android/EmiBannerManager.kt
 package emi.indo.cordova.plugin.admob
 
 import android.annotation.SuppressLint
@@ -28,7 +27,6 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
     private var bannerViewLayout: FrameLayout? = null
     private var bannerView: AdView? = null
 
-    // Layout variables
     private var isPosition: String = "bottom-center"
     private var adType: String = "BANNER"
     private var bannerViewHeight: Int = 0
@@ -36,7 +34,6 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
     private var marginsInPx: Int = 0
     private var isCollapsible: Boolean = false
 
-    // States
     private var isBannerLoad: Boolean = false
     private var isBannerShow: Boolean = false
     private var bannerAutoShow: Boolean = false
@@ -45,7 +42,6 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
     private var lock: Boolean = true
     private var isBannerPause: Int = 2
 
-    // Security & Throttle Guards
     private var isLoading: Boolean = false
     private var lastLoadTime: Long = 0
     private var minLoadInterval: Long = 5000
@@ -54,10 +50,6 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
     private fun runOnUiThread(action: Runnable) {
         plugin.pluginActivity.runOnUiThread(action)
     }
-
-    // ==========================================
-    // LAYOUT ENGINE (FIXED MATH)
-    // ==========================================
 
     @SuppressLint("RtlHardcoded")
     private fun setBannerPosition(position: String?) {
@@ -132,22 +124,20 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
             val bannerHeightPx = bannerViewHeight
             val statusBarHeight = getStatusBarHeight(activity)
 
-            // 1. Posisi Banner (Di DecorView)
             if (isPosition.equals("top-center", ignoreCase = true)) {
                 val bannerLp = bannerView?.layoutParams as? FrameLayout.LayoutParams
                 bannerLp?.let { lp ->
-                    // Banner harus didorong sejauh status bar agar tidak tertutup
+
                     lp.topMargin = if (isFullScreen) 0 else statusBarHeight
                     bannerView?.layoutParams = lp
                 }
             }
 
-            // 2. Posisi WebView (Di Content View)
             val webView = plugin.pluginWebView.view
             val webLp = webView.layoutParams as? FrameLayout.LayoutParams
             if (webLp != null && isPosition.equals("top-center", ignoreCase = true)) {
                 if (!isOverlapping) {
-                    // FIX: WebView SUDAH di bawah status bar, jadi hanya perlu didorong sejauh tinggi banner + padding
+
                     webLp.topMargin = bannerHeightPx + paddingInPx
                     webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
                 } else {
@@ -167,7 +157,6 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
                     try {
                         val activity = plugin.pluginActivity
 
-                        // Kalkulasi akurat sisa ruang layar
                         val screenHeightInPx = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                             val windowMetrics = activity.windowManager.currentWindowMetrics
                             val insets = windowMetrics.windowInsets.getInsets(WindowInsets.Type.systemBars())
@@ -179,7 +168,6 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
                             displayMetrics.heightPixels
                         }
 
-                        // Mengamankan banner dari Navigation Bar bawah
                         val navBarHeight = if (!isFullScreen) getNavigationBarHeight(activity) else 0
                         bannerViewLayout?.let { container ->
                             val params = container.layoutParams as? ViewGroup.MarginLayoutParams
@@ -189,7 +177,6 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
                             }
                         }
 
-                        // Memotong WebView dari bawah
                         val webLp = plugin.pluginWebView.view.layoutParams as? FrameLayout.LayoutParams
                         if (webLp != null) {
                             if (!isOverlapping) {
@@ -257,9 +244,6 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
         }
     }
 
-    // ==========================================
-    // CORDOVA COMMANDS
-    // ==========================================
     fun loadBannerAd(args: JSONArray, callbackContext: CallbackContext) {
         if (isLoading) return
 
@@ -420,9 +404,6 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
         }
     }
 
-    // ==========================================
-    // ADMOB DELEGATE / LISTENER
-    // ==========================================
     private val bannerAdListener = object : AdListener() {
         override fun onAdLoaded() {
             isLoading = false
@@ -528,9 +509,6 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
         }
     }
 
-    // ==========================================
-    // UTILS
-    // ==========================================
     private fun setBannerSize(size: String?) {
         val activity = plugin.pluginActivity
         if (bannerView == null) return

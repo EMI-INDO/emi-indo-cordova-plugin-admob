@@ -1,4 +1,3 @@
-// src/android/EmiInterstitialManager.kt
 package emi.indo.cordova.plugin.admob
 
 import com.google.android.gms.ads.AdError
@@ -18,10 +17,9 @@ class EmiInterstitialManager(private val plugin: EmiAdPluginProtocol) {
     private var mInterstitialAd: InterstitialAd? = null
     private var intAutoShow: Boolean = false
 
-    // Security & Throttle Guards
     private var isLoading: Boolean = false
     private var lastLoadTime: Long = 0
-    private var minLoadInterval: Long = 5000 // Default 5 detik (dalam milidetik)
+    private var minLoadInterval: Long = 5000 
     private var lastAdUnitId: String = ""
 
     fun loadInterstitialAd(args: JSONArray, callbackContext: CallbackContext) {
@@ -38,7 +36,6 @@ class EmiInterstitialManager(private val plugin: EmiAdPluginProtocol) {
 
         val now = System.currentTimeMillis()
 
-        // Guard: Same Ad Unit
         if (adUnitId == lastAdUnitId && mInterstitialAd != null) {
             if (intAutoShow) {
                 showInterstitialAd(null)
@@ -49,7 +46,6 @@ class EmiInterstitialManager(private val plugin: EmiAdPluginProtocol) {
             return
         }
 
-        // Guard: Throttle
         if (now - lastLoadTime < minLoadInterval) {
             return
         }
@@ -127,7 +123,7 @@ class EmiInterstitialManager(private val plugin: EmiAdPluginProtocol) {
 
             override fun onAdDismissedFullScreenContent() {
                 mInterstitialAd = null
-                lastAdUnitId = "" // Reset cache
+                lastAdUnitId = "" 
                 plugin.fireEvent("on.interstitial.dismissed", null)
             }
 
@@ -148,7 +144,7 @@ class EmiInterstitialManager(private val plugin: EmiAdPluginProtocol) {
 
             override fun onAdShowedFullScreenContent() {
                 plugin.fireEvent("on.interstitial.show", null)
-                plugin.fireEvent("onPresentAd", null) // Backward compatibility
+                plugin.fireEvent("onPresentAd", null) 
             }
         }
 

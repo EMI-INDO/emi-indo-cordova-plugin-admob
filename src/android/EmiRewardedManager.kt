@@ -1,4 +1,3 @@
-// src/android/EmiRewardedManager.kt
 package emi.indo.cordova.plugin.admob
 
 import com.google.android.gms.ads.AdError
@@ -17,12 +16,11 @@ class EmiRewardedManager(private val plugin: EmiAdPluginProtocol) {
 
     private var rewardedAd: RewardedAd? = null
     private var rewardedAutoShow: Boolean = false
-    private var isAdSkip: Int = 0 // 0 = initial, 1 = showed/no reward, 2 = rewarded
+    private var isAdSkip: Int = 0 
 
-    // Security & Throttle Guards
     private var isLoading: Boolean = false
     private var lastLoadTime: Long = 0
-    private var minLoadInterval: Long = 5000 // Default 5000ms (5 seconds)
+    private var minLoadInterval: Long = 5000 
     private var lastAdUnitId: String = ""
 
     fun loadRewardedAd(args: JSONArray, callbackContext: CallbackContext) {
@@ -39,7 +37,6 @@ class EmiRewardedManager(private val plugin: EmiAdPluginProtocol) {
 
         val now = System.currentTimeMillis()
 
-        // Guard: Same Ad Unit
         if (adUnitId == lastAdUnitId && rewardedAd != null) {
             if (rewardedAutoShow) {
                 showRewardedAd(null)
@@ -50,7 +47,6 @@ class EmiRewardedManager(private val plugin: EmiAdPluginProtocol) {
             return
         }
 
-        // Guard: Throttle
         if (now - lastLoadTime < minLoadInterval) {
             return
         }
@@ -120,9 +116,9 @@ class EmiRewardedManager(private val plugin: EmiAdPluginProtocol) {
 
     private fun showInternal() {
         plugin.pluginActivity.let { activity ->
-            isAdSkip = 1 // Mark as showing, but not yet rewarded
+            isAdSkip = 1 
             rewardedAd?.show(activity) { rewardItem ->
-                isAdSkip = 2 // Mark as rewarded
+                isAdSkip = 2 
                 val result = JSONObject()
                 try {
                     result.put("rewardType", rewardItem.type)
@@ -149,7 +145,7 @@ class EmiRewardedManager(private val plugin: EmiAdPluginProtocol) {
                 }
 
                 rewardedAd = null
-                lastAdUnitId = "" // Reset cache to allow reloading
+                lastAdUnitId = "" 
                 plugin.pluginWebView.view.requestFocus()
             }
 
