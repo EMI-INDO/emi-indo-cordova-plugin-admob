@@ -1,7 +1,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  id="emi-indo-cordova-plugin-admob" version="2.7.9">
+  id="emi-indo-cordova-plugin-admob" version="2.8.9">
 
   <name>emiAdmobPlugin</name>
   <description>Cordova/Quasar/Capacitor Plugin Admob Android IOS</description>
