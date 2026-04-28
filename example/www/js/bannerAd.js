@@ -10,7 +10,7 @@ function loadBanner() {
         cordova.plugins.emiAdmobPlugin.loadBannerAd({
             adUnitId: Banner_ID, //Banner_ID,
             position: "bottom-center", //  bottom-center | top-center
-            size: "banner",
+            size: "banner", // adaptive | banner | large_banner | full_banner | leaderboard
             collapsible: false, // default false
             autoShow: true, // default false
             isOverlapping: false, // The height of the body is reduced by the height of the banner.
@@ -57,29 +57,13 @@ top-center
 
 /* ///////<<<<  bannerAd size  >>>>>>\\\\\\\
 
-(ANDROID)
-
-responsive_adaptive
-anchored_adaptive
-full_width_adaptive
-full_width
-in_line_adaptive
-banner
-large_banner
-medium_rectangle
-full_banner
-leaderboard
-fluid
-
-(IOS)
+(ANDROID | IOS)
 
 adaptive
 banner
 large_banner
 full_banner
 leaderboard
-
-
 
 */
 

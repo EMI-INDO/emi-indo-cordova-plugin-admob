@@ -411,16 +411,28 @@ NSString *setKeyword = @"";
     CDVPluginResult *pluginResult;
     NSString *callbackId = cmd.callbackId;
     NSDictionary *options = [cmd.arguments objectAtIndex:0];
-    BOOL childDirectedTreatment = [[options valueForKey:@"childDirectedTreatment"] boolValue];
-    BOOL underAgeOfConsent = [[options valueForKey:@"underAgeOfConsent"] boolValue];
+
+    id childOpt = [options objectForKey:@"childDirectedTreatment"];
+    id teenOpt = [options objectForKey:@"underAgeOfConsent"];
     NSString *contentRating = [options valueForKey:@"contentRating"];
 
     @try {
         GADRequestConfiguration *requestConfiguration = GADMobileAds.sharedInstance.requestConfiguration;
-        requestConfiguration.tagForChildDirectedTreatment = @(childDirectedTreatment);
-        requestConfiguration.tagForUnderAgeOfConsent = @(underAgeOfConsent);
 
-        if (contentRating != nil) {
+        GADAgeRestrictedTreatment ageTreatment = GADAgeRestrictedTreatmentUnspecified;
+
+        BOOL isChild = (childOpt != nil && childOpt != [NSNull null]) ? [childOpt boolValue] : NO;
+        BOOL isTeen = (teenOpt != nil && teenOpt != [NSNull null]) ? [teenOpt boolValue] : NO;
+
+        if (isChild) {
+            ageTreatment = GADAgeRestrictedTreatmentChild;
+        } else if (isTeen) {
+            ageTreatment = GADAgeRestrictedTreatmentTeen;
+        }
+
+        requestConfiguration.ageRestrictedTreatment = ageTreatment;
+
+        if (contentRating != nil && contentRating != (id)[NSNull null]) {
             if ([contentRating isEqualToString:@"G"]) {
                 requestConfiguration.maxAdContentRating = GADMaxAdContentRatingGeneral;
             } else if ([contentRating isEqualToString:@"PG"]) {
@@ -431,11 +443,14 @@ NSString *setKeyword = @"";
                 requestConfiguration.maxAdContentRating = GADMaxAdContentRatingMatureAudience;
             }
         }
-        UnderAgeOfConsent = underAgeOfConsent;
+
+        UnderAgeOfConsent = isTeen;
+
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     } @catch (NSException *exception) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
     }
+
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 

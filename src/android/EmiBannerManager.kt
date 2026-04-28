@@ -520,8 +520,8 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
 
         when (size?.uppercase(Locale.getDefault())) {
             "RESPONSIVE_ADAPTIVE" -> bannerView?.setAdSize(adSize)
-            "ANCHORED_ADAPTIVE" -> bannerView?.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidth))
-            "FULL_WIDTH_ADAPTIVE", "FULL_WIDTH" -> bannerView?.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidth))
+            "ANCHORED_ADAPTIVE" -> bannerView?.setAdSize(AdSize.getLargeAnchoredAdaptiveBannerAdSize(activity, adWidth))
+            "FULL_WIDTH_ADAPTIVE", "FULL_WIDTH" -> bannerView?.setAdSize(AdSize.getLargeAnchoredAdaptiveBannerAdSize(activity, adWidth))
             "IN_LINE_ADAPTIVE" -> bannerView?.setAdSize(AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(activity, adWidth))
             "BANNER" -> bannerView?.setAdSize(AdSize.BANNER)
             "LARGE_BANNER" -> bannerView?.setAdSize(AdSize.LARGE_BANNER)
@@ -529,7 +529,7 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
             "FULL_BANNER" -> bannerView?.setAdSize(AdSize.FULL_BANNER)
             "LEADERBOARD" -> bannerView?.setAdSize(AdSize.LEADERBOARD)
             "FLUID" -> bannerView?.setAdSize(AdSize.FLUID)
-            else -> bannerView?.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidth))
+            else -> bannerView?.setAdSize(AdSize.getLargeAnchoredAdaptiveBannerAdSize(activity, adWidth))
         }
     }
 
@@ -551,7 +551,7 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
             val density = outMetrics.density
             val adWidthPixels = if ((bannerViewLayout?.width ?: 0) > 0) bannerViewLayout!!.width else outMetrics.widthPixels
             val adWidthInt = (adWidthPixels / density).toInt()
-            return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidthInt)
+            return AdSize.getLargeAnchoredAdaptiveBannerAdSize(activity, adWidthInt)
         }
 
     private val adWidth: Int

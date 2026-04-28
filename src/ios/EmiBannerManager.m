@@ -199,7 +199,7 @@
 
         GADAdSize adSize;
         if (self.isCollapsible) {
-            adSize = GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(viewController.view.bounds.size.width);
+            adSize = GADAdSizeBanner; 
         } else {
             adSize = [self getAdSizeFromString:size];
         }
@@ -394,12 +394,15 @@
 }
 
 - (GADAdSize)getAdSizeFromString:(NSString *)size {
-    if ([size isEqualToString:@"adaptive"]) return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(UIScreen.mainScreen.bounds.size.width);
+    if ([size isEqualToString:@"adaptive"]) return GADLargeAnchoredAdaptiveBannerAdSizeWithWidth(UIScreen.mainScreen.bounds.size.width);
     if ([size isEqualToString:@"banner"]) return GADAdSizeBanner;
     if ([size isEqualToString:@"large_banner"]) return GADAdSizeLargeBanner;
     if ([size isEqualToString:@"full_banner"]) return GADAdSizeFullBanner;
     if ([size isEqualToString:@"leaderboard"]) return GADAdSizeLeaderboard;
-    return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(UIScreen.mainScreen.bounds.size.width);
+    if ([size isEqualToString:@"medium_rectangle"]) return GADAdSizeMediumRectangle;
+    if ([size isEqualToString:@"fluid"]) return GADAdSizeFluid;
+
+    return GADAdSizeBanner;
 }
 
 @end

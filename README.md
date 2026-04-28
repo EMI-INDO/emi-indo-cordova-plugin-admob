@@ -27,11 +27,10 @@ This plugin supports the latest Mobile Ads SDK, User Messaging Platform (UMP), C
 
 
 ### 🎉 New Milestone 2026
-We are starting the year strong! **Version 2.5.9-beta.1, 2.7.9-beta.1+** is now available with significant improvements.
-👉 [**Check out the Release Notes (v2.7.9-beta.2)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/2.7.9-beta.2)
-👉 [**Check out the Release Notes (v2.7.9-beta.1)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/2.7.9-beta.1)
+We are starting the year strong! **Version 2.8.9 or 2.9.9** is now available with significant improvements.
+👉 [**Check out the Release Notes (v2.8.9)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v2.8.9)
+👉 [**Check out the Release Notes: Migration SDK (v2.9.9)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v2.9.9)
 
-👉 [**Check out the Release Notes (v2.5.9-beta.1)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/2.5.9-beta.1)
 
 ---
 
@@ -57,10 +56,10 @@ We are starting the year strong! **Version 2.5.9-beta.1, 2.7.9-beta.1+** is now 
 
 ---
 
-## 📢 Version 2.0.8+ Highlights
+## 📢 Version 2.9.+ Highlights
 
-* **Android Migration:** Mobile Ads SDK updated from v23 to **v24**.
-* **iOS Migration:** Mobile Ads SDK updated from v11 to **v12**.
+* **Android Migration:** Mobile Ads SDK updated from v24+ to **v25+**.
+* **iOS Migration:** Mobile Ads SDK updated from v12+ to **v13+**.
 * **Release Notes:** [Check all release notes here](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/)
 * **Examples:** [Full Source Code Examples](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/www/js)
 
@@ -70,10 +69,10 @@ This plugin is regularly updated to support the latest standards.
 
 | Component | Platform | Version | Release Notes |
 | :--- | :--- | :--- | :--- |
-| **Mobile Ads SDK** | Android | **24.9.0** | [View Notes](https://developers.google.com/admob/android/rel-notes) |
+| **Mobile Ads SDK** | Android | **25.2.0** | [View Notes](https://developers.google.com/admob/android/rel-notes) |
 | **UMP SDK** | Android | **4.0.0** | [View Notes](https://developers.google.com/admob/android/privacy/release-notes) |
-| **Mobile Ads SDK** | iOS | **12.14.0** | [View Notes](https://developers.google.com/admob/ios/rel-notes) |
-| **UMP SDK** | iOS | **3.2.0** | [View Notes](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/privacy/download) |
+| **Mobile Ads SDK** | iOS | **13.3.0** | [View Notes](https://developers.google.com/admob/ios/rel-notes) |
+| **UMP SDK** | iOS | **3.1.0** | [View Notes](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/privacy/download) |
 
 ### Recommended `config.xml` Setup
 
@@ -288,7 +287,8 @@ document.addEventListener('on.TCString.expired', () => {
 ```javascript
 const bannerConfig = {
    adUnitId: "ca-app-pub-xxx/xxx", 
-   size: "adaptive", // banner 
+   position: "bottom-center", //  bottom-center | top-center
+   size: "adaptive", // adaptive | banner | large_banner | full_banner | leaderboard
    collapsible: false, // default false
    autoShow: true, // default false
    isOverlapping: false, // The height of the body is reduced by the height of the banner.
