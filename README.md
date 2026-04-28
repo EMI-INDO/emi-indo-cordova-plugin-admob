@@ -28,8 +28,8 @@ This plugin supports the latest Mobile Ads SDK, User Messaging Platform (UMP), C
 
 ### 🎉 New Milestone 2026
 We are starting the year strong! **Version 2.8.9 or 2.9.9** is now available with significant improvements.
-👉 [**Check out the Release Notes (v2.8.9)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v2.8.9)
-👉 [**Check out the Release Notes: Migration SDK (v2.9.9)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v2.9.9)
+> 👉 [**Check out the Release Notes (v2.8.9)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v2.8.9)
+> 👉 [**Check out the Release Notes: Migration SDK (v2.9.9)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v2.9.9)
 
 
 ---
