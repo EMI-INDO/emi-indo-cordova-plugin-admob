@@ -1,7 +1,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  id="emi-indo-cordova-plugin-admob" version="2.7.9-beta.2">
+  id="emi-indo-cordova-plugin-admob" version="2.7.9-beta.3">
 
   <name>emiAdmobPlugin</name>
   <description>Cordova/Quasar/Capacitor Plugin Admob Android IOS</description>
@@ -23,9 +23,9 @@
 
   <platform name="android">
 
-  <hook type="after_plugin_install" src="src/android/hooks/add-tools-namespace.js" />
-  <hook type="after_prepare" src="src/android/hooks/add-tools-namespace.js" />
-    
+    <hook type="after_plugin_install" src="src/android/hooks/add-tools-namespace.js" />
+    <hook type="after_prepare" src="src/android/hooks/add-tools-namespace.js" />
+
     <config-file parent="/*" target="res/xml/config.xml">
       <feature name="emiAdmobPlugin">
         <param name="android-package" value="emi.indo.cordova.plugin.admob.EmiAdmobPlugin" />
@@ -44,9 +44,12 @@
         tools:replace="android:configChanges"
         android:theme="@android:style/Theme.Translucent"
         android:hardwareAccelerated="true" />
-      <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="$APP_ID_ANDROID" />
-      <meta-data android:name="com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT" android:value="true" />
-      <meta-data android:name="com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING" android:value="true" />
+      <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
+        android:value="$APP_ID_ANDROID" />
+      <meta-data android:name="com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT"
+        android:value="true" />
+      <meta-data android:name="com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING"
+        android:value="true" />
       <meta-data
         android:name="com.google.android.gms.ads.INTEGRATION_MANAGER" android:value="webview" />
     </config-file>
@@ -55,6 +58,7 @@
 
     <preference name="APP_ID_ANDROID" default="ca-app-pub-3940256099942544~3347511713" />
     <preference name="PLAY_SERVICES_VERSION" default="24.9.0" />
+
 
     <framework src="com.google.android.gms:play-services-ads:$PLAY_SERVICES_VERSION" />
 
@@ -65,13 +69,20 @@
     <preference name="ANDROID_X" default="1.2.0" />
     <framework src="androidx.preference:preference:$ANDROID_X" />
 
-    <source-file src="src/android/EmiAdmobPlugin.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
-    <source-file src="src/android/EmiAdPluginProtocol.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
-    <source-file src="src/android/EmiAppOpenManager.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
-    <source-file src="src/android/EmiBannerManager.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
-    <source-file src="src/android/EmiInterstitialManager.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
-    <source-file src="src/android/EmiRewardedManager.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
-    <source-file src="src/android/EmiRewardedInterstitialManager.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
+    <source-file src="src/android/EmiAdmobPlugin.kt"
+      target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
+    <source-file src="src/android/EmiAdPluginProtocol.kt"
+      target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
+    <source-file src="src/android/EmiAppOpenManager.kt"
+      target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
+    <source-file src="src/android/EmiBannerManager.kt"
+      target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
+    <source-file src="src/android/EmiInterstitialManager.kt"
+      target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
+    <source-file src="src/android/EmiRewardedManager.kt"
+      target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
+    <source-file src="src/android/EmiRewardedInterstitialManager.kt"
+      target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/admob" />
 
   </platform>
 
@@ -156,7 +167,15 @@
         </dict>
         <dict>
           <key>SKAdNetworkIdentifier</key>
+          <string>wg4vff78zm.skadnetwork</string>
+        </dict>
+        <dict>
+          <key>SKAdNetworkIdentifier</key>
           <string>3qy4746246.skadnetwork</string>
+        </dict>
+        <dict>
+          <key>SKAdNetworkIdentifier</key>
+          <string>f38h382jlk.skadnetwork</string>
         </dict>
         <dict>
           <key>SKAdNetworkIdentifier</key>
@@ -181,6 +200,10 @@
         <dict>
           <key>SKAdNetworkIdentifier</key>
           <string>yclnxrl5pm.skadnetwork</string>
+        </dict>
+        <dict>
+          <key>SKAdNetworkIdentifier</key>
+          <string>t38b2kh725.skadnetwork</string>
         </dict>
         <dict>
           <key>SKAdNetworkIdentifier</key>
@@ -228,6 +251,14 @@
         </dict>
         <dict>
           <key>SKAdNetworkIdentifier</key>
+          <string>44jx6755aq.skadnetwork</string>
+        </dict>
+        <dict>
+          <key>SKAdNetworkIdentifier</key>
+          <string>k674qkevps.skadnetwork</string>
+        </dict>
+        <dict>
+          <key>SKAdNetworkIdentifier</key>
           <string>4468km3ulz.skadnetwork</string>
         </dict>
         <dict>
@@ -240,15 +271,19 @@
         </dict>
         <dict>
           <key>SKAdNetworkIdentifier</key>
+          <string>klf5c3l5u5.skadnetwork</string>
+        </dict>
+        <dict>
+          <key>SKAdNetworkIdentifier</key>
           <string>ppxm28t8ap.skadnetwork</string>
         </dict>
         <dict>
           <key>SKAdNetworkIdentifier</key>
-          <string>uw77j35x4d.skadnetwork</string>
+          <string>kbmxgpxpgc.skadnetwork</string>
         </dict>
         <dict>
           <key>SKAdNetworkIdentifier</key>
-          <string>pwa73g5rt2.skadnetwork</string>
+          <string>uw77j35x4d.skadnetwork</string>
         </dict>
         <dict>
           <key>SKAdNetworkIdentifier</key>
@@ -264,6 +299,10 @@
         </dict>
         <dict>
           <key>SKAdNetworkIdentifier</key>
+          <string>c3frkrj4fj.skadnetwork</string>
+        </dict>
+        <dict>
+          <key>SKAdNetworkIdentifier</key>
           <string>e5fvkxwrpn.skadnetwork</string>
         </dict>
         <dict>
@@ -273,6 +312,10 @@
         <dict>
           <key>SKAdNetworkIdentifier</key>
           <string>3rd42ekr43.skadnetwork</string>
+        </dict>
+        <dict>
+          <key>SKAdNetworkIdentifier</key>
+          <string>97r2b46745.skadnetwork</string>
         </dict>
         <dict>
           <key>SKAdNetworkIdentifier</key>

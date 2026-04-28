@@ -1,3 +1,4 @@
+// avoid duplicate conflicts with other plugins if any, xmlns:tools="http://schemas.android.com/tools
 const fs = require('fs');
 const path = require('path');
 
