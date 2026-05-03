@@ -59,6 +59,36 @@ function updatePluginXml(admobConfig) {
   console.log('AdMob IDs and framework dependency successfully updated in plugin.xml');
 }
 
+// Fixed Capacitor's forgotten XML namespace
+function fixAndroidManifestNamespaces() {
+  const manifestPaths = [
+    path.join(process.cwd(), 'android', 'capacitor-cordova-android-plugins', 'src', 'main', 'AndroidManifest.xml'),
+    path.join(process.cwd(), 'android', 'app', 'src', 'main', 'AndroidManifest.xml')
+  ];
+
+  manifestPaths.forEach(manifestPath => {
+    if (fileExists(manifestPath)) {
+      let xmlContent = fs.readFileSync(manifestPath, 'utf8');
+      let needsWrite = false;
+
+      if (xmlContent.includes('tools:') && !xmlContent.includes('xmlns:tools')) {
+        xmlContent = xmlContent.replace('<manifest', '<manifest xmlns:tools="http://schemas.android.com/tools"');
+        needsWrite = true;
+      }
+      
+      if (xmlContent.includes('app:') && !xmlContent.includes('xmlns:app')) {
+        xmlContent = xmlContent.replace('<manifest', '<manifest xmlns:app="http://schemas.android.com/apk/res-auto"');
+        needsWrite = true;
+      }
+
+      if (needsWrite) {
+        fs.writeFileSync(manifestPath, xmlContent, 'utf8');
+        console.log(`Auto-healed XML namespaces in ${path.basename(manifestPath)}`);
+      }
+    }
+  });
+}
+
 function updateInfoPlist(admobConfig) {
   if (!fileExists(infoPlistPath)) {
     console.error('Info.plist not found. Ensure you have built the iOS project.');
@@ -144,6 +174,7 @@ try {
 
   if (fileExists(androidPlatformPath)) {
     updatePluginXml(admobConfig);
+    fixAndroidManifestNamespaces();
   }
 
   if (fileExists(iosPlatformPath)) {
