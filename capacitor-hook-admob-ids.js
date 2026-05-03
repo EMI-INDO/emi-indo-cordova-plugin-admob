@@ -83,7 +83,7 @@ function fixAndroidManifestNamespaces() {
 
       if (needsWrite) {
         fs.writeFileSync(manifestPath, xmlContent, 'utf8');
-        console.log(`Auto-healed XML namespaces in ${path.basename(manifestPath)}`);
+        //console.log(`Auto-healed XML namespaces in ${path.basename(manifestPath)}`);
       }
     }
   });

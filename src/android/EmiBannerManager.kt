@@ -33,6 +33,7 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
     private var paddingInPx: Int = 0
     private var marginsInPx: Int = 0
     private var isCollapsible: Boolean = false
+    private var isCapacitor: Boolean = false 
 
     private var isBannerLoad: Boolean = false
     private var isBannerShow: Boolean = false
@@ -100,16 +101,31 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
                 try {
                     val rootView = plugin.pluginWebView.view.parent as View
                     rootView.post {
-                        val webLp = plugin.pluginWebView.view.layoutParams as? FrameLayout.LayoutParams
-                        if (webLp != null) {
-                            webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
-                            webLp.topMargin = 0
-                            webLp.bottomMargin = 0
-                            plugin.pluginWebView.view.layoutParams = webLp
+                        val webView = plugin.pluginWebView.view
+
+                        if (isCapacitor) {
+
+                            val params = webView.layoutParams as? ViewGroup.MarginLayoutParams
+                            if (params != null) {
+                                params.height = ViewGroup.LayoutParams.MATCH_PARENT
+                                params.topMargin = 0
+                                params.bottomMargin = 0
+                                webView.layoutParams = params
+                            }
+                        } else {
+
+                            val webLp = webView.layoutParams as? FrameLayout.LayoutParams
+                            if (webLp != null) {
+                                webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
+                                webLp.topMargin = 0
+                                webLp.bottomMargin = 0
+                                webView.layoutParams = webLp
+                            }
                         }
-                        plugin.pluginWebView.view.setPadding(0, 0, 0, 0)
-                        (plugin.pluginWebView.view.parent as? ViewGroup)?.setPadding(0, 0, 0, 0)
-                        plugin.pluginWebView.view.requestLayout()
+
+                        webView.setPadding(0, 0, 0, 0)
+                        (webView.parent as? ViewGroup)?.setPadding(0, 0, 0, 0)
+                        webView.requestLayout()
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -127,26 +143,47 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
             if (isPosition.equals("top-center", ignoreCase = true)) {
                 val bannerLp = bannerView?.layoutParams as? FrameLayout.LayoutParams
                 bannerLp?.let { lp ->
-
                     lp.topMargin = if (isFullScreen) 0 else statusBarHeight
                     bannerView?.layoutParams = lp
                 }
             }
 
             val webView = plugin.pluginWebView.view
-            val webLp = webView.layoutParams as? FrameLayout.LayoutParams
-            if (webLp != null && isPosition.equals("top-center", ignoreCase = true)) {
-                if (!isOverlapping) {
 
-                    webLp.topMargin = bannerHeightPx + paddingInPx
-                    webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
+            if (isPosition.equals("top-center", ignoreCase = true)) {
+                if (isCapacitor) {
+
+                    val capLp = webView.layoutParams as? ViewGroup.MarginLayoutParams
+                    if (capLp != null) {
+                        if (!isOverlapping) {
+                            val pushDown = bannerHeightPx + paddingInPx + (if (isFullScreen) 0 else statusBarHeight)
+                            capLp.topMargin = pushDown
+
+                            val screenHeightInPx = getScreenHeightInPx(activity)
+                            val navBarHeight = if (!isFullScreen) getNavigationBarHeight(activity) else 0
+                            capLp.height = screenHeightInPx - pushDown - navBarHeight
+                        } else {
+                            capLp.topMargin = 0
+                            capLp.height = ViewGroup.LayoutParams.MATCH_PARENT
+                        }
+                        webView.layoutParams = capLp
+                    }
                 } else {
-                    webLp.topMargin = 0
-                    webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
+
+                    val webLp = webView.layoutParams as? FrameLayout.LayoutParams
+                    if (webLp != null) {
+                        if (!isOverlapping) {
+                            webLp.topMargin = bannerHeightPx + paddingInPx
+                            webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
+                        } else {
+                            webLp.topMargin = 0
+                            webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
+                        }
+                        webView.layoutParams = webLp
+                    }
                 }
-                webView.layoutParams = webLp
+                webView.requestLayout()
             }
-            webView.requestLayout()
         }
     }
 
@@ -156,17 +193,7 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
                 bannerView?.post {
                     try {
                         val activity = plugin.pluginActivity
-
-                        val screenHeightInPx = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                            val windowMetrics = activity.windowManager.currentWindowMetrics
-                            val insets = windowMetrics.windowInsets.getInsets(WindowInsets.Type.systemBars())
-                            windowMetrics.bounds.height() - insets.top - insets.bottom
-                        } else {
-                            val displayMetrics = DisplayMetrics()
-                            @Suppress("DEPRECATION")
-                            activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
-                            displayMetrics.heightPixels
-                        }
+                        val screenHeightInPx = getScreenHeightInPx(activity)
 
                         val navBarHeight = if (!isFullScreen) getNavigationBarHeight(activity) else 0
                         bannerViewLayout?.let { container ->
@@ -177,17 +204,36 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
                             }
                         }
 
-                        val webLp = plugin.pluginWebView.view.layoutParams as? FrameLayout.LayoutParams
-                        if (webLp != null) {
-                            if (!isOverlapping) {
-                                val webViewHeight = screenHeightInPx - bannerViewHeight - paddingInPx
-                                webLp.height = webViewHeight
-                                webLp.topMargin = 0
-                            } else {
-                                webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
-                                webLp.topMargin = 0
+                        val webView = plugin.pluginWebView.view
+
+                        if (isCapacitor) {
+
+                            val capLp = webView.layoutParams as? ViewGroup.MarginLayoutParams
+                            if (capLp != null) {
+                                if (!isOverlapping) {
+                                    val webViewHeight = screenHeightInPx - bannerViewHeight - paddingInPx
+                                    capLp.height = webViewHeight
+                                    capLp.topMargin = 0
+                                } else {
+                                    capLp.height = ViewGroup.LayoutParams.MATCH_PARENT
+                                    capLp.topMargin = 0
+                                }
+                                webView.layoutParams = capLp
                             }
-                            plugin.pluginWebView.view.layoutParams = webLp
+                        } else {
+
+                            val webLp = webView.layoutParams as? FrameLayout.LayoutParams
+                            if (webLp != null) {
+                                if (!isOverlapping) {
+                                    val webViewHeight = screenHeightInPx - bannerViewHeight - paddingInPx
+                                    webLp.height = webViewHeight
+                                    webLp.topMargin = 0
+                                } else {
+                                    webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
+                                    webLp.topMargin = 0
+                                }
+                                webView.layoutParams = webLp
+                            }
                         }
 
                     } catch (e: Exception) {
@@ -254,6 +300,8 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
 
         isOverlapping = options.optBoolean("isOverlapping", false)
         bannerAutoShow = options.optBoolean("autoShow", false)
+        isCapacitor = options.optBoolean("isCapacitor", false) 
+
         isPosition = position
         adType = sizeStr
         paddingInPx = options.optInt("padding", 0)
@@ -573,6 +621,19 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
             val adWidthPixels = (bannerViewLayout?.width?.takeIf { it > 0 } ?: outMetrics.widthPixels).toFloat()
             return (adWidthPixels / density).toInt()
         }
+
+    private fun getScreenHeightInPx(activity: android.app.Activity): Int {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val windowMetrics = activity.windowManager.currentWindowMetrics
+            val insets = windowMetrics.windowInsets.getInsets(WindowInsets.Type.systemBars())
+            windowMetrics.bounds.height() - insets.top - insets.bottom
+        } else {
+            val displayMetrics = DisplayMetrics()
+            @Suppress("DEPRECATION")
+            activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+            displayMetrics.heightPixels
+        }
+    }
 
     private fun getAdHeightInPx(adSize: AdSize?): Int {
         if (adSize == null) return 0

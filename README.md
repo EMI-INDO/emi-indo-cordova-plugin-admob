@@ -27,10 +27,16 @@ This plugin supports the latest Mobile Ads SDK, User Messaging Platform (UMP), C
 
 
 ### 🎉 New Milestone 2026
-We are starting the year strong! **Version 2.8.9 or 2.9.9** is now available with significant improvements.
-> 👉 [**Check out the Release Notes (v2.8.9)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v2.8.9)
-> 👉 [**Check out the Release Notes: Migration SDK (v2.9.9)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v2.9.9)
+We are starting the year strong! **Version 2.8.9 - 3.0.+** is now available with significant improvements.
+- 👉 [**Check out the Release Notes: Migration SDK (v3.0.0)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v3.0.0)
+- 👉 [**Check out the Release Notes: Migration SDK (v2.9.9)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v2.9.9)
+- 👉 [**Check out the Release Notes (v2.8.9)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v2.8.9)
 
+---
+
+## ☁️ Cloud Build (Quick Test)
+
+> Fastest test (APK Debug): **[⚡ With github action ](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/discussions/87)** (Optional)
 
 ---
 
@@ -56,12 +62,13 @@ We are starting the year strong! **Version 2.8.9 or 2.9.9** is now available wit
 
 ---
 
-## 📢 Version 2.9.+ Highlights
+## 📢 Version 2.9.+ - 3+ Highlights
 
 * **Android Migration:** Mobile Ads SDK updated from v24+ to **v25+**.
 * **iOS Migration:** Mobile Ads SDK updated from v12+ to **v13+**.
 * **Release Notes:** [Check all release notes here](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/)
-* **Examples:** [Full Source Code Examples](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example/www/js)
+* **Examples:** [Full Cordova Source Code Examples](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example-cordova/www/js)
+* **Examples:** [🚀 Capacitor Code Examples](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example-capacitor/README.md)
 
 ### 📦 Current SDK Versions (Maintained & Up-to-Date)
 
@@ -74,12 +81,6 @@ This plugin is regularly updated to support the latest standards.
 | **Mobile Ads SDK** | iOS | **13.3.0** | [View Notes](https://developers.google.com/admob/ios/rel-notes) |
 | **UMP SDK** | iOS | **3.1.0** | [View Notes](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/privacy/download) |
 
-### Recommended `config.xml` Setup
-
-```xml
-<preference name="android-minSdkVersion" value="24" />
-<preference name="android-targetSdkVersion" value="36" />
-```
 
 ---
 
@@ -88,12 +89,12 @@ This plugin is regularly updated to support the latest standards.
 This plugin works seamlessly with the following frameworks:
 
 * **Quasar Framework:** [Implementation Discussion](https://github.com/quasarframework/quasar/discussions/17706)
-* **Capacitor:** [Implementation Discussion](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/discussions/29)
+* **Capacitor:** [Implementation](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/tree/main/example-capacitor)
 * **jQuery Mobile:** [Official Site](https://jquerymobile.com/)
 
 ---
 
-## 🛠 Installation
+## 🛠 Installation Cordova
 
 ### 1. Install Plugin
 
@@ -201,7 +202,7 @@ document.addEventListener("deviceready", function(){
 
     // 1. Initialize
     cordova.plugins.emiAdmobPlugin.initialize({
-        isUsingAdManagerRequest: false, // true = AdManager | false = AdMob (Default true)
+        isUsingAdManagerRequest: false, // true = AdManager | false = AdMob (Default false)
         isResponseInfo: false,          // Default false (Debug true)
         isConsentDebug: false,          // Default false (Debug true)
     });
@@ -292,6 +293,7 @@ const bannerConfig = {
    collapsible: false, // default false
    autoShow: true, // default false
    isOverlapping: false, // The height of the body is reduced by the height of the banner.
+// isCapacitor: false, // Opsional: only for capacitors: if isOverlapping: false
 // padding: 0, // Optional: only isOverlapping: false, Extra 20px distance between WebView and Banner
 // loadInterval: 5 // Opsional: Anti-Flicker/Spam, Default interval 5 seconds, disable 0
 }
