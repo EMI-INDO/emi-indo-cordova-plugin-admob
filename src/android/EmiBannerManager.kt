@@ -99,33 +99,34 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
         if (bannerView != null) {
             runOnUiThread {
                 try {
-                    val rootView = plugin.pluginWebView.view.parent as View
-                    rootView.post {
-                        val webView = plugin.pluginWebView.view
-
-                        if (isCapacitor) {
-
-                            val params = webView.layoutParams as? ViewGroup.MarginLayoutParams
-                            if (params != null) {
-                                params.height = ViewGroup.LayoutParams.MATCH_PARENT
-                                params.topMargin = 0
-                                params.bottomMargin = 0
-                                webView.layoutParams = params
-                            }
-                        } else {
-
-                            val webLp = webView.layoutParams as? FrameLayout.LayoutParams
-                            if (webLp != null) {
-                                webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
-                                webLp.topMargin = 0
-                                webLp.bottomMargin = 0
-                                webView.layoutParams = webLp
-                            }
+                    val webView = plugin.pluginWebView.view
+                    if (isCapacitor) {
+                        val params = webView.layoutParams as? ViewGroup.MarginLayoutParams
+                        if (params != null) {
+                            params.height = ViewGroup.LayoutParams.MATCH_PARENT
+                            params.topMargin = 0
+                            params.bottomMargin = 0
+                            webView.layoutParams = params
                         }
-
                         webView.setPadding(0, 0, 0, 0)
                         (webView.parent as? ViewGroup)?.setPadding(0, 0, 0, 0)
                         webView.requestLayout()
+                    } else {
+
+                        val rootView = webView.parent as View
+                        rootView.post {
+                            val layoutParams = webView.layoutParams
+                            layoutParams?.height = FrameLayout.LayoutParams.MATCH_PARENT
+
+                            if (layoutParams is FrameLayout.LayoutParams) {
+                                layoutParams.topMargin = 0
+                            }
+
+                            webView.layoutParams = layoutParams
+                            webView.setPadding(0, 0, 0, 0)
+                            (webView.parent as? ViewGroup)?.setPadding(0, 0, 0, 0)
+                            webView.requestLayout()
+                        }
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -146,11 +147,8 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
                     lp.topMargin = if (isFullScreen) 0 else statusBarHeight
                     bannerView?.layoutParams = lp
                 }
-            }
 
-            val webView = plugin.pluginWebView.view
-
-            if (isPosition.equals("top-center", ignoreCase = true)) {
+                val webView = plugin.pluginWebView.view
                 if (isCapacitor) {
 
                     val capLp = webView.layoutParams as? ViewGroup.MarginLayoutParams
@@ -158,7 +156,6 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
                         if (!isOverlapping) {
                             val pushDown = bannerHeightPx + paddingInPx + (if (isFullScreen) 0 else statusBarHeight)
                             capLp.topMargin = pushDown
-
                             val screenHeightInPx = getScreenHeightInPx(activity)
                             val navBarHeight = if (!isFullScreen) getNavigationBarHeight(activity) else 0
                             capLp.height = screenHeightInPx - pushDown - navBarHeight
@@ -174,10 +171,8 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
                     if (webLp != null) {
                         if (!isOverlapping) {
                             webLp.topMargin = bannerHeightPx + paddingInPx
-                            webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
                         } else {
                             webLp.topMargin = 0
-                            webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
                         }
                         webView.layoutParams = webLp
                     }
@@ -194,18 +189,18 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
                     try {
                         val activity = plugin.pluginActivity
                         val screenHeightInPx = getScreenHeightInPx(activity)
-
                         val navBarHeight = if (!isFullScreen) getNavigationBarHeight(activity) else 0
+
                         bannerViewLayout?.let { container ->
                             val params = container.layoutParams as? ViewGroup.MarginLayoutParams
                             if (params != null) {
                                 params.bottomMargin = navBarHeight
                                 container.layoutParams = params
+                                container.requestLayout()
                             }
                         }
 
                         val webView = plugin.pluginWebView.view
-
                         if (isCapacitor) {
 
                             val capLp = webView.layoutParams as? ViewGroup.MarginLayoutParams
@@ -222,20 +217,18 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
                             }
                         } else {
 
-                            val webLp = webView.layoutParams as? FrameLayout.LayoutParams
+                            val webLp = webView.layoutParams
                             if (webLp != null) {
                                 if (!isOverlapping) {
                                     val webViewHeight = screenHeightInPx - bannerViewHeight - paddingInPx
                                     webLp.height = webViewHeight
-                                    webLp.topMargin = 0
                                 } else {
                                     webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
-                                    webLp.topMargin = 0
                                 }
                                 webView.layoutParams = webLp
                             }
                         }
-
+                        webView.requestLayout()
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

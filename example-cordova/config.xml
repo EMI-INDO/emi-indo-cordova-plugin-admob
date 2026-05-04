@@ -15,4 +15,8 @@
     <preference name="fullscreen" value="false" />
     <preference name="android-minSdkVersion" value="24" />
     <preference name="android-targetSdkVersion" value="36" />
+    <plugin name="emi-indo-cordova-plugin-admob" spec="https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob.git">
+    <variable name="APP_ID_ANDROID" value="ca-app-pub-1822348918971762~4231915823"/>
+    <variable name="APP_ID_IOS" value="ca-app-pub-3940256099942544~1458002511"/>
+    </plugin>
 </widget>
