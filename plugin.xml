@@ -1,7 +1,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  id="emi-indo-cordova-plugin-admob" version="3.0.1">
+  id="emi-indo-cordova-plugin-admob" version="3.0.2-beta.1">
 
   <name>emiAdmobPlugin</name>
   <description>Cordova/Quasar/Capacitor Plugin Admob Android IOS</description>
@@ -58,7 +58,8 @@
 
     <preference name="APP_ID_ANDROID" default="ca-app-pub-3940256099942544~3347511713" />
     <preference name="PLAY_SERVICES_VERSION" default="25.2.0" />
-
+    <!-- optional -->
+    <preference name="ADD_AD_ID" default="false" />
 
     <framework src="com.google.android.gms:play-services-ads:$PLAY_SERVICES_VERSION" />
 
