@@ -26,7 +26,16 @@ exports.loadBannerAd = function (options, success, error) {
         options = {};
     }
     var isCapacitorEnvironment = typeof window.Capacitor !== 'undefined';
-    options.isCapacitor = isCapacitorEnvironment;
+        var isCordova15Environment = false;
+        if (!isCapacitorEnvironment && typeof cordova !== 'undefined' && cordova.platformVersion) {
+            var majorVersion = parseInt(cordova.platformVersion.split('.')[0], 10);
+            if (majorVersion >= 15) {
+                isCordova15Environment = true;
+            }
+        }
+        options = options || {};
+        options.isCapacitor = isCapacitorEnvironment;
+        options.isCordova15 = isCordova15Environment;
 
     // ==========================================
     // PARAMETER NORMALIZATION: COLLAPSIBLE (Legacy Support)
