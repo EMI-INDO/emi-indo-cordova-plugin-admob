@@ -137,57 +137,73 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
 
     private fun setBannerAdTop() {
         val activity = plugin.pluginActivity
+        val isAndroid16OrHigher = Build.VERSION.SDK_INT >= 36
+        val isFullScreen = isFullScreenMode(activity)
+
         bannerView?.post {
-            val bannerHeightPx = bannerViewHeight
-            val statusBarHeight = getStatusBarHeight(activity)
+            try {
+                val bannerHeightPx = bannerViewHeight
+                val statusBarHeight = getStatusBarHeight(activity)
 
-            if (isPosition.equals("top-center", ignoreCase = true)) {
-                val bannerLp = bannerView?.layoutParams as? FrameLayout.LayoutParams
-                bannerLp?.let { lp ->
-                    lp.topMargin = if (isFullScreen) 0 else statusBarHeight
-                    bannerView?.layoutParams = lp
-                }
-
-                val webView = plugin.pluginWebView.view
-                if (isCapacitor) {
-
-                    val capLp = webView.layoutParams as? ViewGroup.MarginLayoutParams
-                    if (capLp != null) {
-                        if (!isOverlapping) {
-                            val pushDown = bannerHeightPx + paddingInPx + (if (isFullScreen) 0 else statusBarHeight)
-                            capLp.topMargin = pushDown
-                            val screenHeightInPx = getScreenHeightInPx(activity)
-                            val navBarHeight = if (!isFullScreen) getNavigationBarHeight(activity) else 0
-                            capLp.height = screenHeightInPx - pushDown - navBarHeight
-                        } else {
-                            capLp.topMargin = 0
-                            capLp.height = ViewGroup.LayoutParams.MATCH_PARENT
-                        }
-                        webView.layoutParams = capLp
+                if (isPosition.equals("top-center", ignoreCase = true)) {
+                    val bannerLp = bannerView?.layoutParams as? FrameLayout.LayoutParams
+                    bannerLp?.let { lp ->
+                        lp.topMargin = if (isFullScreen) 0 else statusBarHeight
+                        bannerView?.layoutParams = lp
                     }
-                } else {
 
-                    val webLp = webView.layoutParams as? FrameLayout.LayoutParams
-                    if (webLp != null) {
-                        if (!isOverlapping) {
-                            webLp.topMargin = bannerHeightPx + paddingInPx
-                        } else {
-                            webLp.topMargin = 0
+                    val webView = plugin.pluginWebView.view
+                    if (isCapacitor) {
+
+                        val capLp = webView.layoutParams as? ViewGroup.MarginLayoutParams
+                        if (capLp != null) {
+                            if (!isOverlapping) {
+                                val pushDown = bannerHeightPx + paddingInPx + (if (isFullScreen) 0 else statusBarHeight)
+                                capLp.topMargin = pushDown
+                                val screenHeightInPx = getScreenHeightInPx(activity)
+                                val navBarHeight = if (!isFullScreen) getNavigationBarHeight(activity) else 0
+                                capLp.height = screenHeightInPx - pushDown - navBarHeight
+                            } else {
+                                capLp.topMargin = 0
+                                capLp.height = ViewGroup.LayoutParams.MATCH_PARENT
+                            }
+                            webView.layoutParams = capLp
                         }
-                        webView.layoutParams = webLp
+                    } else {
+
+                        val webLp = webView.layoutParams as? FrameLayout.LayoutParams
+                        if (webLp != null) {
+                            if (!isOverlapping) {
+                                if (isAndroid16OrHigher && !isFullScreen) {
+
+                                    webLp.topMargin = bannerHeightPx + paddingInPx + statusBarHeight
+                                } else {
+
+                                    webLp.topMargin = bannerHeightPx + paddingInPx
+                                }
+                            } else {
+                                webLp.topMargin = 0
+                            }
+                            webView.layoutParams = webLp
+                        }
                     }
+                    webView.requestLayout()
                 }
-                webView.requestLayout()
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
 
     private fun setBannerAdBottom() {
+        val isAndroid16OrHigher = Build.VERSION.SDK_INT >= 36
+        val activity = plugin.pluginActivity
+        val isFullScreen = isFullScreenMode(activity)
+
         if (bannerView != null) {
             runOnUiThread {
                 bannerView?.post {
                     try {
-                        val activity = plugin.pluginActivity
                         val screenHeightInPx = getScreenHeightInPx(activity)
                         val navBarHeight = if (!isFullScreen) getNavigationBarHeight(activity) else 0
 
@@ -202,7 +218,6 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
 
                         val webView = plugin.pluginWebView.view
                         if (isCapacitor) {
-
                             val capLp = webView.layoutParams as? ViewGroup.MarginLayoutParams
                             if (capLp != null) {
                                 if (!isOverlapping) {
@@ -216,12 +231,21 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
                                 webView.layoutParams = capLp
                             }
                         } else {
-
                             val webLp = webView.layoutParams
                             if (webLp != null) {
                                 if (!isOverlapping) {
-                                    val webViewHeight = screenHeightInPx - bannerViewHeight - paddingInPx
-                                    webLp.height = webViewHeight
+
+                                    val isNativePushHandled = isAndroid16OrHigher && !isFullScreen
+
+                                    if (isNativePushHandled) {
+
+                                        val webViewHeight = screenHeightInPx - paddingInPx
+                                        webLp.height = webViewHeight
+                                    } else {
+
+                                        val webViewHeight = screenHeightInPx - bannerViewHeight - paddingInPx
+                                        webLp.height = webViewHeight
+                                    }
                                 } else {
                                     webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
                                 }
