@@ -34,7 +34,7 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
     private var marginsInPx: Int = 0
     private var isCollapsible: Boolean = false
     private var isCapacitor: Boolean = false
-    private var isCordova15: Boolean = false 
+    private var isCordova15: Boolean = false
 
     private var isBannerLoad: Boolean = false
     private var isBannerShow: Boolean = false
@@ -178,7 +178,12 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
 
                             if (layoutParams is FrameLayout.LayoutParams) {
                                 layoutParams.topMargin = 0
+                                layoutParams.bottomMargin = 0
+
+                                layoutParams.gravity = Gravity.TOP or Gravity.START
                             }
+
+                            webView.translationY = 0f
 
                             webView.layoutParams = layoutParams
                             webView.setPadding(0, 0, 0, 0)
@@ -200,65 +205,181 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
             return
         }
 
-        val activity = plugin.pluginActivity
         val isAndroid16OrHigher = Build.VERSION.SDK_INT >= 36
+        val activity = plugin.pluginActivity
         val isFullScreen = isFullScreenMode(activity)
 
-        bannerView?.post {
-            try {
-                val bannerHeightPx = bannerViewHeight
-                val statusBarHeight = getStatusBarHeight(activity)
+        if (bannerView != null) {
+            runOnUiThread {
+                bannerView?.post {
+                    try {
+                        val screenHeightInPx = getScreenHeightInPx(activity)
+                        val statusBarHeight = if (!isFullScreen) getStatusBarHeight(activity) else 0
+                        val bannerTotalHeightPx = bannerViewHeight + paddingInPx
 
-                if (isPosition.equals("top-center", ignoreCase = true)) {
-                    val bannerLp = bannerView?.layoutParams as? FrameLayout.LayoutParams
-                    bannerLp?.let { lp ->
-                        lp.topMargin = if (isFullScreen) 0 else statusBarHeight
-                        bannerView?.layoutParams = lp
-                    }
+                        bannerViewLayout?.let { container ->
+                            val params = container.layoutParams as? FrameLayout.LayoutParams
+                            if (params != null) {
+                                params.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
 
-                    val webView = plugin.pluginWebView.view
-                    if (isCapacitor) {
-                        val capLp = webView.layoutParams as? ViewGroup.MarginLayoutParams
-                        if (capLp != null) {
-                            if (!isOverlapping) {
-                                val pushDown = bannerHeightPx + paddingInPx + (if (isFullScreen) 0 else statusBarHeight)
-                                capLp.topMargin = pushDown
-                                val screenHeightInPx = getScreenHeightInPx(activity)
-                                val navBarHeight = if (!isFullScreen) getNavigationBarHeight(activity) else 0
-                                capLp.height = screenHeightInPx - pushDown - navBarHeight
-                            } else {
-                                capLp.topMargin = 0
-                                capLp.height = ViewGroup.LayoutParams.MATCH_PARENT
+                                params.topMargin = statusBarHeight
+                                container.layoutParams = params
+                                container.requestLayout()
                             }
-                            webView.layoutParams = capLp
                         }
-                    } else {
-                        val webLp = webView.layoutParams as? FrameLayout.LayoutParams
-                        if (webLp != null) {
-                            if (isCordova15) {
+
+                        val webView = plugin.pluginWebView.view
+
+                        if (isCapacitor) {
+                            val bannerHeightPx = bannerViewHeight
+                            val capLp = webView.layoutParams as? ViewGroup.MarginLayoutParams
+                            if (capLp != null) {
                                 if (!isOverlapping) {
-                                    webLp.topMargin = bannerHeightPx + paddingInPx + (if (isFullScreen) 0 else statusBarHeight)
+                                    val pushDown = bannerHeightPx + paddingInPx + (if (isFullScreen) 0 else statusBarHeight)
+                                    capLp.topMargin = pushDown
+                                    val screenHeightInPx = getScreenHeightInPx(activity)
+                                    val navBarHeight = if (!isFullScreen) getNavigationBarHeight(activity) else 0
+                                    capLp.height = screenHeightInPx - pushDown - navBarHeight
                                 } else {
-                                    webLp.topMargin = 0
+                                    capLp.topMargin = 0
+                                    capLp.height = ViewGroup.LayoutParams.MATCH_PARENT
                                 }
-                            } else {
-                                if (!isOverlapping) {
-                                    if (isAndroid16OrHigher && !isFullScreen) {
-                                        webLp.topMargin = bannerHeightPx + paddingInPx + statusBarHeight
+                                webView.layoutParams = capLp
+                            }
+                        } else {
+                            val webLp = webView.layoutParams as? ViewGroup.MarginLayoutParams
+                            if (webLp != null) {
+                                if (isCordova15) {
+                                    val frameLp = webLp as? FrameLayout.LayoutParams
+
+                                    if (!isOverlapping) {
+
+                                        val webViewHeight = screenHeightInPx - bannerTotalHeightPx
+                                        webLp.height = webViewHeight
+                                        webLp.topMargin = 0
+
+                                        if (frameLp != null) {
+                                            frameLp.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+                                        }
+
+                                        webView.translationY = 0f
+
                                     } else {
-                                        webLp.topMargin = bannerHeightPx + paddingInPx
+
+                                        webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
+                                        webLp.topMargin = 0
+
+                                        if (frameLp != null) {
+                                            frameLp.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                                        }
+
+                                        webView.translationY = 0f
                                     }
                                 } else {
-                                    webLp.topMargin = 0
+                                    if (!isOverlapping) {
+                                        val isNativePushHandled = isAndroid16OrHigher && !isFullScreen
+
+                                        if (isNativePushHandled) {
+                                            val webViewHeight = screenHeightInPx - paddingInPx
+                                            webLp.height = webViewHeight
+                                            webLp.topMargin = bannerTotalHeightPx + statusBarHeight
+                                        } else {
+                                            val webViewHeight = screenHeightInPx - bannerTotalHeightPx
+                                            webLp.height = webViewHeight
+                                            webLp.topMargin = bannerTotalHeightPx + statusBarHeight
+                                        }
+                                    } else {
+                                        webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
+                                        webLp.topMargin = statusBarHeight
+                                    }
                                 }
+                                webView.layoutParams = webLp
                             }
-                            webView.layoutParams = webLp
                         }
+                        webView.requestLayout()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
-                    webView.requestLayout()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun setBannerAdBottom() {
+
+        if (isCordova15 && Build.VERSION.SDK_INT < 35) {
+            setBannerAdBottomSDKMax35()
+            return
+        }
+
+        val isAndroid16OrHigher = Build.VERSION.SDK_INT >= 36
+        val activity = plugin.pluginActivity
+        val isFullScreen = isFullScreenMode(activity)
+
+        if (bannerView != null) {
+            runOnUiThread {
+                bannerView?.post {
+                    try {
+                        val screenHeightInPx = getScreenHeightInPx(activity)
+                        val navBarHeight = if (!isFullScreen) getNavigationBarHeight(activity) else 0
+
+                        bannerViewLayout?.let { container ->
+                            val params = container.layoutParams as? ViewGroup.MarginLayoutParams
+                            if (params != null) {
+                                params.bottomMargin = navBarHeight
+                                container.layoutParams = params
+                                container.requestLayout()
+                            }
+                        }
+
+                        val webView = plugin.pluginWebView.view
+                        if (isCapacitor) {
+
+                            val capLp = webView.layoutParams as? ViewGroup.MarginLayoutParams
+                            if (capLp != null) {
+                                if (!isOverlapping) {
+                                    val webViewHeight = screenHeightInPx - bannerViewHeight - paddingInPx
+                                    capLp.height = webViewHeight
+                                    capLp.topMargin = 0
+                                } else {
+                                    capLp.height = ViewGroup.LayoutParams.MATCH_PARENT
+                                    capLp.topMargin = 0
+                                }
+                                webView.layoutParams = capLp
+                            }
+                        } else {
+                            val webLp = webView.layoutParams
+                            if (webLp != null) {
+                                if (isCordova15) {
+                                    if (!isOverlapping) {
+                                        val webViewHeight = screenHeightInPx - bannerViewHeight - paddingInPx
+                                        webLp.height = webViewHeight
+                                    } else {
+                                        webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
+                                    }
+                                } else {
+                                    if (!isOverlapping) {
+                                        val isNativePushHandled = isAndroid16OrHigher && !isFullScreen
+
+                                        if (isNativePushHandled) {
+                                            val webViewHeight = screenHeightInPx - paddingInPx
+                                            webLp.height = webViewHeight
+                                        } else {
+                                            val webViewHeight = screenHeightInPx - bannerViewHeight - paddingInPx
+                                            webLp.height = webViewHeight
+                                        }
+                                    } else {
+                                        webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
+                                    }
+                                }
+                                webView.layoutParams = webLp
+                            }
+                        }
+                        webView.requestLayout()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
             }
         }
     }
@@ -303,84 +424,6 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
                             webView.requestLayout()
                         }
 
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-        }
-    }
-
-    private fun setBannerAdBottom() {
-
-        if (isCordova15 && Build.VERSION.SDK_INT < 35) {
-            setBannerAdBottomSDKMax35()
-            return
-        }
-
-        val isAndroid16OrHigher = Build.VERSION.SDK_INT >= 36
-        val activity = plugin.pluginActivity
-        val isFullScreen = isFullScreenMode(activity)
-
-        if (bannerView != null) {
-            runOnUiThread {
-                bannerView?.post {
-                    try {
-                        val screenHeightInPx = getScreenHeightInPx(activity)
-                        val navBarHeight = if (!isFullScreen) getNavigationBarHeight(activity) else 0
-
-                        bannerViewLayout?.let { container ->
-                            val params = container.layoutParams as? ViewGroup.MarginLayoutParams
-                            if (params != null) {
-                                params.bottomMargin = navBarHeight
-                                container.layoutParams = params
-                                container.requestLayout()
-                            }
-                        }
-
-                        val webView = plugin.pluginWebView.view
-                        if (isCapacitor) {
-                            val capLp = webView.layoutParams as? ViewGroup.MarginLayoutParams
-                            if (capLp != null) {
-                                if (!isOverlapping) {
-                                    val webViewHeight = screenHeightInPx - bannerViewHeight - paddingInPx
-                                    capLp.height = webViewHeight
-                                    capLp.topMargin = 0
-                                } else {
-                                    capLp.height = ViewGroup.LayoutParams.MATCH_PARENT
-                                    capLp.topMargin = 0
-                                }
-                                webView.layoutParams = capLp
-                            }
-                        } else {
-                            val webLp = webView.layoutParams
-                            if (webLp != null) {
-                                if (isCordova15) {
-                                    if (!isOverlapping) {
-                                        val webViewHeight = screenHeightInPx - bannerViewHeight - paddingInPx
-                                        webLp.height = webViewHeight
-                                    } else {
-                                        webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
-                                    }
-                                } else {
-                                    if (!isOverlapping) {
-                                        val isNativePushHandled = isAndroid16OrHigher && !isFullScreen
-
-                                        if (isNativePushHandled) {
-                                            val webViewHeight = screenHeightInPx - paddingInPx
-                                            webLp.height = webViewHeight
-                                        } else {
-                                            val webViewHeight = screenHeightInPx - bannerViewHeight - paddingInPx
-                                            webLp.height = webViewHeight
-                                        }
-                                    } else {
-                                        webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
-                                    }
-                                }
-                                webView.layoutParams = webLp
-                            }
-                        }
-                        webView.requestLayout()
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -517,7 +560,7 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
         isOverlapping = options.optBoolean("isOverlapping", false)
         bannerAutoShow = options.optBoolean("autoShow", false)
         isCapacitor = options.optBoolean("isCapacitor", false)
-        isCordova15 = options.optBoolean("isCordova15", false) 
+        isCordova15 = options.optBoolean("isCordova15", false)
 
         isPosition = position
         adType = sizeStr
