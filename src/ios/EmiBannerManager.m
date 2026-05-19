@@ -394,7 +394,11 @@
 }
 
 - (GADAdSize)getAdSizeFromString:(NSString *)size {
-    if ([size isEqualToString:@"adaptive"]) return GADLargeAnchoredAdaptiveBannerAdSizeWithWidth(UIScreen.mainScreen.bounds.size.width);
+    if ([size isEqualToString:@"adaptive"]) return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(UIScreen.mainScreen.bounds.size.width);
+    if ([size isEqualToString:@"large_anchored_adaptive"]) return GADLargeAnchoredAdaptiveBannerAdSizeWithWidth(UIScreen.mainScreen.bounds.size.width);
+    if ([size isEqualToString:@"large_portrait_anchored_adaptive"]) return GADLargePortraitAnchoredAdaptiveBannerAdSizeWithWidth(UIScreen.mainScreen.bounds.size.width);
+    if ([size isEqualToString:@"large_landscape_anchored_adaptive"]) return GADLargeLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(UIScreen.mainScreen.bounds.size.width);
+    if ([size isEqualToString:@"current_orientation_inline_adaptive"]) return GADCurrentOrientationInlineAdaptiveBannerAdSizeWithWidth(UIScreen.mainScreen.bounds.size.width);
     if ([size isEqualToString:@"banner"]) return GADAdSizeBanner;
     if ([size isEqualToString:@"large_banner"]) return GADAdSizeLargeBanner;
     if ([size isEqualToString:@"full_banner"]) return GADAdSizeFullBanner;

@@ -10,12 +10,20 @@ function loadBanner() {
     const positionSelect = document.getElementById("banner-position").value;
     const isCollapsible = document.getElementById("banner-collapsible").value === "true";
     const isOverlapping = document.getElementById("banner-overlapping").value === "true";
+     
+    /* New large banner size adaptive: (Android | IOS)
 
+    large_anchored_adaptive
+    large_portrait_anchored_adaptive
+    large_landscape_anchored_adaptive
+    current_orientation_inline_adaptive
+
+    */
     // default: Android | IOS
     cordova.plugins.emiAdmobPlugin.loadBannerAd({
         adUnitId: Banner_ID, // Ensure Banner_ID is defined globally
         position: positionSelect, // "bottom-center" | "top-center"
-        size: "banner", // adaptive | banner | large_banner | full_banner | leaderboard
+        size: "banner", // adaptive | banner | large_banner | full_banner | leaderboard | default: adaptive
         collapsible: isCollapsible, // true | false
         autoShow: true, // default false
         isOverlapping: isOverlapping, // true | false

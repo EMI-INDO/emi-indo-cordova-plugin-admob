@@ -118,12 +118,21 @@ function App() {
 
   // ================= AD CONTROLS =================
 
+    /* New large banner size adaptive: (Android | IOS)
+
+    large_anchored_adaptive
+    large_portrait_anchored_adaptive
+    large_landscape_anchored_adaptive
+    current_orientation_inline_adaptive
+
+    */
+
   // 1. BANNER (Dynamic Configuration)
   const showBanner = () => {
     window.cordova.plugins.emiAdmobPlugin.loadBannerAd({
         adUnitId: 'ca-app-pub-3940256099942544/9214589741', 
         position: bannerPos(), // Get value from signal
-        size: "banner", 
+        size: "banner", // adaptive | banner | large_banner | full_banner | leaderboard | default: adaptive
         collapsible: isCollapsible(), // Get boolean value from signal
         autoShow: true, 
         isOverlapping: isOverlapping(), // Get boolean value from signal

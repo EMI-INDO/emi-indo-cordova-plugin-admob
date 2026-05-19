@@ -11,6 +11,7 @@
 > While this plugin (**emi-indo**) remains **actively maintained and supported** for existing users, we are developing the next evolution of AdMob integration at **[SwapLab Engine](https://github.com/swaplab-engine/cordova-plugin-admob-nextgen)**.
 >
 > 👉 **[Check out cordova-plugin-admob-nextgen](https://github.com/swaplab-engine/cordova-plugin-admob-nextgen)**
+> 👉 **[Check out capacitor-admob-nextgen](https://github.com/swaplab-engine/capacitor-admob-nextgen)**
 > * **New Projects:** We highly recommend using the **Next Gen** plugin for modern architecture and long-term stability.
 > * **Existing Projects:** You are safe to stay here, updates will continue as usual.
 
@@ -27,10 +28,7 @@ This plugin supports the latest Mobile Ads SDK, User Messaging Platform (UMP), C
 
 
 ### 🎉 New Milestone 2026
-We are starting the year strong! **Version 2.8.9 - 3.0.+** is now available with significant improvements.
-- 👉 [**Check out the Release Notes: Migration SDK (v3.0.0)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v3.0.0)
-- 👉 [**Check out the Release Notes: Migration SDK (v2.9.9)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v2.9.9)
-- 👉 [**Check out the Release Notes (v2.8.9)**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/tag/v2.8.9)
+- 👉 [**View all release notes:**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/)
 
 ---
 
@@ -285,11 +283,17 @@ document.addEventListener('on.TCString.expired', () => {
 
 ### 2. Banner Ads
 
+* New large banner size adaptive: (Android | IOS)
+- large_anchored_adaptive
+- large_portrait_anchored_adaptive
+- large_landscape_anchored_adaptive
+- current_orientation_inline_adaptive
+
 ```javascript
 const bannerConfig = {
    adUnitId: "ca-app-pub-xxx/xxx", 
    position: "bottom-center", //  bottom-center | top-center
-   size: "adaptive", // adaptive | banner | large_banner | full_banner | leaderboard
+   size: "adaptive", // adaptive | banner | large_banner | full_banner | leaderboard | default: adaptive
    collapsible: false, // default false
    autoShow: true, // default false
    isOverlapping: false, // The height of the body is reduced by the height of the banner.
