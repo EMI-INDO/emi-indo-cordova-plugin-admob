@@ -81,9 +81,23 @@ exports.loadBannerAd = function (options, success, error) {
         case "FLUID":
             options.size = "fluid";
             break;
+        // NEW Size
+        case "LARGE_ANCHORED_ADAPTIVE":
+            options.size = "large_anchored_adaptive";
+            break;
+        case "CURRENT_ORIENTATION_INLINE_ADAPTIVE":
+            options.size = "current_orientation_inline_adaptive";
+            break;
+        case "LARGE_PORTRAIT_ANCHORED_ADAPTIVE":
+            options.size = "large_portrait_anchored_adaptive";
+            break;
+        case "LARGE_LANDSCAPE_ANCHORED_ADAPTIVE":
+            options.size = "large_landscape_anchored_adaptive";
+            break;
         case "IN_LINE_ADAPTIVE":
             options.size = "in_line_adaptive";
             break;
+        // Old size ADAPTIVE: Still working, build warning: 'static fun getCurrentOrientationAnchoredAdaptiveBannerAdSize(context: Context, width: Int): AdSize' is deprecated. Deprecated in Java
         case "ADAPTIVE":
         case "RESPONSIVE_ADAPTIVE":
         case "ANCHORED_ADAPTIVE":

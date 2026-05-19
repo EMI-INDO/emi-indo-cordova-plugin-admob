@@ -231,22 +231,20 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
                         val webView = plugin.pluginWebView.view
 
                         if (isCapacitor) {
-                            val bannerHeightPx = bannerViewHeight
-                            val capLp = webView.layoutParams as? ViewGroup.MarginLayoutParams
-                            if (capLp != null) {
-                                if (!isOverlapping) {
-                                    val pushDown = bannerHeightPx + paddingInPx + (if (isFullScreen) 0 else statusBarHeight)
-                                    capLp.topMargin = pushDown
-                                    val screenHeightInPx = getScreenHeightInPx(activity)
-                                    val navBarHeight = if (!isFullScreen) getNavigationBarHeight(activity) else 0
-                                    capLp.height = screenHeightInPx - pushDown - navBarHeight
-                                } else {
-                                    capLp.topMargin = 0
-                                    capLp.height = ViewGroup.LayoutParams.MATCH_PARENT
-                                }
-                                webView.layoutParams = capLp
+                        val capLp = webView.layoutParams as? ViewGroup.MarginLayoutParams
+                        if (capLp != null) {
+                            if (!isOverlapping) {
+
+                                val webViewHeight = screenHeightInPx - bannerTotalHeightPx
+                                capLp.height = webViewHeight
+                                capLp.topMargin = bannerTotalHeightPx + statusBarHeight
+                            } else {
+                                capLp.height = ViewGroup.LayoutParams.MATCH_PARENT
+                                capLp.topMargin = statusBarHeight
                             }
-                        } else {
+                            webView.layoutParams = capLp
+                        }
+                    } else {
                             val webLp = webView.layoutParams as? ViewGroup.MarginLayoutParams
                             if (webLp != null) {
                                 if (isCordova15) {
@@ -286,7 +284,7 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
                                         } else {
                                             val webViewHeight = screenHeightInPx - bannerTotalHeightPx
                                             webLp.height = webViewHeight
-                                            webLp.topMargin = bannerTotalHeightPx + statusBarHeight
+                                            webLp.topMargin = bannerTotalHeightPx 
                                         }
                                     } else {
                                         webLp.height = FrameLayout.LayoutParams.MATCH_PARENT
@@ -828,16 +826,17 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
 
         when (size?.uppercase(Locale.getDefault())) {
             "RESPONSIVE_ADAPTIVE" -> bannerView?.setAdSize(adSize)
-            "ANCHORED_ADAPTIVE" -> bannerView?.setAdSize(AdSize.getLargeAnchoredAdaptiveBannerAdSize(activity, adWidth))
-            "FULL_WIDTH_ADAPTIVE", "FULL_WIDTH" -> bannerView?.setAdSize(AdSize.getLargeAnchoredAdaptiveBannerAdSize(activity, adWidth))
-            "IN_LINE_ADAPTIVE" -> bannerView?.setAdSize(AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(activity, adWidth))
+            "LARGE_ANCHORED_ADAPTIVE" -> bannerView?.setAdSize(AdSize.getLargeAnchoredAdaptiveBannerAdSize(activity, adWidth))
+            "CURRENT_ORIENTATION_INLINE_ADAPTIVE" -> bannerView?.setAdSize(AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(activity, adWidth))
+            "LARGE_PORTRAIT_ANCHORED_ADAPTIVE" -> bannerView?.setAdSize(AdSize.getLargePortraitAnchoredAdaptiveBannerAdSize(activity, adWidth))
+            "LARGE_LANDSCAPE_ANCHORED_ADAPTIVE" -> bannerView?.setAdSize(AdSize.getLargeLandscapeAnchoredAdaptiveBannerAdSize(activity, adWidth))
             "BANNER" -> bannerView?.setAdSize(AdSize.BANNER)
             "LARGE_BANNER" -> bannerView?.setAdSize(AdSize.LARGE_BANNER)
             "MEDIUM_RECTANGLE" -> bannerView?.setAdSize(AdSize.MEDIUM_RECTANGLE)
             "FULL_BANNER" -> bannerView?.setAdSize(AdSize.FULL_BANNER)
             "LEADERBOARD" -> bannerView?.setAdSize(AdSize.LEADERBOARD)
             "FLUID" -> bannerView?.setAdSize(AdSize.FLUID)
-            else -> bannerView?.setAdSize(AdSize.getLargeAnchoredAdaptiveBannerAdSize(activity, adWidth))
+            else -> bannerView?.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidth))
         }
     }
 
