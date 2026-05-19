@@ -1,3 +1,5 @@
+// App.jsx
+
 import logo from "./logo.svg";
 import styles from "./App.module.css";
 import { createSignal, onMount, onCleanup } from "solid-js";
@@ -5,6 +7,11 @@ import { createSignal, onMount, onCleanup } from "solid-js";
 function App() {
   const [status, setStatus] = createSignal("Waiting for Device Ready...");
   const [logs, setLogs] = createSignal([]);
+
+  // Banner Configuration Signals
+  const [bannerPos, setBannerPos] = createSignal("bottom-center");
+  const [isCollapsible, setIsCollapsible] = createSignal(false);
+  const [isOverlapping, setIsOverlapping] = createSignal(false);
 
   const addLog = (msg) => {
     console.log(msg);
@@ -22,6 +29,7 @@ function App() {
   });
 
   // For complete example API check out: https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/blob/main/example-cordova/www/js
+
   const onDeviceReady = () => {
     setStatus("Device Ready. Checking Plugin...");
     const AdMob = window.cordova.plugins.emiAdmobPlugin;
@@ -37,7 +45,7 @@ function App() {
     AdMob.targeting({
         childDirectedTreatment: null, // true|false default: null
         underAgeOfConsent: null, // true || false default: null
-        contentRating: "", // value: G | MA | PG | T | default ""
+        contentRating: "", // value: G | MA | PG | T | default: ""
     }, () => {
         addLog("Requesting Targeting...");
         addLog("initSdk...");
@@ -49,8 +57,6 @@ function App() {
       },
     );
   };
-
-    
 
   const initSdk = (AdMob) => {
     setStatus("Initializing SDK...");
@@ -70,37 +76,16 @@ function App() {
   };
 
   const setupEventListeners = () => {
+    document.addEventListener('on.sdkInitialization',  (data) => {
+        addLog(`On Sdk Initialization version: ${data.version}`);
+        addLog(`On Consent Status: ${data.consentStatus}`);
+        console.log("on personalization state: " + JSON.stringify(data));
+    });
 
-
-
-    // SDK EVENT Initialization
-    // Optional
-    document.addEventListener('on.sdkInitialization',  (data) =>
-        // JSON.stringify(data)
-        addLog(`On Sdk Initialization version: ${data.version}`), // SDK version
-        addLog(`On Consent Status: ${data.consentStatus}`), // UMP
+    document.addEventListener('on.personalization.state', (data) => 
         console.log("on personalization state: " + JSON.stringify(data))
     );
 
-
-    // Optional
-    document.addEventListener('on.personalization.state', (data) => 
-        console.log("on personalization state: " + JSON.stringify(data)),
-        /*
-        if (data.personalizationState === "PERSONALIZED"){
-            console.log("PERSONALIZED")
-         } else if (data.personalizationState === "NON_PERSONALIZED"){
-            console.log("NON_PERSONALIZED")
-         } if (data.personalizationState === "LIMITED_OR_NO_ADS"){
-           console.log("LIMITED_OR_NO_ADS")
-        } else {
-          console.log("UNKNOWN")
-        }
-        */
-    );
-
-
-    // Banner specific events
     document.addEventListener("on.banner.load", (data) =>
       addLog(`Banner Loaded height : ${data.height}`),
     );
@@ -108,7 +93,6 @@ function App() {
       addLog("Banner Fail: " + e.message),
     );
 
-    // Other events
     document.addEventListener("on.interstitial.loaded", () =>
       addLog("Interstitial: LOADED"),
     );
@@ -134,33 +118,17 @@ function App() {
 
   // ================= AD CONTROLS =================
 
-  // 1. BANNER (PUSH CONTENT MODE)
+  // 1. BANNER (Dynamic Configuration)
   const showBanner = () => {
     window.cordova.plugins.emiAdmobPlugin.loadBannerAd({
-            adUnitId: 'ca-app-pub-3940256099942544/9214589741', 
-            position: "bottom-center", //  bottom-center | top-center
-            size: "banner", // adaptive | banner | large_banner | full_banner | leaderboard
-            collapsible: false, // default false
-            autoShow: true, // default false
-            isOverlapping: false, // The height of the body is reduced by the height of the banner.
-        //  padding: 10 // Optional: only isOverlapping: false, Extra 20px distance between WebView and Banner
-        //  loadInterval: 5 // Opsional: Anti-Flicker/Spam, Default interval 5 seconds, disable 0
-        });
-    addLog("Requesting Banner (Push Mode)...");
-  };
-
-  const showBannerCollapsible = () => {
-    window.cordova.plugins.emiAdmobPlugin.loadBannerAd({
-            adUnitId: 'ca-app-pub-3940256099942544/9214589741', 
-            position: "bottom-center", //  bottom-center | top-center
-            size: "banner", // adaptive | banner | large_banner | full_banner | leaderboard
-            collapsible: true, // default false
-            autoShow: true, // default false
-            isOverlapping: false, // The height of the body is reduced by the height of the banner.
-        //  padding: 10 // Optional: only isOverlapping: false, Extra 20px distance between WebView and Banner
-        //  loadInterval: 5 // Opsional: Anti-Flicker/Spam, Default interval 5 seconds, disable 0
-        });
-    addLog("Requesting collapsible Banner (Push Mode)...");
+        adUnitId: 'ca-app-pub-3940256099942544/9214589741', 
+        position: bannerPos(), // Get value from signal
+        size: "banner", 
+        collapsible: isCollapsible(), // Get boolean value from signal
+        autoShow: true, 
+        isOverlapping: isOverlapping(), // Get boolean value from signal
+    });
+    addLog(`Requesting Banner (Pos: ${bannerPos()}, Col: ${isCollapsible()}, Over: ${isOverlapping()})`);
   };
 
   const removeBanner = () => {
@@ -168,77 +136,147 @@ function App() {
     addLog("Banner removed");
   };
 
-  // ... (Other functions remain the same: showInterstitial, showRewarded, etc.)
+  // 2. INTERSTITIAL
   const loadInterstitial = () => {
     window.cordova.plugins.emiAdmobPlugin.loadInterstitialAd({ 
-            adUnitId: "ca-app-pub-3940256099942544/1033173712", 
-            autoShow: false,
-         // loadInterval: 5 // Opsional: Anti Spam, Default interval 5 seconds, disable 0 
-        });
+        adUnitId: "ca-app-pub-3940256099942544/1033173712", 
+        autoShow: false,
+    });
     addLog("Loading Interstitial...");
   };
   const showInterstitial = () => window.cordova.plugins.emiAdmobPlugin.showInterstitialAd();
 
-
+  // 3. REWARDED
   const loadRewarded = () => {
     window.cordova.plugins.emiAdmobPlugin.loadRewardedAd({ 
-            adUnitId: "ca-app-pub-3940256099942544/5224354917", 
-            autoShow: false,
-         // loadInterval: 5 // Opsional: Anti Spam, Default interval 5 seconds, disable 0 
-        });
+        adUnitId: "ca-app-pub-3940256099942544/5224354917", 
+        autoShow: false,
+    });
     addLog("Loading Rewarded...");
   };
   const showRewarded = () => window.cordova.plugins.emiAdmobPlugin.showRewardedAd();
 
-
+  // 4. APP OPEN
   const loadAppOpen = () => {
     window.cordova.plugins.emiAdmobPlugin.loadAppOpenAd({ 
-            adUnitId: "ca-app-pub-3940256099942544/9257395921", 
-            autoShow: false,
-         // loadInterval: 5 // Opsional: Anti Spam, Default interval 5 seconds, disable 0
-        });;
+        adUnitId: "ca-app-pub-3940256099942544/9257395921", 
+        autoShow: false,
+    });
     addLog("Loading App Open...");
   };
-
-
   const showAppOpen = () => window.cordova.plugins.emiAdmobPlugin.showAppOpenAd();
 
-
   return (
-    // Main container uses Flexbox to push footer to bottom
     <div
       style={{
         display: "flex",
         "flex-direction": "column",
-        "min-height": "100vh", // Force full height
+        height: "100vh", // Force exactly 100vh to prevent full page scroll
+        overflow: "hidden", // Lock body scroll
         "background-color": "#282c34",
         color: "white",
       }}
     >
-      {/* CONTENT AREA (Grows to fill space) */}
-      <div style={{ flex: 1, padding: "20px", "text-align": "center" }}>
-        <img
-          src={logo}
-          class={styles.logo}
-          alt="logo"
-          style={{ height: "80px" }}
-        />
-        <p style={{ "font-weight": "bold", color: "#4caf50" }}>{status()}</p>
+      {/* CONTENT AREA */}
+      <div style={{ flex: 1, padding: "15px", "text-align": "center", display: "flex", "flex-direction": "column", "min-height": 0 }}>
+        
+        {/* Header Section */}
+        <div>
+            <img
+            src={logo}
+            class={styles.logo}
+            alt="logo"
+            style={{ height: "60px" }}
+            />
+            <p style={{ "font-weight": "bold", color: "#4caf50", margin: "10px 0", "font-size": "14px" }}>{status()}</p>
+        </div>
 
-        {/* LOG PANEL */}
+        {/* Scrollable Container for Controls */}
+        <div style={{ flex: 1, overflowY: "auto", padding: "5px", border: "1px solid #444", "border-radius": "8px", "background-color": "#222" }}>
+            
+            {/* CONTROLS */}
+            <div style={{ display: "flex", "flex-direction": "column", gap: "15px", "margin-top": "10px" }}>
+            
+            {/* Banner Section */}
+            <div style={adGroupStyle}>
+                <div style={groupTitleStyle}>Banner Ads</div>
+                
+                {/* Configuration Row */}
+                <div style={configRowStyle}>
+                    <div style={selectContainerStyle}>
+                        <label>Pos:</label>
+                        <select style={selectStyle} value={bannerPos()} onInput={(e) => setBannerPos(e.target.value)}>
+                            <option value="bottom-center">bottom</option>
+                            <option value="top-center">top</option>
+                        </select>
+                    </div>
+                    <div style={selectContainerStyle}>
+                        <label>Col:</label>
+                        <select style={selectStyle} value={isCollapsible().toString()} onInput={(e) => setIsCollapsible(e.target.value === "true")}>
+                            <option value="false">false</option>
+                            <option value="true">true</option>
+                        </select>
+                    </div>
+                    <div style={selectContainerStyle}>
+                        <label>Over:</label>
+                        <select style={selectStyle} value={isOverlapping().toString()} onInput={(e) => setIsOverlapping(e.target.value === "true")}>
+                            <option value="false">false</option>
+                            <option value="true">true</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style={btnGroupStyle}>
+                    <button onClick={showBanner}>Load & Show</button>
+                    <button onClick={removeBanner} style={{ background: "#d32f2f" }}>Remove</button>
+                </div>
+            </div>
+
+            {/* Interstitial Section */}
+            <div style={adGroupStyle}>
+                <div style={groupTitleStyle}>Interstitial Ads</div>
+                <div style={btnGroupStyle}>
+                    <button onClick={loadInterstitial}>Load</button>
+                    <button onClick={showInterstitial} style={{ background: "#ff9800" }}>Show</button>
+                </div>
+            </div>
+
+            {/* Rewarded Section */}
+            <div style={adGroupStyle}>
+                <div style={groupTitleStyle}>Rewarded Ads</div>
+                <div style={btnGroupStyle}>
+                    <button onClick={loadRewarded}>Load</button>
+                    <button onClick={showRewarded} style={{ background: "#ff9800" }}>Show</button>
+                </div>
+            </div>
+
+            {/* App Open Section */}
+            <div style={adGroupStyle}>
+                <div style={groupTitleStyle}>App Open Ads</div>
+                <div style={btnGroupStyle}>
+                    <button onClick={loadAppOpen}>Load</button>
+                    <button onClick={showAppOpen} style={{ background: "#ff9800" }}>Show</button>
+                </div>
+            </div>
+
+            </div>
+        </div>
+
+        {/* LOG PANEL (Fixed at bottom of content area) */}
         <div
           style={{
             background: "#1e1e1e",
             color: "#0f0",
             padding: "10px",
-            height: "150px",
-            overflow: "scroll",
+            height: "100px",
+            "overflow-y": "auto",
             "text-align": "left",
             "font-family": "monospace",
-            "font-size": "11px",
-            margin: "10px auto",
+            "font-size": "10px",
+            margin: "15px 0 5px 0",
             border: "1px solid #555",
             "border-radius": "5px",
+            "flex-shrink": 0
           }}
         >
           {logs().map((log) => (
@@ -246,68 +284,22 @@ function App() {
           ))}
         </div>
 
-        {/* CONTROLS */}
-        <div
-          style={{
-            display: "flex",
-            "flex-direction": "column",
-            gap: "10px",
-            "margin-top": "20px",
-          }}
-        >
-          <div style={btnGroupStyle}>
-            <span style={labelStyle}>Banner:</span>
-            <button onClick={showBanner}>Show (Push)</button>
-            <button onClick={removeBanner} style={{ background: "#d32f2f" }}>
-              Remove
-            </button>
-            <button onClick={showBannerCollapsible}>Show Collapsible (Push)</button>
-          </div>
-
-          <div style={btnGroupStyle}>
-            <span style={labelStyle}>Interstitial:</span>
-            <button onClick={loadInterstitial}>Load</button>
-            <button
-              onClick={showInterstitial}
-              style={{ background: "#ff9800" }}
-            >
-              Show
-            </button>
-          </div>
-
-          <div style={btnGroupStyle}>
-            <span style={labelStyle}>Rewarded:</span>
-            <button onClick={loadRewarded}>Load</button>
-            <button onClick={showRewarded} style={{ background: "#ff9800" }}>
-              Show
-            </button>
-          </div>
-
-          <div style={btnGroupStyle}>
-            <span style={labelStyle}>App Open:</span>
-            <button onClick={loadAppOpen}>Load</button>
-            <button onClick={showAppOpen} style={{ background: "#ff9800" }}>
-              Show
-            </button>
-          </div>
-
-        </div>
       </div>
 
       {/* FOOTER INDICATOR */}
-      {/* This element is key. If banner pushes content, this will move UP. */}
       <div
         style={{
-          padding: "15px",
+          padding: "10px",
           "background-color": "#ffeb3b",
           color: "#000",
           "text-align": "center",
           "font-weight": "bold",
           "border-top": "4px solid #f44336",
+          "font-size": "12px",
         }}
       >
         ⬇️ BOTTOM OF WEBVIEW ⬇️ <br />
-        <span style={{ "font-size": "10px" }}>
+        <span style={{ "font-size": "9px" }}>
           If banner is working correctly, this bar should sit ABOVE the ad.
         </span>
       </div>
@@ -315,18 +307,51 @@ function App() {
   );
 }
 
-// Styling
-const btnGroupStyle = {
-  display: "grid",
-  "grid-template-columns": "80px 1fr 1fr",
-  gap: "5px",
-  "align-items": "center",
+// Styling Objects
+const adGroupStyle = {
+  "border-bottom": "1px solid #444",
+  "padding-bottom": "10px",
+  "margin-bottom": "5px"
 };
 
-const labelStyle = {
+const groupTitleStyle = {
   "font-size": "12px",
-  "text-align": "right",
-  "margin-right": "5px",
+  color: "#aaa",
+  "text-transform": "uppercase",
+  "margin-bottom": "8px",
+  "text-align": "left",
+  "padding-left": "5px"
+};
+
+const configRowStyle = {
+  display: "flex",
+  "justify-content": "center",
+  gap: "10px",
+  "margin-bottom": "10px",
+  "background-color": "#333",
+  padding: "8px",
+  "border-radius": "4px"
+};
+
+const selectContainerStyle = {
+  display: "flex",
+  "align-items": "center",
+  gap: "4px",
+  "font-size": "11px"
+};
+
+const selectStyle = {
+  color: "black",
+  "font-size": "11px",
+  padding: "2px",
+  "border-radius": "3px"
+};
+
+const btnGroupStyle = {
+  display: "grid",
+  "grid-template-columns": "1fr 1fr",
+  gap: "8px",
+  padding: "0 5px"
 };
 
 export default App;
