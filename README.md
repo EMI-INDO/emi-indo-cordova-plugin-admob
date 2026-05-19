@@ -11,6 +11,7 @@
 > While this plugin (**emi-indo**) remains **actively maintained and supported** for existing users, we are developing the next evolution of AdMob integration at **[SwapLab Engine](https://github.com/swaplab-engine/cordova-plugin-admob-nextgen)**.
 >
 > 👉 **[Check out cordova-plugin-admob-nextgen](https://github.com/swaplab-engine/cordova-plugin-admob-nextgen)**
+> 
 > 👉 **[Check out capacitor-admob-nextgen](https://github.com/swaplab-engine/capacitor-admob-nextgen)**
 > * **New Projects:** We highly recommend using the **Next Gen** plugin for modern architecture and long-term stability.
 > * **Existing Projects:** You are safe to stay here, updates will continue as usual.
