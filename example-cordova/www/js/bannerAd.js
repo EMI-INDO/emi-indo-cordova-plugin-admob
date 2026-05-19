@@ -6,21 +6,24 @@
 
 function loadBanner() {
 
-        // default: Android | IOS
-        cordova.plugins.emiAdmobPlugin.loadBannerAd({
-            adUnitId: Banner_ID, //Banner_ID,
-            position: "bottom-center", //  bottom-center | top-center
-            size: "banner", // adaptive | banner | large_banner | full_banner | leaderboard
-            collapsible: false, // default false
-            autoShow: true, // default false
-            isOverlapping: false, // The height of the body is reduced by the height of the banner.
-         // padding: 0, // Optional: only isOverlapping: false, Extra 20px distance between WebView and Banner
-         // loadInterval: 5 // Opsional: Anti-Flicker/Spam, Default interval 5 seconds, disable 0
-        });
+    // Retrieve configuration values from the UI
+    const positionSelect = document.getElementById("banner-position").value;
+    const isCollapsible = document.getElementById("banner-collapsible").value === "true";
+    const isOverlapping = document.getElementById("banner-overlapping").value === "true";
+
+    // default: Android | IOS
+    cordova.plugins.emiAdmobPlugin.loadBannerAd({
+        adUnitId: Banner_ID, // Ensure Banner_ID is defined globally
+        position: positionSelect, // "bottom-center" | "top-center"
+        size: "banner", // adaptive | banner | large_banner | full_banner | leaderboard
+        collapsible: isCollapsible, // true | false
+        autoShow: true, // default false
+        isOverlapping: isOverlapping, // true | false
+        // padding: 0, // Optional: only isOverlapping: false, Extra 20px distance between WebView and Banner
+        // loadInterval: 5 // Optional: Anti-Flicker/Spam, Default interval 5 seconds, disable 0
+    });
 
 }
-
-
 
 function showBanner() {
 

@@ -127,7 +127,7 @@ document.addEventListener("deviceready", function () {
             log.value += ("\n On Authorization Status: " + attStatus);
         }
 
-        loadBanner(); // auto show
+       // loadBanner(); // auto show
 
     });
 

@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-      <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#000000">
   <title>Cordova | Capacitor | Quasar</title>
-  <style> </style>
   <link rel="stylesheet" href="css/index.css">
   <script type="text/javascript" src="cordova.js"></script>
   <script src="js/deviceready.js" defer></script>
@@ -18,29 +17,105 @@
   <script src="js/privacyOptionsFormShow.js" defer></script>
 </head>
 <body>
-  <h1>Ad Management Panel</h1>
-  <div class="button-container">
-    <button onclick="loadAppOpen();">Auto Show App Open Ad</button>
-    <button onclick="loadBanner();">Load and Show Banner Ad</button>
-    <button onclick="showBanner();">Show Banner Ad</button>
-    <button onclick="hideBanner();">Hide Banner Ad</button>
-    <button onclick="removeBanner();">Remove Banner Ad</button>
-    <button onclick="loadInterstitial();">Load Interstitial Ad</button>
-    <button onclick="showInterstitial();">Show Interstitial Ad</button>
-    <button onclick="loadRewarded();">Load Rewarded Ad</button>
-    <button onclick="showRewarded();">Show Rewarded Ad</button>
-    <button onclick="loadRewardedInt();">Load Rewarded Int Ad</button>
-    <button onclick="showRewardedInt();">Show Rewarded Int Ad</button>
-    <button onclick="registerWebView();">AdSense Register</button>
-    <button onclick="loadUrl();">AdSense Load Url</button>
-    <button onclick="showPrivacyOptionsForm();">Show Privacy Options Form</button>
-    <button onclick="forceDisplayPrivacyForm();">Force Display Privacy Form</button>
-    <button onclick="cleanText();">Clean Response Text</button>
+
+<!-- VISUAL DEBUG: TOP BOUNDARY -->
+<div class="webview-boundary-top">
+  Webview Top Boundary
+</div>
+
+<h1>Ad Management Panel</h1>
+
+<!-- Scrollable container acting like an iframe -->
+<div class="scroll-area">
+
+  <!-- App Open Ads Section -->
+  <div class="ad-group">
+    <div class="group-title">App Open Ads</div>
+    <div class="button-container">
+      <button onclick="loadAppOpen();">Auto Show App Open Ad</button>
+    </div>
   </div>
+
+  <!-- Banner Ads Section -->
+  <div class="ad-group">
+    <div class="group-title">Banner Ads</div>
+
+    <!-- Banner Configuration Dropdowns -->
+    <div class="config-row">
+      <div class="select-container">
+        <label for="banner-position">Position:</label>
+        <select id="banner-position">
+          <option value="bottom-center">bottom-center</option>
+          <option value="top-center">top-center</option>
+        </select>
+      </div>
+      <div class="select-container">
+        <label for="banner-collapsible">Collapsible:</label>
+        <select id="banner-collapsible">
+          <option value="false">false</option>
+          <option value="true">true</option>
+        </select>
+      </div>
+      <div class="select-container">
+        <label for="banner-overlapping">Overlapping:</label>
+        <select id="banner-overlapping">
+          <option value="false">false</option>
+          <option value="true">true</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="button-container">
+      <button onclick="loadBanner();">Load Banner Ad</button>
+      <button onclick="showBanner();">Show Banner Ad</button>
+      <button onclick="hideBanner();">Hide Banner Ad</button>
+      <button onclick="removeBanner();">Remove Banner Ad</button>
+    </div>
+  </div>
+
+  <!-- Interstitial Ads Section -->
+  <div class="ad-group">
+    <div class="group-title">Interstitial Ads</div>
+    <div class="button-container">
+      <button onclick="loadInterstitial();">Load Interstitial Ad</button>
+      <button onclick="showInterstitial();">Show Interstitial Ad</button>
+    </div>
+  </div>
+
+  <!-- Rewarded Ads Section -->
+  <div class="ad-group">
+    <div class="group-title">Rewarded Ads</div>
+    <div class="button-container">
+      <button onclick="loadRewarded();">Load Rewarded Ad</button>
+      <button onclick="showRewarded();">Show Rewarded Ad</button>
+      <button onclick="loadRewardedInt();">Load Rewarded Int Ad</button>
+      <button onclick="showRewardedInt();">Show Rewarded Int Ad</button>
+    </div>
+  </div>
+
+  <!-- AdSense & Privacy Section -->
+  <div class="ad-group no-border">
+    <div class="group-title">AdSense & Privacy</div>
+    <div class="button-container">
+      <button onclick="registerWebView();">AdSense Register</button>
+      <button onclick="loadUrl();">AdSense Load Url</button>
+      <button onclick="showPrivacyOptionsForm();">Show Privacy Form</button>
+      <button onclick="forceDisplayPrivacyForm();">Force Privacy Form</button>
+      <button onclick="cleanText();" class="btn-warning">Clean Text</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="logs-section">
   <label for="log">Debug Event All Response:</label>
   <textarea id="log" name="log" placeholder="Logs will appear here..."></textarea>
-  <div class="webview-boundary">
-    Webview Bottom Boundary
-  </div>
+</div>
+
+<!-- VISUAL DEBUG: BOTTOM BOUNDARY -->
+<div class="webview-boundary">
+  Webview Bottom Boundary
+</div>
+
 </body>
 </html>
