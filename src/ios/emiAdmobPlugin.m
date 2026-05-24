@@ -109,6 +109,40 @@ NSString *setKeyword = @"";
     [self isResponseInfo:respInfo];
     [self isDebugGeography:setDebugGeography];
 
+    id childOpt = [options objectForKey:@"childDirectedTreatment"];
+    id teenOpt = [options objectForKey:@"underAgeOfConsent"];
+    NSString *contentRating = [options valueForKey:@"contentRating"];
+
+    if (childOpt != nil || teenOpt != nil || contentRating != nil) {
+        GADRequestConfiguration *requestConfiguration = GADMobileAds.sharedInstance.requestConfiguration;
+        GADAgeRestrictedTreatment ageTreatment = GADAgeRestrictedTreatmentUnspecified;
+
+        BOOL isChild = (childOpt != nil && childOpt != (id)[NSNull null]) ? [childOpt boolValue] : NO;
+        BOOL isTeen = (teenOpt != nil && teenOpt != (id)[NSNull null]) ? [teenOpt boolValue] : NO;
+
+        if (isChild) {
+            ageTreatment = GADAgeRestrictedTreatmentChild;
+        } else if (isTeen) {
+            ageTreatment = GADAgeRestrictedTreatmentTeen;
+        }
+
+        requestConfiguration.ageRestrictedTreatment = ageTreatment;
+
+        if (contentRating != nil && contentRating != (id)[NSNull null]) {
+            if ([contentRating isEqualToString:@"G"]) {
+                requestConfiguration.maxAdContentRating = GADMaxAdContentRatingGeneral;
+            } else if ([contentRating isEqualToString:@"PG"]) {
+                requestConfiguration.maxAdContentRating = GADMaxAdContentRatingParentalGuidance;
+            } else if ([contentRating isEqualToString:@"T"]) {
+                requestConfiguration.maxAdContentRating = GADMaxAdContentRatingTeen;
+            } else if ([contentRating isEqualToString:@"MA"]) {
+                requestConfiguration.maxAdContentRating = GADMaxAdContentRatingMatureAudience;
+            }
+        }
+
+        UnderAgeOfConsent = isTeen;
+    }
+
     if (isCustomConsentManager) {
         [self startGoogleMobileAdsSDK];
         [self fireEvent:@"" event:@"on.custom.consent.manager.used" withData:nil];
@@ -126,6 +160,7 @@ NSString *setKeyword = @"";
         debugSettings.geography = UMPDebugGeographyEEA;
         debugSettings.testDeviceIdentifiers = @[ deviceId ];
     }
+
     parameters.tagForUnderAgeOfConsent = UnderAgeOfConsent;
 
     if (UMPConsentInformation.sharedInstance.canRequestAds) {
@@ -504,11 +539,21 @@ NSString *setKeyword = @"";
     return _bannerManager;
 }
 
-- (void)loadBannerAd:(CDVInvokedUrlCommand *)cmd { [self.bannerManager loadBannerAd:cmd]; }
-- (void)showBannerAd:(CDVInvokedUrlCommand *)cmd { [self.bannerManager showBannerAd:cmd]; }
-- (void)hideBannerAd:(CDVInvokedUrlCommand *)cmd { [self.bannerManager hideBannerAd:cmd]; }
-- (void)removeBannerAd:(CDVInvokedUrlCommand *)cmd { [self.bannerManager removeBannerAd:cmd]; }
-- (void)styleBannerAd:(CDVInvokedUrlCommand *)cmd { [self.bannerManager styleBannerAd:cmd]; }
+- (void)loadBannerAd:(CDVInvokedUrlCommand *)cmd { 
+    [self.bannerManager loadBannerAd:cmd]; 
+}
+- (void)showBannerAd:(CDVInvokedUrlCommand *)cmd { 
+    [self.bannerManager showBannerAd:cmd]; 
+}
+- (void)hideBannerAd:(CDVInvokedUrlCommand *)cmd { 
+    [self.bannerManager hideBannerAd:cmd]; 
+}
+- (void)removeBannerAd:(CDVInvokedUrlCommand *)cmd { 
+    [self.bannerManager removeBannerAd:cmd]; 
+}
+- (void)styleBannerAd:(CDVInvokedUrlCommand *)cmd { 
+    [self.bannerManager styleBannerAd:cmd]; 
+}
 
 #pragma mark - App Open Routing
 
@@ -519,8 +564,12 @@ NSString *setKeyword = @"";
     return _appOpenManager;
 }
 
-- (void)loadAppOpenAd:(CDVInvokedUrlCommand *)cmd { [self.appOpenManager loadAppOpenAd:cmd]; }
-- (void)showAppOpenAd:(CDVInvokedUrlCommand *)cmd { [self.appOpenManager showAppOpenAd:cmd]; }
+- (void)loadAppOpenAd:(CDVInvokedUrlCommand *)cmd { 
+    [self.appOpenManager loadAppOpenAd:cmd]; 
+}
+- (void)showAppOpenAd:(CDVInvokedUrlCommand *)cmd { 
+    [self.appOpenManager showAppOpenAd:cmd]; 
+}
 
 #pragma mark - Interstitial Routing
 
@@ -531,8 +580,12 @@ NSString *setKeyword = @"";
     return _interstitialManager;
 }
 
-- (void)loadInterstitialAd:(CDVInvokedUrlCommand *)cmd { [self.interstitialManager loadInterstitialAd:cmd]; }
-- (void)showInterstitialAd:(CDVInvokedUrlCommand *)cmd { [self.interstitialManager showInterstitialAd:cmd]; }
+- (void)loadInterstitialAd:(CDVInvokedUrlCommand *)cmd { 
+    [self.interstitialManager loadInterstitialAd:cmd]; 
+}
+- (void)showInterstitialAd:(CDVInvokedUrlCommand *)cmd { 
+    [self.interstitialManager showInterstitialAd:cmd]; 
+}
 
 #pragma mark - Rewarded Routing
 
@@ -543,8 +596,12 @@ NSString *setKeyword = @"";
     return _rewardedManager;
 }
 
-- (void)loadRewardedAd:(CDVInvokedUrlCommand *)cmd { [self.rewardedManager loadRewardedAd:cmd]; }
-- (void)showRewardedAd:(CDVInvokedUrlCommand *)cmd { [self.rewardedManager showRewardedAd:cmd]; }
+- (void)loadRewardedAd:(CDVInvokedUrlCommand *)cmd { 
+    [self.rewardedManager loadRewardedAd:cmd]; 
+}
+- (void)showRewardedAd:(CDVInvokedUrlCommand *)cmd { 
+    [self.rewardedManager showRewardedAd:cmd]; 
+}
 
 #pragma mark - Rewarded Interstitial Routing
 
@@ -555,7 +612,10 @@ NSString *setKeyword = @"";
     return _rewardedInterstitialManager;
 }
 
-- (void)loadRewardedInterstitialAd:(CDVInvokedUrlCommand *)cmd { [self.rewardedInterstitialManager loadRewardedInterstitialAd:cmd]; }
-- (void)showRewardedInterstitialAd:(CDVInvokedUrlCommand *)cmd { [self.rewardedInterstitialManager showRewardedInterstitialAd:cmd]; }
-
+- (void)loadRewardedInterstitialAd:(CDVInvokedUrlCommand *)cmd { 
+    [self.rewardedInterstitialManager loadRewardedInterstitialAd:cmd]; 
+}
+- (void)showRewardedInterstitialAd:(CDVInvokedUrlCommand *)cmd { 
+    [self.rewardedInterstitialManager showRewardedInterstitialAd:cmd]; 
+}
 @end

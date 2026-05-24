@@ -199,11 +199,18 @@ You must initialize the plugin before using any ads.
 ```javascript
 document.addEventListener("deviceready", function(){
 
+    // 0. Method optional: cordova.plugins.emiAdmobPlugin.targeting({...})
+
     // 1. Initialize
     cordova.plugins.emiAdmobPlugin.initialize({
         isUsingAdManagerRequest: false, // true = AdManager | false = AdMob (Default false)
         isResponseInfo: false,          // Default false (Debug true)
         isConsentDebug: false,          // Default false (Debug true)
+        
+        // Targeting can be combined here. 
+        // childDirectedTreatment: null, // true|false default: null (Enable COPPA true)
+        // underAgeOfConsent: null, // true || false default: null (Enable teen privacy/TFUA true)
+        // contentRating: "", // value: G | MA | PG | T | default: ""
     });
 
     // 2. Listen for SDK Ready

@@ -169,6 +169,32 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
             isResponseInfo = options.optBoolean("isResponseInfo")
             setDebugGeography = options.optBoolean("isConsentDebug")
 
+            if (options.has("childDirectedTreatment") || options.has("underAgeOfConsent") || options.has("contentRating")) {
+                val isChildDirected = if (options.has("childDirectedTreatment")) options.optBoolean("childDirectedTreatment") else null
+                val isUnderAgeOfConsent = if (options.has("underAgeOfConsent")) options.optBoolean("underAgeOfConsent") else null
+
+                ageRestrictedTreatment = when {
+                    isChildDirected == true -> AgeRestrictedTreatment.CHILD
+                    isUnderAgeOfConsent == true -> AgeRestrictedTreatment.TEEN
+                    else -> AgeRestrictedTreatment.UNSPECIFIED
+                }
+
+                isSetMaxAdContentRating = options.optString("contentRating", "")
+
+                val requestConfiguration = MobileAds.getRequestConfiguration().toBuilder()
+                requestConfiguration.setAgeRestrictedTreatment(ageRestrictedTreatment)
+
+                when (isSetMaxAdContentRating.uppercase(Locale.getDefault())) {
+                    "T" -> requestConfiguration.setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_T)
+                    "PG" -> requestConfiguration.setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_PG)
+                    "MA" -> requestConfiguration.setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_MA)
+                    "G" -> requestConfiguration.setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_G)
+                    else -> requestConfiguration.setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_UNSPECIFIED)
+                }
+
+                MobileAds.setRequestConfiguration(requestConfiguration.build())
+            }
+
             if (isCustomConsentManager) {
                 fireEvent("on.custom.consent.manager.used", null)
                 initializeMobileAdsSdk()
@@ -205,13 +231,13 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
                 }
             }, { formError ->
                 if (consentInformation?.canRequestAds() == true) {
-                    initializeMobileAdsSdk()
+                    initializeMobileAdsSdk() 
                 }
                 fireEvent("on.consent.info.update.failed", "{\"message\":\"${formError.message}\"}")
             })
 
             if (consentInformation?.canRequestAds() == true) {
-                initializeMobileAdsSdk()
+                initializeMobileAdsSdk() 
             }
             callbackContext.success()
         }

@@ -42,9 +42,10 @@ function App() {
     setupEventListeners();
 
     // https://developers.google.com/admob/android/targeting
+    // targeting Method optional (If needed, add it directly during initialize)
     AdMob.targeting({
-        childDirectedTreatment: null, // true|false default: null
-        underAgeOfConsent: null, // true || false default: null
+        childDirectedTreatment: null, // true|false default: null (Enable COPPA true)
+        underAgeOfConsent: null, // true || false default: null  (Enable teen privacy/TFUA true)
         contentRating: "", // value: G | MA | PG | T | default: ""
     }, () => {
         addLog("Requesting Targeting...");
@@ -64,6 +65,11 @@ function App() {
         isUsingAdManagerRequest: false, // true = AdManager | false = AdMob (Default false)
         isResponseInfo: false, // debug true | Production false
         isConsentDebug: true, // debug true | Production false // Requesting Consent...
+
+        // Targeting can be combined here. 
+        // childDirectedTreatment: null, // true|false default: null (Enable COPPA true)
+        // underAgeOfConsent: null, // true || false default: null (Enable teen privacy/TFUA true)
+        // contentRating: "", // value: G | MA | PG | T | default: ""
     },() => {
         setStatus("SDK Ready! Select an ad format.");
         addLog(">>> Mobile Ads SDK Initialized <<<");

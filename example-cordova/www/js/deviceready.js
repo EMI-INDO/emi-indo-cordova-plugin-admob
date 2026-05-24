@@ -58,22 +58,25 @@ function cleanText(){
 document.addEventListener("deviceready", function () {
 
 
-    // targeting
+    // targeting Method optional (If needed, add it directly during initialize)
+    /*
     cordova.plugins.emiAdmobPlugin.targeting({
         childDirectedTreatment: null, // true|false default: null
         underAgeOfConsent: null, // true || false default: null
         contentRating: "", // value: G | MA | PG | T | default ""
     });
+    */
 
 
 
-    // globalSettings Optional
+    // globalSettings Method optional 
+    /*
     cordova.plugins.emiAdmobPlugin.globalSettings({
         setAppMuted: false, // Type Boolean default: false
         setAppVolume: 1.0, // Type float
         pubIdEnabled: false, // default: false
     });
-
+    */
 
 
     if (isPlatformIOS){
@@ -99,9 +102,14 @@ document.addEventListener("deviceready", function () {
     
     cordova.plugins.emiAdmobPlugin.initialize({
 
-        isUsingAdManagerRequest: false, // true = AdManager | false = AdMob (Default true)
+        isUsingAdManagerRequest: false, // true = AdManager | false = AdMob (Default false)
         isResponseInfo: false, // debug true | Production false
         isConsentDebug: false, // debug true | Production false
+
+        // Targeting can be combined here. 
+        // childDirectedTreatment: null, // true|false default: null (Enable COPPA true)
+        // underAgeOfConsent: null, // true || false default: null (Enable teen privacy/TFUA true)
+        // contentRating: "", // value: G | MA | PG | T | default: ""
 
     });
 
