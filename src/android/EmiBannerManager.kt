@@ -149,6 +149,8 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
 
     private fun bannerOverlappingToZero() {
 
+        if (isOverlapping) return
+
         if (isCordova15 && Build.VERSION.SDK_INT < 35) {
             bannerOverlappingToZeroSDKMax35()
             return
@@ -237,10 +239,10 @@ class EmiBannerManager(private val plugin: EmiAdPluginProtocol) {
 
                                 val webViewHeight = screenHeightInPx - bannerTotalHeightPx
                                 capLp.height = webViewHeight
-                                capLp.topMargin = bannerTotalHeightPx + statusBarHeight
+                                capLp.topMargin = bannerTotalHeightPx
                             } else {
                                 capLp.height = ViewGroup.LayoutParams.MATCH_PARENT
-                                capLp.topMargin = statusBarHeight
+                                capLp.topMargin = 0
                             }
                             webView.layoutParams = capLp
                         }
