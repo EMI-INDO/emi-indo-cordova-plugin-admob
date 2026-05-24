@@ -15,6 +15,7 @@ import androidx.preference.PreferenceManager
 import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.AgeRestrictedTreatment
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.ump.ConsentDebugSettings
@@ -100,8 +101,7 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
     private var isEnabledKeyword = false
     private var setKeyword: String = ""
 
-    private var isSetTagForChildDirectedTreatment = RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_UNSPECIFIED
-    private var isSetTagForUnderAgeOfConsent = RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_UNSPECIFIED
+    private var ageRestrictedTreatment = AgeRestrictedTreatment.UNSPECIFIED
     private var isSetMaxAdContentRating = ""
 
     override fun pluginInitialize() {
@@ -185,7 +185,8 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
                     paramsBuilder.setConsentDebugSettings(debugSettings)
                 }
             } else {
-                val isUnderAge = (isSetTagForUnderAgeOfConsent == RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_TRUE)
+
+                val isUnderAge = (ageRestrictedTreatment == AgeRestrictedTreatment.TEEN)
                 paramsBuilder.setTagForUnderAgeOfConsent(isUnderAge)
             }
 
@@ -227,31 +228,20 @@ class EmiAdmobPlugin : CordovaPlugin(), EmiAdPluginProtocol {
     private fun handleTargeting(args: JSONArray, callbackContext: CallbackContext) {
         val options = args.optJSONObject(0) ?: return
 
-        if (options.has("childDirectedTreatment")) {
-            isSetTagForChildDirectedTreatment = if (options.optBoolean("childDirectedTreatment")) {
-                RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE
-            } else {
-                RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_FALSE
-            }
-        } else {
-            isSetTagForChildDirectedTreatment = RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_UNSPECIFIED
-        }
+        val isChildDirected = if (options.has("childDirectedTreatment")) options.optBoolean("childDirectedTreatment") else null
+        val isUnderAgeOfConsent = if (options.has("underAgeOfConsent")) options.optBoolean("underAgeOfConsent") else null
 
-        if (options.has("underAgeOfConsent")) {
-            isSetTagForUnderAgeOfConsent = if (options.optBoolean("underAgeOfConsent")) {
-                RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_TRUE
-            } else {
-                RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE
-            }
-        } else {
-            isSetTagForUnderAgeOfConsent = RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_UNSPECIFIED
+        ageRestrictedTreatment = when {
+            isChildDirected == true -> AgeRestrictedTreatment.CHILD
+            isUnderAgeOfConsent == true -> AgeRestrictedTreatment.TEEN
+            else -> AgeRestrictedTreatment.UNSPECIFIED
         }
 
         isSetMaxAdContentRating = options.optString("contentRating", "")
 
         val requestConfiguration = MobileAds.getRequestConfiguration().toBuilder()
-        requestConfiguration.setTagForChildDirectedTreatment(isSetTagForChildDirectedTreatment)
-        requestConfiguration.setTagForUnderAgeOfConsent(isSetTagForUnderAgeOfConsent)
+
+        requestConfiguration.setAgeRestrictedTreatment(ageRestrictedTreatment)
 
         when (isSetMaxAdContentRating.uppercase(Locale.getDefault())) {
             "T" -> requestConfiguration.setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_T)

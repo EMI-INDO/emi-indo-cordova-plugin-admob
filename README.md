@@ -75,7 +75,7 @@ This plugin is regularly updated to support the latest standards.
 
 | Component | Platform | Version | Release Notes |
 | :--- | :--- | :--- | :--- |
-| **Mobile Ads SDK** | Android | **25.2.0** | [View Notes](https://developers.google.com/admob/android/rel-notes) |
+| **Mobile Ads SDK** | Android | **25.3.0** | [View Notes](https://developers.google.com/admob/android/rel-notes) |
 | **UMP SDK** | Android | **4.0.0** | [View Notes](https://developers.google.com/admob/android/privacy/release-notes) |
 | **Mobile Ads SDK** | iOS | **13.3.0** | [View Notes](https://developers.google.com/admob/ios/rel-notes) |
 | **UMP SDK** | iOS | **3.1.0** | [View Notes](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/privacy/download) |
