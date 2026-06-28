@@ -16,6 +16,7 @@
 > * **New Projects:** We highly recommend using the **Next Gen** plugin for modern architecture and long-term stability.
 > * **Existing Projects:** You are safe to stay here, updates will continue as usual.
 
+> 👉 New COPPA : **[⚡ cordova-plugin-play-age-signals ](https://github.com/swaplab-engine/cordova-plugin-play-age-signals)** (Optional)
 
 **Cordova/Quasar/Capacitor Plugin for AdMob (Android & iOS)**
 
@@ -30,7 +31,6 @@ This plugin supports the latest Mobile Ads SDK, User Messaging Platform (UMP), C
 
 ### 🎉 New Milestone 2026
 - 👉 [**View all release notes:**](https://github.com/EMI-INDO/emi-indo-cordova-plugin-admob/releases/)
-
 ---
 
 ## ☁️ Cloud Build (Quick Test)
