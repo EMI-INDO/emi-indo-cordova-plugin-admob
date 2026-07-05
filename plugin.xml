@@ -33,8 +33,9 @@
       </feature>
     </config-file>
 
-    <config-file parent="/*" target="AndroidManifest.xml">
+ <config-file parent="/*" target="AndroidManifest.xml">
       <uses-permission android:name="android.permission.INTERNET" />
+      <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
     </config-file>
 
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
